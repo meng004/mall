@@ -2,35 +2,19 @@
 
 SDC 是 mall 内的 Java 教学项目，按 E1–E7 组织。产品修复保留在原业务模块，实验代码和 JUnit 测试在这里；不需要 Python。
 
-第一次使用请从[学生操作手册](学生操作手册.md)开始：包含教师仓库克隆、安装、独立样例环境、前后端启动、模型配置与E1–E7逐项验收。教学仓库为 [meng004/mall](https://github.com/meng004/mall/tree/sdc-java-migration)，配套[课程实验方案](课程实验方案.md)和[发布验收](发布验收.md)。
+**学生只看[学生操作手册](学生操作手册.md)**：一个仓库、先跑一个测试、每次一页说明加≤2分钟录屏。无需先安装两个前端、swarm、Docker或模型CLI；真实运行环境由教师课前准备，故障时可以先完成可评分的离线内容并标明未完成项。
 
-## 快速开始
+教师/助教看[环境准备](教师环境准备.md)。前端与微服务对照只用于已有理论讲解，不增加部署作业。课程边界：[理论章节](课程理论章节.md)、[实验方案](课程实验方案.md)、[考核方案](课程考核方案.md)。评分与既有测试/安全要求不变。
 
-1. 安装 JDK 17、Maven；`java -version` 与 `mvn -version` 均应显示 Java 17。macOS 上默认 Java 可能仍为 8，需将 `JAVA_HOME` 和 `PATH` 指向安装的 JDK 17。终端示例沿用本项目 RTK 约定；未安装 RTK 的学生可以去掉 `rtk proxy`，直接运行后面的 Maven/Java 命令。
-2. 在 IDEA 中打开 **mall 根目录的 `pom.xml`**，选择作为 Maven 工程导入。Project SDK、Maven Importer JDK、Maven Runner JRE 均选择 JDK 17，然后 Reload All Maven Projects。
-3. 首次运行需要网络下载 Maven 依赖。以下所有命令的工作目录为 **mall**：
+## 第一次运行
 
-```bash
-rtk proxy mvn -pl SDC/E1,SDC/E2,SDC/E3,SDC/E4,SDC/E5,SDC/E6,SDC/E7 -am test
+IDEA打开mall根 `pom.xml`，Project SDK和Maven Runner选JDK17；在mall目录运行：
+
+```sh
+rtk proxy mvn -pl SDC/E1 -am test
 ```
 
-该命令编译所需产品模块并运行实验测试。mall 原项目默认跳过自己的集成测试，SDC 子模块单独启用测试；普通 SDC 测试无需数据库、中间件或在线模型。真实 mall 启动和在线模型演示的前置条件见 E1、E7 操作说明。
-
-完整编译与打包（跳过镜像构建，不跳过 SDC 测试）：
-
-```bash
-rtk proxy mvn -Ddocker.skip=true clean package
-```
-
-portal 同时生成普通依赖 JAR 和 `mall-portal-1.0-SNAPSHOT-exec.jar`；后者用于 `java -jar` 启动。Docker 配置仍将可执行产物放到容器原文件名，原镜像启动入口不变。
-
-单项运行示例：
-
-```bash
-rtk proxy mvn -pl SDC/E3 -am test
-```
-
-也可在 IDEA 直接运行各模块 `src/test/java` 的测试类。在 `mall-portal/src/main/java` 对应业务方法设断点，即可从测试进入真实业务代码。不要把工程设成 Java 8，也不需要安装额外 Python 测试工具。
+E1的3项测试通过即可继续本次导读。其余实验替换模块名；也可在IDEA运行指定JUnit类。首次Maven需要联网准备依赖，缓存后可离线。未安装RTK时，普通Git/Maven命令可去掉 `rtk proxy`；JavaEvidence与Cursor适配器的RTK依赖由教师环境准备处理。
 
 ## 实验导航
 
@@ -53,7 +37,7 @@ E1/E2/E5 的静态分析工具帮助定位和讲解，不是运行时业务验�
 
 产品代码只有一份；不会在每个实验中复制算法。E7 当前只读查询，不再提供库存草稿、确认或撤销。
 
-## 原版对照与覆盖率
+## 教师验证与参考证据
 
 首次准备 JaCoCo 依赖后，可用 Java 源文件运行器重建 E3/E4/E6 对照：
 
