@@ -1,0 +1,219 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] SDC - software design and convenient                               [pom]
+[INFO] SDC E3                                                             [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                         [1/7]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall ---
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                  [2/7]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-common ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-common/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 14 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-common ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-common/target/mall-common-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                     [3/7]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-mbg ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-mbg/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 230 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-mbg ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-mbg/target/mall-mbg-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                                [4/7]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-security ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-security/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 14 source files with javac [debug parameters release 17] to target/classes
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/java/com/macro/mall/security/component/DynamicAuthorizationManager.java: 某些输入文件使用或覆盖了已过时的 API。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/java/com/macro/mall/security/component/DynamicAuthorizationManager.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-security ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-security/target/mall-security-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                  [5/7]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-portal ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-portal/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 93 source files with javac [debug parameters release 17] to target/classes
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java: /Users/limeng/软件设计与规范AI/mall/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java使用或覆盖了已过时的 API。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-portal/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-portal ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-portal/target/mall-portal-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.14:repackage (repackage) @ mall-portal ---
+[INFO] Replacing main artifact /Users/limeng/软件设计与规范AI/mall/mall-portal/target/mall-portal-1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/limeng/软件设计与规范AI/mall/mall-portal/target/mall-portal-1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- docker:0.45.1:build (build-image) @ mall-portal ---
+[INFO] 
+[INFO] -------------------------< com.macro.mall:sdc >-------------------------
+[INFO] Building SDC - software design and convenient 1.0-SNAPSHOT         [6/7]
+[INFO]   from SDC/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/target
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e3 >------------------------
+[INFO] Building SDC E3 1.0-SNAPSHOT                                       [7/7]
+[INFO]   from SDC/E3/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e3 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E3/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e3 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e3 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e3 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e3 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[10,39] 程序包com.macro.mall.portal.component不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[14,42] 程序包com.macro.mall.portal.service.impl不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[29,19] 找不到符号
+  符号:   类 OmsPortalOrderServiceImpl
+  位置: 类 com.macro.mall.sdc.e3.OrderIntegrationTest
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[11,1] 程序包com.macro.mall.portal.dao不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[12,1] 程序包com.macro.mall.portal.domain不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[13,1] 程序包com.macro.mall.portal.service不存在
+[INFO] 6 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for mall 1.0-SNAPSHOT:
+[INFO] 
+[INFO] mall ............................................... SUCCESS [  0.045 s]
+[INFO] mall-common ........................................ SUCCESS [  1.035 s]
+[INFO] mall-mbg ........................................... SUCCESS [  1.620 s]
+[INFO] mall-security ...................................... SUCCESS [  0.316 s]
+[INFO] mall-portal ........................................ SUCCESS [  1.374 s]
+[INFO] SDC - software design and convenient ............... SUCCESS [  0.001 s]
+[INFO] SDC E3 ............................................. FAILURE [  0.206 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.748 s
+[INFO] Finished at: 2026-10-03T11:09:57+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.14.1:testCompile (default-testCompile) on project sdc-e3: Compilation failure: Compilation failure: 
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[10,39] 程序包com.macro.mall.portal.component不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[14,42] 程序包com.macro.mall.portal.service.impl不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[29,19] 找不到符号
+[ERROR]   符号:   类 OmsPortalOrderServiceImpl
+[ERROR]   位置: 类 com.macro.mall.sdc.e3.OrderIntegrationTest
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[11,1] 程序包com.macro.mall.portal.dao不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[12,1] 程序包com.macro.mall.portal.domain不存在
+[ERROR] /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/test/java/com/macro/mall/sdc/e3/OrderIntegrationTest.java:[13,1] 程序包com.macro.mall.portal.service不存在
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :sdc-e3

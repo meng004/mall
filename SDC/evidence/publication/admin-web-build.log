@@ -1,0 +1,214 @@
+
+> mall-admin-web@3.0.0 build
+> run-p type-check "build-only {@}" --
+
+
+> mall-admin-web@3.0.0 build-only
+> vite build
+
+
+> mall-admin-web@3.0.0 type-check
+> vue-tsc --build
+
+vite v7.3.0 building client environment for production...
+transforming...
+✓ 2459 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                                    0.44 kB │ gzip:   0.29 kB
+dist/assets/order-return-reason-Cdw7WKky.svg                                       4.18 kB │ gzip:   1.76 kB
+dist/assets/sms-ad-Cw9rEqwc.svg                                                    4.20 kB │ gzip:   1.75 kB
+dist/assets/ums-resource-kp4iUtTe.svg                                              4.26 kB │ gzip:   2.11 kB
+dist/assets/sms-hot-CAsoCjyE.svg                                                   4.34 kB │ gzip:   2.17 kB
+dist/assets/order-setting-Ctl2fEsh.svg                                             5.05 kB │ gzip:   2.23 kB
+dist/assets/cms-topic-Cl5-NKUl.svg                                                 5.37 kB │ gzip:   1.39 kB
+dist/assets/home_yesterday_amount-foLujjJZ.png                                     5.59 kB
+dist/assets/home_today_amount-DW67EZVx.png                                         5.63 kB
+dist/assets/login_center_bg-BZM8WChn.png                                          34.46 kB
+dist/assets/gif_404-BenjvNny.gif                                               1,066.29 kB
+dist/assets/reason-CTkbS5T6.css                                                    0.04 kB │ gzip:   0.06 kB
+dist/assets/CouponDetail-DnoSm_Rb.css                                              0.04 kB │ gzip:   0.06 kB
+dist/assets/HomeAdvertiseDetail-BsDCnfc4.css                                       0.04 kB │ gzip:   0.06 kB
+dist/assets/index-CiKLG2ro.css                                                     0.04 kB │ gzip:   0.06 kB
+dist/assets/index-CE76tS-m.css                                                     0.04 kB │ gzip:   0.06 kB
+dist/assets/index-A4eGyc2f.css                                                     0.04 kB │ gzip:   0.06 kB
+dist/assets/index-CBW2iQR9.css                                                     0.04 kB │ gzip:   0.06 kB
+dist/assets/selectSessionList-CCY2Q_Tz.css                                         0.05 kB │ gzip:   0.07 kB
+dist/assets/setting-D_j2W6KZ.css                                                   0.09 kB │ gzip:   0.09 kB
+dist/assets/productRelationList-SWIOpQ7w.css                                       0.09 kB │ gzip:   0.09 kB
+dist/assets/radio-group-CVk8lhZF.css                                               0.10 kB │ gzip:   0.11 kB
+dist/assets/index-DhHY0wv9.css                                                     0.16 kB │ gzip:   0.14 kB
+dist/assets/allocResource-C3RXaxyh.css                                             0.19 kB │ gzip:   0.13 kB
+dist/assets/index-BgPlVWEZ.css                                                     0.31 kB │ gzip:   0.21 kB
+dist/assets/applyDetail-DYT2cpzM.css                                               0.44 kB │ gzip:   0.23 kB
+dist/assets/history-CAwi1TTN.css                                                   0.59 kB │ gzip:   0.27 kB
+dist/assets/card-B_RRuwNs.css                                                      0.99 kB │ gzip:   0.35 kB
+dist/assets/loading-COTUiuFz.css                                                   1.61 kB │ gzip:   0.56 kB
+dist/assets/orderDetail-CuAewxw8.css                                               2.11 kB │ gzip:   0.67 kB
+dist/assets/index-BrY-0XKx.css                                                     2.86 kB │ gzip:   0.90 kB
+dist/assets/radio-button-59sCOz-b.css                                              3.23 kB │ gzip:   0.80 kB
+dist/assets/dialog-BDaBieUJ.css                                                    3.60 kB │ gzip:   1.03 kB
+dist/assets/switch-WrLaSrk8.css                                                    3.94 kB │ gzip:   0.98 kB
+dist/assets/radio-Cz1QdZmq.css                                                     4.36 kB │ gzip:   0.99 kB
+dist/assets/step-DuRN3eW1.css                                                      4.74 kB │ gzip:   1.20 kB
+dist/assets/form-item-DYX81GMW.css                                                 4.77 kB │ gzip:   0.91 kB
+dist/assets/allocMenu-B4uWc9Gr.css                                                 6.01 kB │ gzip:   1.38 kB
+dist/assets/tag-BnZGoQMR.css                                                       6.10 kB │ gzip:   0.98 kB
+dist/assets/checkbox-C836svJk.css                                                  6.58 kB │ gzip:   1.30 kB
+dist/assets/pagination-FawnR72S.css                                                6.96 kB │ gzip:   1.22 kB
+dist/assets/select-BzhE2E-H.css                                                    9.23 kB │ gzip:   1.96 kB
+dist/assets/cascader-panel-DYPxVzCS.css                                            9.98 kB │ gzip:   1.84 kB
+dist/assets/singleUpload-B-UlwsZK.css                                             14.32 kB │ gzip:   2.57 kB
+dist/assets/sessionList-vHhZJZMh.css                                              14.92 kB │ gzip:   2.77 kB
+dist/assets/table-column-Bgl73sqU.css                                             19.41 kB │ gzip:   2.96 kB
+dist/assets/ProductDetail-tCYrOuW7.css                                            20.06 kB │ gzip:   3.23 kB
+dist/assets/date-picker-panel-DqKAuBE5.css                                        28.52 kB │ gzip:   4.22 kB
+dist/assets/col-BYIDk0De.css                                                      39.34 kB │ gzip:   3.59 kB
+dist/assets/index-RJLr5Lgr.css                                                    76.15 kB │ gzip:  11.88 kB
+dist/assets/sms-ad-BYcXB24I.js                                                     0.09 kB │ gzip:   0.10 kB
+dist/assets/sms-hot-Cgsq1sVO.js                                                    0.09 kB │ gzip:   0.10 kB
+dist/assets/cms-topic-CYDJ6DZM.js                                                  0.09 kB │ gzip:   0.11 kB
+dist/assets/ums-resource-g0M9-mB8.js                                               0.09 kB │ gzip:   0.11 kB
+dist/assets/order-setting-D4-QBhNn.js                                              0.09 kB │ gzip:   0.11 kB
+dist/assets/cloneDeep-CxB_iiyF.js                                                  0.10 kB │ gzip:   0.11 kB
+dist/assets/order-return-reason-ChAidxuv.js                                        0.10 kB │ gzip:   0.11 kB
+dist/assets/_baseFindIndex-D7XfJLKM.js                                             0.11 kB │ gzip:   0.12 kB
+dist/assets/order-JDUnm5-7.js                                                      0.17 kB │ gzip:   0.16 kB
+dist/assets/subject-DGe-G4RE.js                                                    0.19 kB │ gzip:   0.15 kB
+dist/assets/index-wWlCRynS.js                                                      0.20 kB │ gzip:   0.21 kB
+dist/assets/returnApply-V5yUiwEl.js                                                0.37 kB │ gzip:   0.20 kB
+dist/assets/resourceCategory-CA8yZ6Sn.js                                           0.38 kB │ gzip:   0.20 kB
+dist/assets/resource-v5tuQHVh.js                                                   0.43 kB │ gzip:   0.20 kB
+dist/assets/datetime-DASWr4of.js                                                   0.43 kB │ gzip:   0.28 kB
+dist/assets/productAttrCate-DI3VaCAZ.js                                            0.53 kB │ gzip:   0.23 kB
+dist/assets/add-Bk67UcTF.js                                                        0.54 kB │ gzip:   0.34 kB
+dist/assets/toNumber-C1Zb84eu.js                                                   0.54 kB │ gzip:   0.36 kB
+dist/assets/update-DCKWX7M7.js                                                     0.54 kB │ gzip:   0.34 kB
+dist/assets/flashSession-CCO4RsXp.js                                               0.54 kB │ gzip:   0.24 kB
+dist/assets/homeAdvertise-JHxK22mv.js                                              0.55 kB │ gzip:   0.23 kB
+dist/assets/productAttr-C7IDZ6Y1.js                                                0.56 kB │ gzip:   0.23 kB
+dist/assets/add-DSfhV9ms.js                                                        0.56 kB │ gzip:   0.36 kB
+dist/assets/menu-CsvQU1oK.js                                                       0.56 kB │ gzip:   0.24 kB
+dist/assets/update-Pp1HFhTm.js                                                     0.56 kB │ gzip:   0.36 kB
+dist/assets/brand-HjIgBaXc.js                                                      0.58 kB │ gzip:   0.24 kB
+dist/assets/addProductAttr-I8OIXhLP.js                                             0.62 kB │ gzip:   0.38 kB
+dist/assets/updateProductAttr-CTM8dTcM.js                                          0.62 kB │ gzip:   0.39 kB
+dist/assets/order-BhIEexzc.js                                                      0.68 kB │ gzip:   0.24 kB
+dist/assets/table-CGJYHgHe.js                                                      0.68 kB │ gzip:   0.40 kB
+dist/assets/product-CZuHKszT.js                                                    0.72 kB │ gzip:   0.25 kB
+dist/assets/cms-subject-DTNtgVKu.js                                                0.72 kB │ gzip:   0.42 kB
+dist/assets/constant-Ct8KkFaw.js                                                   0.73 kB │ gzip:   0.34 kB
+dist/assets/productCate-HyHlX2KX.js                                                0.74 kB │ gzip:   0.27 kB
+dist/assets/role-0pJeIcf4.js                                                       0.80 kB │ gzip:   0.27 kB
+dist/assets/add-DJxoz_EI.js                                                        0.81 kB │ gzip:   0.48 kB
+dist/assets/update-0863uh7n.js                                                     0.81 kB │ gzip:   0.48 kB
+dist/assets/add-CWKO40tE.js                                                        0.84 kB │ gzip:   0.48 kB
+dist/assets/update-CjwWg1zN.js                                                     0.85 kB │ gzip:   0.48 kB
+dist/assets/product-recycle-DFEEm9LP.js                                            0.90 kB │ gzip:   0.48 kB
+dist/assets/add-CSmi5n1i.js                                                        0.90 kB │ gzip:   0.50 kB
+dist/assets/update-BvRwE5qg.js                                                     0.90 kB │ gzip:   0.50 kB
+dist/assets/user-hx8zAWnk.js                                                       0.97 kB │ gzip:   0.55 kB
+dist/assets/marker-BVg1D0tw.js                                                     1.05 kB │ gzip:   0.58 kB
+dist/assets/sms-subject-DJ3z_7SO.js                                                1.06 kB │ gzip:   0.55 kB
+dist/assets/debounce-AiTdZEGa.js                                                   1.07 kB │ gzip:   0.58 kB
+dist/assets/example-Ioj9Fd-4.js                                                    1.09 kB │ gzip:   0.56 kB
+dist/assets/tag-DabGjKIV.js                                                        1.13 kB │ gzip:   0.59 kB
+dist/assets/index-D3BhUgxv.js                                                      1.16 kB │ gzip:   0.81 kB
+dist/assets/add-C_kuSfIy.js                                                        1.19 kB │ gzip:   0.63 kB
+dist/assets/update-CleSs2aR.js                                                     1.19 kB │ gzip:   0.63 kB
+dist/assets/ums-admin-UzKUb7nn.js                                                  1.21 kB │ gzip:   0.55 kB
+dist/assets/home-Dy0qG_Ya.js                                                       1.25 kB │ gzip:   0.62 kB
+dist/assets/sms-BRrbrJnY.js                                                        1.29 kB │ gzip:   0.62 kB
+dist/assets/ums-AGmSyKYn.js                                                        1.32 kB │ gzip:   0.65 kB
+dist/assets/omit-D_-3zVpj.js                                                       1.37 kB │ gzip:   0.74 kB
+dist/assets/logisticsDialog.vue_vue_type_script_setup_true_lang-DDf76oTQ.js        1.48 kB │ gzip:   0.84 kB
+dist/assets/order-return-CzB7eWGV.js                                               1.49 kB │ gzip:   0.71 kB
+dist/assets/product-add-C4A-VLJN.js                                                1.50 kB │ gzip:   0.65 kB
+dist/assets/password-CDyTMxCh.js                                                   1.50 kB │ gzip:   0.73 kB
+dist/assets/product-brand-ZYTq4oGq.js                                              1.58 kB │ gzip:   0.68 kB
+dist/assets/form-CtuUYiPq.js                                                       1.60 kB │ gzip:   0.81 kB
+dist/assets/login-mall-DNuBzo6B.js                                                 1.62 kB │ gzip:   0.70 kB
+dist/assets/product-comment-BW-PFOhk.js                                            1.72 kB │ gzip:   0.78 kB
+dist/assets/ums-menu-D-trSi0d.js                                                   1.82 kB │ gzip:   0.69 kB
+dist/assets/total-today-CfnFGPSm.js                                                1.83 kB │ gzip:   0.75 kB
+dist/assets/product-DFGjbQeq.js                                                    1.87 kB │ gzip:   0.90 kB
+dist/assets/sms-coupon-B-5b72H7.js                                                 1.89 kB │ gzip:   0.77 kB
+dist/assets/total-week-D7wKisCs.js                                                 1.89 kB │ gzip:   0.77 kB
+dist/assets/video-QhWqQTJV.js                                                      1.91 kB │ gzip:   0.76 kB
+dist/assets/document-te-wWkTm.js                                                   2.01 kB │ gzip:   0.67 kB
+dist/assets/index-BHqZkuQH.js                                                      2.04 kB │ gzip:   0.95 kB
+dist/assets/cms-DoBg4qOZ.js                                                        2.12 kB │ gzip:   0.73 kB
+dist/assets/eye-CKDvnPrB.js                                                        2.18 kB │ gzip:   0.94 kB
+dist/assets/selectSessionList-B26DT2R9.js                                          2.20 kB │ gzip:   1.13 kB
+dist/assets/order-BFHm_a0x.js                                                      2.24 kB │ gzip:   0.91 kB
+dist/assets/col-GoN4cY9F.js                                                        2.25 kB │ gzip:   0.94 kB
+dist/assets/ums-role-CecYkgLI.js                                                   2.47 kB │ gzip:   0.94 kB
+dist/assets/sms-flash-B16okiBk.js                                                  2.73 kB │ gzip:   1.34 kB
+dist/assets/allocResource-DWadFJDp.js                                              2.87 kB │ gzip:   1.39 kB
+dist/assets/tree-CUxiepjA.js                                                       2.91 kB │ gzip:   1.20 kB
+dist/assets/deliverOrderList-MsYSTMVD.js                                           3.04 kB │ gzip:   1.46 kB
+dist/assets/product-list-DVcWkJ9o.js                                               3.12 kB │ gzip:   0.79 kB
+dist/assets/product-attr-BVdEn9kw.js                                               3.14 kB │ gzip:   0.95 kB
+dist/assets/sms-new-BrHzowB3.js                                                    3.28 kB │ gzip:   1.67 kB
+dist/assets/index-SmPsWTbZ.js                                                      3.54 kB │ gzip:   1.68 kB
+dist/assets/dashboard-DpXU5tI-.js                                                  3.56 kB │ gzip:   1.03 kB
+dist/assets/setting-2ZrByW4n.js                                                    3.61 kB │ gzip:   1.40 kB
+dist/assets/MenuDetail.vue_vue_type_script_setup_true_lang-CzGzzBTo.js             3.86 kB │ gzip:   1.61 kB
+dist/assets/BrandDetail.vue_vue_type_script_setup_true_lang-Cr7DQuGj.js            3.93 kB │ gzip:   1.57 kB
+dist/assets/categoryList-BcAeTWXk.js                                               3.94 kB │ gzip:   1.69 kB
+dist/assets/index-DIj8etCq.js                                                      4.21 kB │ gzip:   1.86 kB
+dist/assets/total-yesterday-6dxAsAhP.js                                            4.32 kB │ gzip:   1.56 kB
+dist/assets/product-cate-B2-fpWzE.js                                               4.36 kB │ gzip:   1.32 kB
+dist/assets/productAttrList-Bn0pKBIi.js                                            4.47 kB │ gzip:   2.04 kB
+dist/assets/HomeAdvertiseDetail-Dv3WNUbF.js                                        4.58 kB │ gzip:   1.80 kB
+dist/assets/index-B9QojYte.js                                                      4.66 kB │ gzip:   1.89 kB
+dist/assets/index-DzG5p9yR.js                                                      4.80 kB │ gzip:   2.06 kB
+dist/assets/loading-6FHDJXzd.js                                                    4.82 kB │ gzip:   2.07 kB
+dist/assets/switch-ChOOn1zf.js                                                     5.03 kB │ gzip:   1.76 kB
+dist/assets/step-AqGjp6i4.js                                                       5.17 kB │ gzip:   2.14 kB
+dist/assets/ProductAttrDetail.vue_vue_type_script_setup_true_lang-EykSXswF.js      5.42 kB │ gzip:   2.02 kB
+dist/assets/radio-BPDq38ik.js                                                      5.61 kB │ gzip:   2.28 kB
+dist/assets/index--e_av-AB.js                                                      5.68 kB │ gzip:   2.39 kB
+dist/assets/ProductCateDetail.vue_vue_type_script_setup_true_lang-8EIVISD8.js      5.91 kB │ gzip:   2.37 kB
+dist/assets/card-CjUctJNs.js                                                       5.94 kB │ gzip:   2.46 kB
+dist/assets/index-qqJ4Ls0v.js                                                      6.16 kB │ gzip:   2.50 kB
+dist/assets/reason-Dpzbvkih.js                                                     6.22 kB │ gzip:   2.50 kB
+dist/assets/index-BrBmePT-.js                                                      6.37 kB │ gzip:   2.54 kB
+dist/assets/index-BvTCJWQi.js                                                      6.80 kB │ gzip:   2.71 kB
+dist/assets/history-CHj7ENly.js                                                    7.01 kB │ gzip:   2.46 kB
+dist/assets/dayjs.min-D6zA3dw-.js                                                  7.15 kB │ gzip:   3.10 kB
+dist/assets/index-DYHevu2m.js                                                      7.39 kB │ gzip:   2.66 kB
+dist/assets/index-vPIYBxiD.js                                                      7.53 kB │ gzip:   2.74 kB
+dist/assets/index-D-oBcmV2.js                                                      7.97 kB │ gzip:   2.92 kB
+dist/assets/index-DgFcENtQ.js                                                      8.94 kB │ gzip:   3.06 kB
+dist/assets/productRelationList-g2VFFaoG.js                                        8.96 kB │ gzip:   2.89 kB
+dist/assets/dialog-DscomgAP.js                                                     8.99 kB │ gzip:   3.52 kB
+dist/assets/CouponDetail-C2GLkigE.js                                               9.62 kB │ gzip:   3.26 kB
+dist/assets/index-DW3VxWQR.js                                                      9.81 kB │ gzip:   3.22 kB
+dist/assets/index-BR7IaFXM.js                                                      9.84 kB │ gzip:   3.46 kB
+dist/assets/index-DBeQHL57.js                                                      9.84 kB │ gzip:   3.22 kB
+dist/assets/checkbox-5Of3mTw0.js                                                   9.88 kB │ gzip:   3.54 kB
+dist/assets/index-CoD-g3Sd.js                                                      9.89 kB │ gzip:   3.25 kB
+dist/assets/index-Sp6r7WA4.js                                                     10.27 kB │ gzip:   3.37 kB
+dist/assets/sessionList-BMlB_k9v.js                                               11.56 kB │ gzip:   4.54 kB
+dist/assets/pagination-CyxbbzIs.js                                                12.45 kB │ gzip:   4.17 kB
+dist/assets/applyDetail-BhipKDcm.js                                               12.58 kB │ gzip:   3.11 kB
+dist/assets/index-bJpLWYmN.js                                                     13.51 kB │ gzip:   4.24 kB
+dist/assets/singleUpload.vue_vue_type_script_setup_true_lang-Bcc3UIHn.js          19.34 kB │ gzip:   7.02 kB
+dist/assets/cascader-panel-DROl1JEL.js                                            26.34 kB │ gzip:   9.87 kB
+dist/assets/form-item-7Y96DAyj.js                                                 26.46 kB │ gzip:   9.28 kB
+dist/assets/panel-time-pick-g3Gbtad4.js                                           27.90 kB │ gzip:  10.47 kB
+dist/assets/select-C_k1cyer.js                                                    30.54 kB │ gzip:  10.46 kB
+dist/assets/allocMenu-V9XVmYuQ.js                                                 30.87 kB │ gzip:  10.40 kB
+dist/assets/ProductDetail.vue_vue_type_style_index_0_lang-Bz7XLsYl.js             58.62 kB │ gzip:  18.49 kB
+dist/assets/date-picker-panel-BafbBuxe.js                                         65.37 kB │ gzip:  17.61 kB
+dist/assets/table-column-DjXLJ4bY.js                                              76.06 kB │ gzip:  26.36 kB
+dist/assets/orderDetail-BAzSVmD6.js                                              218.38 kB │ gzip:  59.05 kB
+dist/assets/index-AM00iCNY.js                                                    442.91 kB │ gzip: 158.37 kB
+dist/assets/index-Ct3ohL1f.js                                                    533.89 kB │ gzip: 180.69 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 7.25s

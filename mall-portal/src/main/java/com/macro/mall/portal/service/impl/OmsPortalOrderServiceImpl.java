@@ -18,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,6 +34,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OmsPortalOrderServiceImpl.class);
     @Autowired
     private UmsMemberService memberService;
     @Autowired
@@ -163,6 +167,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         handleRealAmount(orderItemList);
         //进行库存锁定
         lockStock(cartPromotionItemList);
+        for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
+            warnSku(cartPromotionItem.getProductSkuId());
+        }
         //根据商品合计、运费、活动优惠、优惠券、积分计算应付金额
         OmsOrder order = new OmsOrder();
         order.setDiscountAmount(new BigDecimal(0));
@@ -177,10 +184,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             order.setCouponAmount(calcCouponAmount(orderItemList));
         }
         if (orderParam.getUseIntegration() == null) {
-            order.setIntegration(0);
             order.setIntegrationAmount(new BigDecimal(0));
         } else {
-            order.setIntegration(orderParam.getUseIntegration());
+            order.setUseIntegration(orderParam.getUseIntegration());
             order.setIntegrationAmount(calcIntegrationAmount(orderItemList));
         }
         order.setPayAmount(calcPayAmount(order));
@@ -233,7 +239,6 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         //如使用积分需要扣除积分
         if (orderParam.getUseIntegration() != null) {
-            order.setUseIntegration(orderParam.getUseIntegration());
             if(currentMember.getIntegration()==null){
                 currentMember.setIntegration(0);
             }
@@ -261,6 +266,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //恢复所有下单商品的锁定库存，扣减真实库存
         OmsOrderDetail orderDetail = portalOrderDao.getDetail(orderId);
         int count = portalOrderDao.updateSkuStock(orderDetail.getOrderItemList());
+        for (OmsOrderItem orderItem : orderDetail.getOrderItemList()) {
+            warnSku(orderItem.getProductSkuId());
+        }
         return count;
     }
 
@@ -770,6 +778,25 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         calcAmount.setPromotionAmount(promotionAmount);
         calcAmount.setPayAmount(totalAmount.subtract(promotionAmount));
         return calcAmount;
+    }
+
+    private void warnSku(Long skuId) {
+        PmsSkuStock skuStock;
+        try {
+            skuStock = skuStockMapper.selectByPrimaryKey(skuId);
+        } catch (DataAccessException exception) {
+            // The advisory read must not change the completed stock operation's result.
+            LOGGER.warn("sku {} warning unavailable", skuId);
+            return;
+        }
+        if (skuStock == null || skuStock.getLowStock() == null
+                || skuStock.getStock() == null || skuStock.getLockStock() == null) {
+            return;
+        }
+        int available = skuStock.getStock() - skuStock.getLockStock();
+        if (available < skuStock.getLowStock()) {
+            LOGGER.warn("sku {} available {} is below {}", skuId, available, skuStock.getLowStock());
+        }
     }
 
 }

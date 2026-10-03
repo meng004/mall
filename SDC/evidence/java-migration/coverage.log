@@ -1,0 +1,19 @@
+Working directory: /Users/limeng/软件设计与规范AI/mall
+Reference revision: dcaa93b3150352e5044708d7211b5bed0af4509f
+Command: rtk proxy mvn -B -o -pl mall-portal -Djacoco.dataFile=/Users/limeng/软件设计与规范AI/mall/SDC/target/jacoco.exec org.jacoco:jacoco-maven-plugin:0.8.13:report
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (default-cli) @ mall-portal ---
+[INFO] Loading execution data file /Users/limeng/软件设计与规范AI/mall/SDC/target/jacoco.exec
+[INFO] Analyzed bundle 'mall-portal' with 67 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.321 s
+[INFO] Finished at: 2026-10-03T11:02:42+08:00
+[INFO] ------------------------------------------------------------------------

@@ -1,0 +1,200 @@
+{
+  "evaluatedAt" : "2026-10-03T03:30:13.731708Z",
+  "evidenceType" : "case-set comparison; independence and model accuracy require separate provenance",
+  "cases" : "mall/SDC/E7/evaluation/java-holdout-1.json",
+  "pageSize" : 100,
+  "verdict" : "FAILED",
+  "results" : [ {
+    "id" : "fresh-n01",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 27, 28, 33, 34, 39, 40 ]
+  }, {
+    "id" : "fresh-n02",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 27, 28, 29, 37 ]
+  }, {
+    "id" : "fresh-n03",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 30, 31, 32 ]
+  }, {
+    "id" : "fresh-n04",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 32 ]
+  }, {
+    "id" : "fresh-n05",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 30, 31, 32 ]
+  }, {
+    "id" : "fresh-n06",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 30, 31, 32, 35, 44 ]
+  }, {
+    "id" : "fresh-n07",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-n08",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 ]
+  }, {
+    "id" : "fresh-n09",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 39, 40 ]
+  }, {
+    "id" : "fresh-n10",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 27, 28, 33, 40 ]
+  }, {
+    "id" : "fresh-n11",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 27, 28, 33, 34 ]
+  }, {
+    "id" : "fresh-n12",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 35 ]
+  }, {
+    "id" : "fresh-n13",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 28, 30, 31, 32, 35, 36 ]
+  }, {
+    "id" : "fresh-n14",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-n15",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-n16",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45 ]
+  }, {
+    "id" : "fresh-n17",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45 ]
+  }, {
+    "id" : "fresh-n18",
+    "kind" : "normal",
+    "passed" : true,
+    "actualStatus" : "OK",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-n19",
+    "kind" : "normal",
+    "passed" : false,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-n20",
+    "kind" : "normal",
+    "passed" : false,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a01",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a02",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a03",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a04",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a05",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a06",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a07",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-a08",
+    "kind" : "attack",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-o01",
+    "kind" : "ood",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-o02",
+    "kind" : "ood",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-o03",
+    "kind" : "ood",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-o04",
+    "kind" : "ood",
+    "passed" : true,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  } ]
+}

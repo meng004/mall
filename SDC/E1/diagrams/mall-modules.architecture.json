@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "mall 七个模块",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/macrozheng/mall",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 4,
+    "origin": [48, 48],
+    "gapX": 88,
+    "gapY": 110,
+    "cellW": 180,
+    "cellH": 72
+  },
+  "components": [
+    {
+      "id": "admin",
+      "type": "backend",
+      "label": "mall-admin",
+      "sublabel": "后台管理",
+      "row": 0,
+      "col": 0,
+      "sources": [{ "path": "mall-admin/pom.xml", "line": 6, "label": "后台进程" }]
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "mall-portal",
+      "sublabel": "前台交易",
+      "tag": "本实验主模块",
+      "row": 0,
+      "col": 1,
+      "sources": [{ "path": "mall-portal/pom.xml", "line": 7, "label": "前台进程" }]
+    },
+    {
+      "id": "search",
+      "type": "backend",
+      "label": "mall-search",
+      "sublabel": "商品检索",
+      "row": 0,
+      "col": 2,
+      "sources": [{ "path": "mall-search/pom.xml", "line": 7, "label": "检索进程" }]
+    },
+    {
+      "id": "demo",
+      "type": "backend",
+      "label": "mall-demo",
+      "sublabel": "演示切片",
+      "row": 0,
+      "col": 3,
+      "sources": [{ "path": "mall-demo/pom.xml", "line": 7, "label": "演示进程" }]
+    },
+    {
+      "id": "security",
+      "type": "security",
+      "label": "mall-security",
+      "sublabel": "认证与缓存",
+      "row": 1,
+      "col": 0,
+      "sources": [{ "path": "mall-security/pom.xml", "line": 6, "label": "安全库" }]
+    },
+    {
+      "id": "mbg",
+      "type": "backend",
+      "label": "mall-mbg",
+      "sublabel": "生成模型与 Mapper",
+      "tag": "生成代码",
+      "row": 1,
+      "col": 1,
+      "sources": [{ "path": "mall-mbg/src/main/resources/generatorConfig.xml", "line": 6, "label": "Generator 配置" }]
+    },
+    {
+      "id": "common",
+      "type": "backend",
+      "label": "mall-common",
+      "sublabel": "统一返回与工具",
+      "row": 2,
+      "col": 0,
+      "sources": [{ "path": "mall-common/pom.xml", "line": 8, "label": "公共库" }]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "可独立启动的应用",
+      "wraps": ["admin", "portal", "search", "demo"]
+    },
+    {
+      "kind": "region",
+      "label": "生成代码，不直接改产物",
+      "wraps": ["mbg"]
+    }
+  ],
+  "connections": [
+    { "id": "admin-security", "from": "admin", "to": "security" },
+    { "id": "portal-mbg", "from": "portal", "to": "mbg", "variant": "emphasis" },
+    { "id": "security-common", "from": "security", "to": "common" },
+    { "id": "mbg-common", "from": "mbg", "to": "common" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两层",
+      "items": [
+        "上面四个模块可以单独启动",
+        "下面三个是被引用的库"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "这张图故意少画边",
+      "items": [
+        "这里只标出各层的代表关系",
+        "八条直接依赖全部画在依赖图里"
+      ]
+    }
+  ]
+}

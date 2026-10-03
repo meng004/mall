@@ -1,0 +1,199 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                         [1/5]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (default-cli) @ mall ---
+[INFO] argLine set to -javaagent:/Users/limeng/.m2/repository/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=/Users/limeng/软件设计与规范AI/mall/target/jacoco.exec,append=false
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (default-cli) @ mall ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                  [2/5]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (default-cli) @ mall-common ---
+[INFO] argLine set to -javaagent:/Users/limeng/.m2/repository/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=/Users/limeng/软件设计与规范AI/mall/mall-common/target/jacoco.exec,append=false
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (default-cli) @ mall-common ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                     [3/5]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (default-cli) @ mall-mbg ---
+[INFO] argLine set to -javaagent:/Users/limeng/.m2/repository/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=/Users/limeng/软件设计与规范AI/mall/mall-mbg/target/jacoco.exec,append=false
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (default-cli) @ mall-mbg ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                                [4/5]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (default-cli) @ mall-security ---
+[INFO] argLine set to -javaagent:/Users/limeng/.m2/repository/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=/Users/limeng/软件设计与规范AI/mall/mall-security/target/jacoco.exec,append=false
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (default-cli) @ mall-security ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                  [5/5]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.13:prepare-agent (default-cli) @ mall-portal ---
+[INFO] argLine set to -javaagent:/Users/limeng/.m2/repository/org/jacoco/org.jacoco.agent/0.8.13/org.jacoco.agent-0.8.13-runtime.jar=destfile=/Users/limeng/软件设计与规范AI/mall/mall-portal/target/jacoco.exec,append=false
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.portal.ExperimentPromotionTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.589 s -- in com.macro.mall.portal.ExperimentPromotionTest
+[INFO] Running com.macro.mall.portal.PortalProductDaoTests
+10:14:40.787 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.macro.mall.portal.PortalProductDaoTests]: PortalProductDaoTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+10:14:40.860 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.macro.mall.portal.MallPortalApplication for test class com.macro.mall.portal.PortalProductDaoTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.14)
+
+2026-10-03T10:14:41.206+08:00  INFO 24277 --- [mall-portal] [           main] c.m.mall.portal.PortalProductDaoTests    : Starting PortalProductDaoTests using Java 17.0.19 with PID 24277 (started by limeng in /Users/limeng/软件设计与规范AI/mall/mall-portal)
+2026-10-03T10:14:41.207+08:00 DEBUG 24277 --- [mall-portal] [           main] c.m.mall.portal.PortalProductDaoTests    : Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-10-03T10:14:41.207+08:00  INFO 24277 --- [mall-portal] [           main] c.m.mall.portal.PortalProductDaoTests    : The following 1 profile is active: "dev"
+2026-10-03T10:14:42.003+08:00  INFO 24277 --- [mall-portal] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-03T10:14:42.004+08:00  INFO 24277 --- [mall-portal] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-10-03T10:14:42.081+08:00  INFO 24277 --- [mall-portal] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 74 ms. Found 3 MongoDB repository interfaces.
+2026-10-03T10:14:42.089+08:00  INFO 24277 --- [mall-portal] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-03T10:14:42.089+08:00  INFO 24277 --- [mall-portal] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-03T10:14:42.098+08:00  INFO 24277 --- [mall-portal] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberBrandAttentionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T10:14:42.098+08:00  INFO 24277 --- [mall-portal] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberProductCollectionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T10:14:42.098+08:00  INFO 24277 --- [mall-portal] [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberReadHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T10:14:42.098+08:00  INFO 24277 --- [mall-portal] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2026-10-03T10:14:42.489+08:00  INFO 24277 --- [mall-portal] [           main] c.a.d.s.b.a.DruidDataSourceAutoConfigure : Init DruidDataSource
+2026-10-03T10:14:42.706+08:00  INFO 24277 --- [mall-portal] [           main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2026-10-03T10:14:44.020+08:00  INFO 24277 --- [mall-portal] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "5.5.2"}, "os": {"type": "Darwin", "name": "Mac OS X", "architecture": "aarch64", "version": "27.0.1"}, "platform": "Java/Homebrew/17.0.19+0"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@6625d4aa], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@9d5efdd, com.mongodb.Jep395RecordCodecProvider@72dfcc72, com.mongodb.KotlinCodecProvider@6c18f0a8]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@351197ca], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2026-10-03T10:14:44.026+08:00  INFO 24277 --- [mall-portal] [localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=14334500, minRoundTripTimeNanos=0}
+2026-10-03T10:14:44.704+08:00  INFO 24277 --- [mall-portal] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-03T10:14:44.727+08:00  INFO 24277 --- [mall-portal] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-10-03T10:14:45.202+08:00  INFO 24277 --- [mall-portal] [           main] c.m.mall.portal.PortalProductDaoTests    : Started PortalProductDaoTests in 4.256 seconds (process running for 5.526)
+2026-10-03T10:14:45.277+08:00 DEBUG 24277 --- [mall-portal] [           main] c.m.m.p.d.P.getPromotionProductList      : ==>  Preparing: SELECT p.id, p.`name`, p.promotion_type, p.gift_growth, p.gift_point, sku.id sku_id, sku.price sku_price, sku.sku_code sku_sku_code, sku.promotion_price sku_promotion_price, sku.stock sku_stock, sku.lock_stock sku_lock_stock, ladder.id ladder_id, ladder.count ladder_count, ladder.discount ladder_discount, full_re.id full_id, full_re.full_price full_full_price, full_re.reduce_price full_reduce_price FROM pms_product p LEFT JOIN pms_sku_stock sku ON p.id = sku.product_id LEFT JOIN pms_product_ladder ladder ON p.id = ladder.product_id LEFT JOIN pms_product_full_reduction full_re ON p.id = full_re.product_id WHERE p.id IN ( ? , ? , ? , ? )
+2026-10-03T10:14:45.287+08:00 DEBUG 24277 --- [mall-portal] [           main] c.m.m.p.d.P.getPromotionProductList      : ==> Parameters: 26(Long), 27(Long), 28(Long), 29(Long)
+2026-10-03T10:14:45.304+08:00 DEBUG 24277 --- [mall-portal] [           main] c.m.m.p.d.P.getPromotionProductList      : <==      Total: 28
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.559 s -- in com.macro.mall.portal.PortalProductDaoTests
+[INFO] Running com.macro.mall.portal.ExperimentOrderTest
+2026-10-03T10:14:45.342+08:00  WARN 24277 --- [mall-portal] [           main] c.m.m.p.s.i.OmsPortalOrderServiceImpl    : sku 7 available 4 is below 5
+2026-10-03T10:14:45.346+08:00  WARN 24277 --- [mall-portal] [           main] c.m.m.p.s.i.OmsPortalOrderServiceImpl    : sku 7 warning unavailable
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.124 s -- in com.macro.mall.portal.ExperimentOrderTest
+[INFO] Running com.macro.mall.portal.MallPortalApplicationTests
+2026-10-03T10:14:45.436+08:00  INFO 24277 --- [mall-portal] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.macro.mall.portal.MallPortalApplicationTests]: MallPortalApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-10-03T10:14:45.437+08:00  INFO 24277 --- [mall-portal] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.macro.mall.portal.MallPortalApplication for test class com.macro.mall.portal.MallPortalApplicationTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.macro.mall.portal.MallPortalApplicationTests
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.13:report (default-cli) @ mall-portal ---
+[INFO] Loading execution data file /Users/limeng/软件设计与规范AI/mall/mall-portal/target/jacoco.exec
+[INFO] Analyzed bundle 'mall-portal' with 67 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for mall 1.0-SNAPSHOT:
+[INFO] 
+[INFO] mall ............................................... SUCCESS [  0.176 s]
+[INFO] mall-common ........................................ SUCCESS [  0.302 s]
+[INFO] mall-mbg ........................................... SUCCESS [  0.134 s]
+[INFO] mall-security ...................................... SUCCESS [  0.024 s]
+[INFO] mall-portal ........................................ SUCCESS [  6.228 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.032 s
+[INFO] Finished at: 2026-10-03T10:14:45+08:00
+[INFO] ------------------------------------------------------------------------

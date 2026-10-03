@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "名为取消的接口实际在发消息",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "column_fit": "spread",
+    "viewBox": [980, 480]
+  },
+  "participants": [
+    { "id": "client", "type": "external", "label": "调用方", "sublabel": "HTTP" },
+    { "id": "controller", "type": "backend", "label": "订单控制器", "sublabel": "/order/cancelOrder" },
+    { "id": "service", "type": "backend", "label": "订单服务", "sublabel": "取消与发消息" },
+    { "id": "rabbit", "type": "messagebus", "label": "RabbitMQ", "sublabel": "TTL 队列" }
+  ],
+  "messages": [
+    { "id": "post", "from": "client", "to": "controller", "y": 168, "label": "POST /cancelOrder", "variant": "emphasis" },
+    { "id": "delay", "from": "controller", "to": "service", "y": 208, "label": "sendDelayMessage", "variant": "emphasis" },
+    { "id": "ttl", "from": "service", "to": "rabbit", "y": 248, "label": "投递 TTL", "variant": "default" },
+    { "id": "ok", "from": "controller", "to": "client", "y": 288, "label": "成功，订单仍待付款", "variant": "return" },
+    { "id": "later", "from": "rabbit", "to": "service", "y": 328, "label": "到期后 cancelOrder", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "这条请求没取消订单",
+      "items": [
+        "控制器没有调用服务的 cancelOrder",
+        "成功响应只表示消息已发出"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "真正取消在后面",
+      "items": [
+        "队列到期才进入 cancelOrder",
+        "用户立即取消走的是另一个地址"
+      ]
+    }
+  ]
+}

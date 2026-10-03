@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "下单、支付与超时取消",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/macrozheng/mall",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 4,
+    "origin": [64, 48],
+    "gapX": 88,
+    "gapY": 96,
+    "cellW": 200,
+    "cellH": 68
+  },
+  "components": [
+    {
+      "id": "controller",
+      "type": "backend",
+      "label": "订单控制器",
+      "sublabel": "OmsPortalOrderController",
+      "row": 0,
+      "col": 0,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 43,
+          "end_line": 69,
+          "label": "三个 HTTP 入口"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "订单服务",
+      "sublabel": "OmsPortalOrderServiceImpl",
+      "tag": "主路径",
+      "row": 0,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 94,
+          "end_line": 245,
+          "label": "generateOrder"
+        }
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "backend",
+      "label": "订单 Mapper",
+      "sublabel": "OmsOrderMapper",
+      "tag": "生成代码",
+      "row": 0,
+      "col": 2,
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/mapper/OmsOrderMapper.java",
+          "line": 15,
+          "label": "insert"
+        }
+      ]
+    },
+    {
+      "id": "sender",
+      "type": "backend",
+      "label": "取消消息发送",
+      "sublabel": "CancelOrderSender",
+      "row": 1,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderSender.java",
+          "line": 23,
+          "end_line": 25,
+          "label": "sendMessage"
+        }
+      ]
+    },
+    {
+      "id": "dao",
+      "type": "backend",
+      "label": "手写订单 Dao",
+      "sublabel": "PortalOrderDao",
+      "row": 1,
+      "col": 0,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/dao/PortalOrderDao.java",
+          "line": 22,
+          "label": "updateSkuStock"
+        }
+      ]
+    },
+    {
+      "id": "rabbit",
+      "type": "messagebus",
+      "label": "RabbitMQ",
+      "sublabel": "TTL 后转入取消队列",
+      "row": 1,
+      "col": 2,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/config/RabbitMqConfig.java",
+          "line": 51,
+          "end_line": 53,
+          "label": "x-dead-letter-exchange"
+        }
+      ]
+    },
+    {
+      "id": "receiver",
+      "type": "backend",
+      "label": "取消消息接收",
+      "sublabel": "CancelOrderReceiver",
+      "row": 1,
+      "col": 3,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderReceiver.java",
+          "line": 16,
+          "end_line": 23,
+          "label": "handle 调用 cancelOrder"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "生成代码",
+      "wraps": ["mapper"]
+    }
+  ],
+  "connections": [
+    { "id": "controller-service", "from": "controller", "to": "service", "label": "generateOrder", "variant": "emphasis" },
+    { "id": "service-mapper", "from": "service", "to": "mapper", "label": "insert" },
+    { "id": "service-sender", "from": "service", "to": "sender", "label": "下单后发送", "variant": "emphasis", "fromSide": "bottom", "toSide": "top", "labelDy": 24 },
+    { "id": "service-dao", "from": "service", "to": "dao", "label": "支付后扣库存", "variant": "dashed", "fromSide": "left", "toSide": "right" },
+    { "id": "sender-rabbit", "from": "sender", "to": "rabbit", "label": "TTL" },
+    { "id": "rabbit-receiver", "from": "rabbit", "to": "receiver", "label": "取消队列" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "依赖方向",
+      "items": [
+        "控制器只进入服务",
+        "服务再进入 Mapper、Dao 和消息发送"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "取消怎样走回来",
+      "items": [
+        "接收者调用订单服务的 cancelOrder",
+        "HTTP /cancelOrder 本身并不调用这个方法"
+      ]
+    }
+  ]
+}

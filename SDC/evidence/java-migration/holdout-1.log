@@ -1,0 +1,299 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] SDC - software design and convenient                               [pom]
+[INFO] SDC E7                                                             [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                         [1/7]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                  [2/7]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                     [3/7]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                                [4/7]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                  [5/7]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-portal/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] -------------------------< com.macro.mall:sdc >-------------------------
+[INFO] Building SDC - software design and convenient 1.0-SNAPSHOT         [6/7]
+[INFO]   from SDC/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e7 >------------------------
+[INFO] Building SDC E7 1.0-SNAPSHOT                                       [7/7]
+[INFO]   from SDC/E7/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e7 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E7/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E7/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e7 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e7 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e7 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e7 ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- exec:3.5.0:java (default) @ sdc-e7 ---
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.14)
+
+2026-10-03T11:19:04.381+08:00  INFO 4398 --- [mall-portal] [aluation.main()] com.macro.mall.sdc.e7.QueryEvaluation    : Starting QueryEvaluation using Java 17.0.19 with PID 4398 (/Users/limeng/软件设计与规范AI/mall/SDC/E7/target/classes started by limeng in /Users/limeng/软件设计与规范AI)
+2026-10-03T11:19:04.382+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] com.macro.mall.sdc.e7.QueryEvaluation    : Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-10-03T11:19:04.382+08:00  INFO 4398 --- [mall-portal] [aluation.main()] com.macro.mall.sdc.e7.QueryEvaluation    : The following 1 profile is active: "dev"
+2026-10-03T11:19:04.898+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-03T11:19:04.898+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-10-03T11:19:04.950+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 48 ms. Found 3 MongoDB repository interfaces.
+2026-10-03T11:19:04.955+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-03T11:19:04.956+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-03T11:19:04.961+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberBrandAttentionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T11:19:04.961+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberProductCollectionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T11:19:04.961+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberReadHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T11:19:04.962+08:00  INFO 4398 --- [mall-portal] [aluation.main()] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2026-10-03T11:19:05.311+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-03T11:19:05.317+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-03T11:19:05.318+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-10-03T11:19:05.341+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-03T11:19:05.341+08:00  INFO 4398 --- [mall-portal] [aluation.main()] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 940 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-10-03T11:19:05.435+08:00  INFO 4398 --- [mall-portal] [aluation.main()] c.a.d.s.b.a.DruidDataSourceAutoConfigure : Init DruidDataSource
+2026-10-03T11:19:05.588+08:00  INFO 4398 --- [mall-portal] [aluation.main()] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2026-10-03T11:19:06.237+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.s.c.JwtAuthenticationTokenFilter   : Filter 'jwtAuthenticationTokenFilter' configured for use
+2026-10-03T11:19:06.533+08:00  INFO 4398 --- [mall-portal] [aluation.main()] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "5.5.2"}, "os": {"type": "Darwin", "name": "Mac OS X", "architecture": "aarch64", "version": "27.0.1"}, "platform": "Java/Homebrew/17.0.19+0"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@328a912f], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@64801e03, com.mongodb.Jep395RecordCodecProvider@fe94c8e, com.mongodb.KotlinCodecProvider@31c0321]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@44610d2c], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2026-10-03T11:19:06.538+08:00  INFO 4398 --- [mall-portal] [localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=9774167, minRoundTripTimeNanos=0}
+2026-10-03T11:19:06.992+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-03T11:19:07.008+08:00  INFO 4398 --- [mall-portal] [aluation.main()] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-10-03T11:19:07.404+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 54107 (http) with context path '/'
+2026-10-03T11:19:07.415+08:00  INFO 4398 --- [mall-portal] [aluation.main()] com.macro.mall.sdc.e7.QueryEvaluation    : Started QueryEvaluation in 3.214 seconds (process running for 4.486)
+2026-10-03T11:19:23.385+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ?)
+2026-10-03T11:19:23.392+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %小米%(String)
+2026-10-03T11:19:23.398+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:19:23.398+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? ) order by id desc LIMIT ?
+2026-10-03T11:19:23.399+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %小米%(String), 100(Integer)
+2026-10-03T11:19:23.402+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 6
+fresh-n01 OK PASS
+2026-10-03T11:19:38.920+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ?)
+2026-10-03T11:19:38.920+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %手机%(String)
+2026-10-03T11:19:38.922+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:19:38.922+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? ) order by id desc LIMIT ?
+2026-10-03T11:19:38.922+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %手机%(String), 100(Integer)
+2026-10-03T11:19:38.925+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 4
+fresh-n02 OK PASS
+2026-10-03T11:19:54.526+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ?)
+2026-10-03T11:19:54.526+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %短袖T恤%(String)
+2026-10-03T11:19:54.528+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:19:54.529+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? ) order by id desc LIMIT ?
+2026-10-03T11:19:54.529+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %短袖T恤%(String), 100(Integer)
+2026-10-03T11:19:54.532+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 3
+fresh-n03 OK PASS
+2026-10-03T11:20:12.365+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND price < ?)
+2026-10-03T11:20:12.365+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 98(BigDecimal)
+2026-10-03T11:20:12.367+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:20:12.367+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and price < ? ) order by id desc LIMIT ?
+2026-10-03T11:20:12.368+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 98(BigDecimal), 100(Integer)
+2026-10-03T11:20:12.370+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 1
+fresh-n04 OK PASS
+2026-10-03T11:20:29.914+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND price < ?)
+2026-10-03T11:20:29.915+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 369(BigDecimal)
+2026-10-03T11:20:29.916+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:20:29.916+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and price < ? ) order by id desc LIMIT ?
+2026-10-03T11:20:29.917+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 369(BigDecimal), 100(Integer)
+2026-10-03T11:20:29.920+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 3
+fresh-n05 OK PASS
+2026-10-03T11:20:46.217+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND price < ?)
+2026-10-03T11:20:46.218+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 369.01(BigDecimal)
+2026-10-03T11:20:46.219+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:20:46.220+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and price < ? ) order by id desc LIMIT ?
+2026-10-03T11:20:46.220+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 369.01(BigDecimal), 100(Integer)
+2026-10-03T11:20:46.222+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 5
+fresh-n06 OK PASS
+2026-10-03T11:21:03.779+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND stock < ?)
+2026-10-03T11:21:03.779+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 100(Integer)
+2026-10-03T11:21:03.781+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+fresh-n07 OK PASS
+2026-10-03T11:21:24.776+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND stock < ?)
+2026-10-03T11:21:24.776+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 101(Integer)
+2026-10-03T11:21:24.777+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:21:24.778+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and stock < ? ) order by id desc LIMIT ?
+2026-10-03T11:21:24.778+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 101(Integer), 100(Integer)
+2026-10-03T11:21:24.781+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 10
+fresh-n08 OK PASS
+2026-10-03T11:21:39.908+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND stock < ?)
+2026-10-03T11:21:39.909+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 1000(Integer)
+2026-10-03T11:21:39.911+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:21:39.912+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and stock < ? ) order by id desc LIMIT ?
+2026-10-03T11:21:39.912+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 1000(Integer), 100(Integer)
+2026-10-03T11:21:39.915+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 12
+fresh-n09 OK PASS
+2026-10-03T11:21:57.467+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ? AND price < ?)
+2026-10-03T11:21:57.472+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %小米%(String), 3000(BigDecimal)
+2026-10-03T11:21:57.473+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:21:57.474+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? and price < ? ) order by id desc LIMIT ?
+2026-10-03T11:21:57.474+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %小米%(String), 3000(BigDecimal), 100(Integer)
+2026-10-03T11:21:57.476+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 4
+fresh-n10 OK PASS
+2026-10-03T11:22:14.267+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ? AND stock < ?)
+2026-10-03T11:22:14.268+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %小米%(String), 500(Integer)
+2026-10-03T11:22:14.269+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:22:14.270+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? and stock < ? ) order by id desc LIMIT ?
+2026-10-03T11:22:14.270+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %小米%(String), 500(Integer), 100(Integer)
+2026-10-03T11:22:14.272+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 4
+fresh-n11 OK PASS
+2026-10-03T11:22:31.182+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ? AND price < ? AND stock < ?)
+2026-10-03T11:22:31.182+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %休闲鞋%(String), 499(BigDecimal), 101(Integer)
+2026-10-03T11:22:31.184+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:22:31.184+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? and price < ? and stock < ? ) order by id desc LIMIT ?
+2026-10-03T11:22:31.184+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %休闲鞋%(String), 499(BigDecimal), 101(Integer), 100(Integer)
+2026-10-03T11:22:31.186+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 1
+fresh-n12 OK PASS
+2026-10-03T11:22:48.447+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND price < ? AND stock < ?)
+2026-10-03T11:22:48.447+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 650(BigDecimal), 101(Integer)
+2026-10-03T11:22:48.449+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:22:48.449+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and price < ? and stock < ? ) order by id desc LIMIT ?
+2026-10-03T11:22:48.450+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 650(BigDecimal), 101(Integer), 100(Integer)
+2026-10-03T11:22:48.451+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 6
+fresh-n13 OK PASS
+2026-10-03T11:23:16.481+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND price < ?)
+2026-10-03T11:23:16.481+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 0(BigDecimal)
+2026-10-03T11:23:16.483+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+fresh-n14 OK PASS
+2026-10-03T11:23:35.480+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND stock < ?)
+2026-10-03T11:23:35.480+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 0(Integer)
+2026-10-03T11:23:35.481+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+fresh-n15 OK PASS
+2026-10-03T11:24:00.648+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND price < ?)
+2026-10-03T11:24:00.648+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 99999999.99(BigDecimal)
+2026-10-03T11:24:00.650+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:24:00.650+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and price < ? ) order by id desc LIMIT ?
+2026-10-03T11:24:00.650+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 99999999.99(BigDecimal), 100(Integer)
+2026-10-03T11:24:00.654+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 20
+fresh-n16 OK PASS
+2026-10-03T11:24:20.582+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND stock < ?)
+2026-10-03T11:24:20.582+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), 2147483647(Integer)
+2026-10-03T11:24:20.584+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:24:20.584+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and stock < ? ) order by id desc LIMIT ?
+2026-10-03T11:24:20.584+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), 2147483647(Integer), 100(Integer)
+2026-10-03T11:24:20.587+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample                : <==      Total: 20
+fresh-n17 OK PASS
+2026-10-03T11:24:42.080+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ?)
+2026-10-03T11:24:42.080+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %月球牌铜锣烧%(String)
+2026-10-03T11:24:42.082+08:00 DEBUG 4398 --- [mall-portal] [aluation.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+fresh-n18 OK PASS
+fresh-n19 UNSUPPORTED FAIL
+fresh-n20 UNSUPPORTED FAIL
+fresh-a01 UNSUPPORTED PASS
+fresh-a02 UNSUPPORTED PASS
+fresh-a03 UNSUPPORTED PASS
+fresh-a04 UNSUPPORTED PASS
+fresh-a05 UNSUPPORTED PASS
+fresh-a06 UNSUPPORTED PASS
+fresh-a07 UNSUPPORTED PASS
+fresh-a08 UNSUPPORTED PASS
+fresh-o01 UNSUPPORTED PASS
+fresh-o02 UNSUPPORTED PASS
+fresh-o03 UNSUPPORTED PASS
+fresh-o04 UNSUPPORTED PASS
+2026-10-03T11:30:13.701+08:00  INFO 4398 --- [mall-portal] [aluation.main()] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-03T11:30:13.705+08:00  INFO 4398 --- [mall-portal] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-10-03T11:30:13.721+08:00  INFO 4398 --- [mall-portal] [aluation.main()] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2026-10-03T11:30:13.723+08:00  INFO 4398 --- [mall-portal] [aluation.main()] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+FAILED

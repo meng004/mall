@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent><groupId>com.macro.mall</groupId><artifactId>sdc</artifactId><version>1.0-SNAPSHOT</version></parent>
+  <artifactId>sdc-e7</artifactId><name>SDC E7</name>
+  <dependencies><dependency><groupId>com.macro.mall</groupId><artifactId>mall-portal</artifactId><version>${project.version}</version></dependency></dependencies>
+  <profiles>
+    <profile>
+      <id>e7-run</id>
+      <properties><exec.mainClass>com.macro.mall.sdc.e7.QueryDemo</exec.mainClass></properties>
+      <build><plugins><plugin>
+        <groupId>org.codehaus.mojo</groupId><artifactId>exec-maven-plugin</artifactId><version>3.5.0</version>
+        <executions><execution><phase>test</phase><goals><goal>java</goal></goals></execution></executions>
+        <configuration>
+          <mainClass>${exec.mainClass}</mainClass>
+          <!-- The demo closes Spring; JDBC driver daemon threads end with this one-shot Maven JVM. -->
+          <cleanupDaemonThreads>false</cleanupDaemonThreads>
+        </configuration>
+      </plugin></plugins></build>
+    </profile>
+  </profiles>
+</project>

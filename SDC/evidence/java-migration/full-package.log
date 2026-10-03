@@ -1,0 +1,580 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-demo                                                          [jar]
+[INFO] mall-admin                                                         [jar]
+[INFO] mall-search                                                        [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] SDC - software design and convenient                               [pom]
+[INFO] SDC E1                                                             [jar]
+[INFO] SDC E2                                                             [jar]
+[INFO] SDC E3                                                             [jar]
+[INFO] SDC E4                                                             [jar]
+[INFO] SDC E5                                                             [jar]
+[INFO] SDC E6                                                             [jar]
+[INFO] SDC E7                                                             [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                        [1/16]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall ---
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                 [2/16]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-common ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-common/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 14 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-common ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-common/target/mall-common-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                    [3/16]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-mbg ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-mbg/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 230 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-mbg ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-mbg/target/mall-mbg-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                               [4/16]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-security ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-security/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 14 source files with javac [debug parameters release 17] to target/classes
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/java/com/macro/mall/security/component/DynamicAuthorizationManager.java: 某些输入文件使用或覆盖了已过时的 API。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/java/com/macro/mall/security/component/DynamicAuthorizationManager.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-security ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-security/target/mall-security-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-demo >----------------------
+[INFO] Building mall-demo 1.0-SNAPSHOT                                   [5/16]
+[INFO]   from mall-demo/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-demo ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-demo/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-demo ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 13 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-demo ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-demo/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-demo ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-demo ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-demo ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-demo/target/mall-demo-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.14:repackage (repackage) @ mall-demo ---
+[INFO] Replacing main artifact /Users/limeng/软件设计与规范AI/mall/mall-demo/target/mall-demo-1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/limeng/软件设计与规范AI/mall/mall-demo/target/mall-demo-1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-admin >----------------------
+[INFO] Building mall-admin 1.0-SNAPSHOT                                  [6/16]
+[INFO]   from mall-admin/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-admin ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-admin/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-admin ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 23 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-admin ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 153 source files with javac [debug parameters release 17] to target/classes
+[WARNING] /Users/limeng/软件设计与规范AI/mall/mall-admin/src/main/java/com/macro/mall/dto/PmsProductParam.java:[15,1] Generating equals/hashCode implementation but without a call to superclass, even though this class does not extend java.lang.Object. If this is intentional, add '@EqualsAndHashCode(callSuper=false)' to your type.
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-admin/src/main/java/com/macro/mall/config/MallSecurityConfig.java: 某些输入文件使用或覆盖了已过时的 API。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-admin/src/main/java/com/macro/mall/config/MallSecurityConfig.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminCacheServiceImpl.java: /Users/limeng/软件设计与规范AI/mall/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminCacheServiceImpl.java使用了未经检查或不安全的操作。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminCacheServiceImpl.java: 有关详细信息, 请使用 -Xlint:unchecked 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-admin ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-admin/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-admin ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-admin ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-admin ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-admin/target/mall-admin-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.14:repackage (repackage) @ mall-admin ---
+[INFO] Replacing main artifact /Users/limeng/软件设计与规范AI/mall/mall-admin/target/mall-admin-1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/limeng/软件设计与规范AI/mall/mall-admin/target/mall-admin-1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- docker:0.45.1:build (build-image) @ mall-admin ---
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-search >---------------------
+[INFO] Building mall-search 1.0-SNAPSHOT                                 [7/16]
+[INFO]   from mall-search/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-search ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-search/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-search ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-search ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-search ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-search/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-search ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-search ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-search ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-search/target/mall-search-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.14:repackage (repackage) @ mall-search ---
+[INFO] Replacing main artifact /Users/limeng/软件设计与规范AI/mall/mall-search/target/mall-search-1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to /Users/limeng/软件设计与规范AI/mall/mall-search/target/mall-search-1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- docker:0.45.1:build (build-image) @ mall-search ---
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                 [8/16]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ mall-portal ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/mall-portal/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 94 source files with javac [debug parameters release 17] to target/classes
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java: /Users/limeng/软件设计与规范AI/mall/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java使用或覆盖了已过时的 API。
+[INFO] /Users/limeng/软件设计与规范AI/mall/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-portal/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ mall-portal ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/mall-portal/target/mall-portal-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.5.14:repackage (repackage) @ mall-portal ---
+[INFO] Attaching repackaged archive /Users/limeng/软件设计与规范AI/mall/mall-portal/target/mall-portal-1.0-SNAPSHOT-exec.jar with classifier exec
+[INFO] 
+[INFO] --- docker:0.45.1:build (build-image) @ mall-portal ---
+[INFO] 
+[INFO] -------------------------< com.macro.mall:sdc >-------------------------
+[INFO] Building SDC - software design and convenient 1.0-SNAPSHOT        [9/16]
+[INFO]   from SDC/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc ---
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e1 >------------------------
+[INFO] Building SDC E1 1.0-SNAPSHOT                                     [10/16]
+[INFO]   from SDC/E1/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e1 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E1/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e1 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E1/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E1/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e1 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e1 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E1/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e1 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e1 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e1.MallFactsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in com.macro.mall.sdc.e1.MallFactsTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e1 ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E1/target/sdc-e1-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e2 >------------------------
+[INFO] Building SDC E2 1.0-SNAPSHOT                                     [11/16]
+[INFO]   from SDC/E2/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e2 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E2/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e2 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E2/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E2/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e2 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e2 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E2/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e2 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e2 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e2.LayerRulesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.macro.mall.sdc.e2.LayerRulesTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e2 ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E2/target/sdc-e2-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e3 >------------------------
+[INFO] Building SDC E3 1.0-SNAPSHOT                                     [12/16]
+[INFO]   from SDC/E3/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e3 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E3/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e3 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E3/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e3 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e3 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e3 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e3 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e3.OrderIntegrationTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.385 s -- in com.macro.mall.sdc.e3.OrderIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e3 ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E3/target/sdc-e3-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e4 >------------------------
+[INFO] Building SDC E4 1.0-SNAPSHOT                                     [13/16]
+[INFO]   from SDC/E4/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e4 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E4/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e4 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E4/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E4/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e4 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e4 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e4 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e4 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e4.PromotionTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.322 s -- in com.macro.mall.sdc.e4.PromotionTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e4 ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E4/target/sdc-e4-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e5 >------------------------
+[INFO] Building SDC E5 1.0-SNAPSHOT                                     [14/16]
+[INFO]   from SDC/E5/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e5 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E5/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e5 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E5/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E5/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e5 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e5 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E5/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e5 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e5 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e5.StockImpactTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.macro.mall.sdc.e5.StockImpactTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e5 ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E5/target/sdc-e5-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e6 >------------------------
+[INFO] Building SDC E6 1.0-SNAPSHOT                                     [15/16]
+[INFO]   from SDC/E6/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e6 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E6/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e6 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E6/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E6/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e6 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e6 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e6 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e6 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e6.StockWarningTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+11:39:39.370 [main] WARN com.macro.mall.portal.service.impl.OmsPortalOrderServiceImpl -- sku 7 available 4 is below 5
+11:39:39.376 [main] WARN com.macro.mall.portal.service.impl.OmsPortalOrderServiceImpl -- sku 7 warning unavailable
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.323 s -- in com.macro.mall.sdc.e6.StockWarningTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e6 ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E6/target/sdc-e6-1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e7 >------------------------
+[INFO] Building SDC E7 1.0-SNAPSHOT                                     [16/16]
+[INFO]   from SDC/E7/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ sdc-e7 ---
+[INFO] Deleting /Users/limeng/软件设计与规范AI/mall/SDC/E7/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e7 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E7/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E7/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e7 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 2 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e7 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e7 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e7 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.portal.llm.CursorCliLlmClientTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.376 s -- in com.macro.mall.portal.llm.CursorCliLlmClientTest
+[INFO] Running com.macro.mall.sdc.e7.ProductQueryTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.314 s -- in com.macro.mall.sdc.e7.ProductQueryTest
+[INFO] Running com.macro.mall.sdc.e7.LlmClientTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.541 s -- in com.macro.mall.sdc.e7.LlmClientTest
+[INFO] Running com.macro.mall.sdc.e7.QueryEvaluationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.macro.mall.sdc.e7.QueryEvaluationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ sdc-e7 ---
+[INFO] Building jar: /Users/limeng/软件设计与规范AI/mall/SDC/E7/target/sdc-e7-1.0-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for mall 1.0-SNAPSHOT:
+[INFO] 
+[INFO] mall ............................................... SUCCESS [  0.039 s]
+[INFO] mall-common ........................................ SUCCESS [  1.046 s]
+[INFO] mall-mbg ........................................... SUCCESS [  1.540 s]
+[INFO] mall-security ...................................... SUCCESS [  0.271 s]
+[INFO] mall-demo .......................................... SUCCESS [  0.538 s]
+[INFO] mall-admin ......................................... SUCCESS [  0.983 s]
+[INFO] mall-search ........................................ SUCCESS [  0.470 s]
+[INFO] mall-portal ........................................ SUCCESS [  0.819 s]
+[INFO] SDC - software design and convenient ............... SUCCESS [  0.001 s]
+[INFO] SDC E1 ............................................. SUCCESS [  0.551 s]
+[INFO] SDC E2 ............................................. SUCCESS [  0.514 s]
+[INFO] SDC E3 ............................................. SUCCESS [  0.778 s]
+[INFO] SDC E4 ............................................. SUCCESS [  0.679 s]
+[INFO] SDC E5 ............................................. SUCCESS [  0.424 s]
+[INFO] SDC E6 ............................................. SUCCESS [  0.680 s]
+[INFO] SDC E7 ............................................. SUCCESS [  4.256 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  13.732 s
+[INFO] Finished at: 2026-10-03T11:39:43+08:00
+[INFO] ------------------------------------------------------------------------

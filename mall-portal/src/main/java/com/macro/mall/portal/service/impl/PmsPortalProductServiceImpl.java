@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import com.macro.mall.portal.query.ProductQueryCriteria;
 import java.util.stream.Collectors;
 
 /**
@@ -43,13 +44,25 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
 
     @Override
     public List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum, Integer pageSize, Integer sort) {
-        PageHelper.startPage(pageNum, pageSize);
+        return search(keyword, brandId, productCategoryId, pageNum, pageSize, sort, null);
+    }
+
+    @Override
+    public List<PmsProduct> search(ProductQueryCriteria filters, Integer pageNum, Integer pageSize) {
+        return search(filters.name(), null, null, pageNum, pageSize, 1, filters);
+    }
+
+    private List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum,
+                                    Integer pageSize, Integer sort, ProductQueryCriteria filters) {
         PmsProductExample example = new PmsProductExample();
         PmsProductExample.Criteria criteria = example.createCriteria();
         criteria.andDeleteStatusEqualTo(0);
         criteria.andPublishStatusEqualTo(1);
         if (StrUtil.isNotEmpty(keyword)) {
-            criteria.andNameLike("%" + keyword + "%");
+            // The structured query promises a literal substring; keep the old API's LIKE semantics.
+            String pattern = filters == null ? keyword
+                    : keyword.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
+            criteria.andNameLike("%" + pattern + "%");
         }
         if (brandId != null) {
             criteria.andBrandIdEqualTo(brandId);
@@ -57,6 +70,8 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         if (productCategoryId != null) {
             criteria.andProductCategoryIdEqualTo(productCategoryId);
         }
+        if (filters != null && filters.priceLt() != null) criteria.andPriceLessThan(filters.priceLt());
+        if (filters != null && filters.stockLt() != null) criteria.andStockLessThan(filters.stockLt());
         //1->按新品；2->按销量；3->价格从低到高；4->价格从高到低
         if (sort == 1) {
             example.setOrderByClause("id desc");
@@ -67,6 +82,7 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         } else if (sort == 4) {
             example.setOrderByClause("price desc");
         }
+        PageHelper.startPage(pageNum, pageSize);
         return productMapper.selectByExample(example);
     }
 

@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "订单与改密的逻辑视图",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/macrozheng/mall",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 3,
+    "origin": [48, 40],
+    "gapX": 110,
+    "gapY": 110,
+    "cellW": 200,
+    "cellH": 72
+  },
+  "components": [
+    {
+      "id": "orderController",
+      "type": "backend",
+      "label": "订单控制器",
+      "sublabel": "OmsPortalOrderController",
+      "tag": "逻辑泄漏",
+      "row": 0,
+      "col": 0,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 64,
+          "end_line": 69,
+          "label": "cancelOrder 只发消息"
+        }
+      ]
+    },
+    {
+      "id": "orderService",
+      "type": "backend",
+      "label": "订单服务",
+      "sublabel": "OmsPortalOrderServiceImpl",
+      "row": 0,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 360,
+          "end_line": 374,
+          "label": "list 使用 Example"
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "type": "backend",
+      "label": "生成查询对象",
+      "sublabel": "OmsOrderExample",
+      "tag": "mall-mbg",
+      "row": 0,
+      "col": 2,
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/model/OmsOrderExample.java",
+          "line": 8,
+          "label": "生成的查询对象"
+        }
+      ]
+    },
+    {
+      "id": "adminController",
+      "type": "backend",
+      "label": "后台控制器",
+      "sublabel": "UmsAdminController",
+      "tag": "逻辑泄漏",
+      "row": 1,
+      "col": 0,
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/controller/UmsAdminController.java",
+          "line": 148,
+          "end_line": 156,
+          "label": "把返回码译成文案"
+        }
+      ]
+    },
+    {
+      "id": "adminService",
+      "type": "backend",
+      "label": "管理员服务",
+      "sublabel": "UmsAdminServiceImpl",
+      "row": 1,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminServiceImpl.java",
+          "line": 242,
+          "end_line": 256,
+          "label": "返回 -1 -2 -3"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "生成代码",
+      "wraps": ["example"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "order-call",
+      "from": "orderController",
+      "to": "orderService",
+      "label": "名字是取消，实际发消息",
+      "variant": "emphasis"
+    },
+    {
+      "id": "service-example",
+      "from": "orderService",
+      "to": "example",
+      "label": "直接使用生成查询",
+      "variant": "emphasis"
+    },
+    {
+      "id": "admin-call",
+      "from": "adminController",
+      "to": "adminService",
+      "label": "服务只返回整数"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "两处逻辑泄漏",
+      "items": [
+        "取消接口没有调用取消方法",
+        "改密文案写在控制器里"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "一处依赖生成代码",
+      "items": [
+        "订单列表在服务层组装 OmsOrderExample",
+        "查询口径跟着生成器走"
+      ]
+    }
+  ]
+}

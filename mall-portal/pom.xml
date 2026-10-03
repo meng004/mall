@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-open-ai</artifactId>
+            <version>1.21.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.macro.mall</groupId>
             <artifactId>mall-mbg</artifactId>
         </dependency>
@@ -55,10 +60,27 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Keep the main jar usable by SDC and attach the executable application. -->
+                    <classifier>exec</classifier>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <images><image><build>
+                        <!-- Preserve the existing image entrypoint and in-container filename. -->
+                        <assembly combine.self="override">
+                            <targetDir>/</targetDir>
+                            <inline><files><file>
+                                <source>${project.build.directory}/${project.build.finalName}-exec.jar</source>
+                                <outputDirectory>.</outputDirectory>
+                                <destName>${project.build.finalName}.jar</destName>
+                            </file></files></inline>
+                        </assembly>
+                    </build></image></images>
+                </configuration>
             </plugin>
         </plugins>
     </build>

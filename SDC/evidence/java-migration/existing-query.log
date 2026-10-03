@@ -1,0 +1,250 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] SDC - software design and convenient                               [pom]
+[INFO] SDC E7                                                             [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                         [1/7]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                  [2/7]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                     [3/7]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                                [4/7]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                  [5/7]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/mall-portal/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] -------------------------< com.macro.mall:sdc >-------------------------
+[INFO] Building SDC - software design and convenient 1.0-SNAPSHOT         [6/7]
+[INFO]   from SDC/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e7 >------------------------
+[INFO] Building SDC E7 1.0-SNAPSHOT                                       [7/7]
+[INFO]   from SDC/E7/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e7 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E7/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/mall/SDC/E7/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e7 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 2 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e7 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e7 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e7 ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- exec:3.5.0:java (default) @ sdc-e7 ---
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.5.14)
+
+2026-10-03T11:16:21.592+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] com.macro.mall.sdc.e7.QueryDemo          : Starting QueryDemo using Java 17.0.19 with PID 3275 (/Users/limeng/软件设计与规范AI/mall/SDC/E7/target/classes started by limeng in /Users/limeng/软件设计与规范AI)
+2026-10-03T11:16:21.594+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] com.macro.mall.sdc.e7.QueryDemo          : Running with Spring Boot v3.5.14, Spring v6.2.18
+2026-10-03T11:16:21.594+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] com.macro.mall.sdc.e7.QueryDemo          : The following 1 profile is active: "dev"
+2026-10-03T11:16:22.130+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-03T11:16:22.131+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-10-03T11:16:22.186+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 51 ms. Found 3 MongoDB repository interfaces.
+2026-10-03T11:16:22.191+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-10-03T11:16:22.191+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-10-03T11:16:22.197+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberBrandAttentionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T11:16:22.197+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberProductCollectionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T11:16:22.197+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.macro.mall.portal.repository.MemberReadHistoryRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-10-03T11:16:22.197+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2026-10-03T11:16:22.543+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-03T11:16:22.550+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-03T11:16:22.550+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-10-03T11:16:22.574+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-03T11:16:22.574+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 966 ms
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+2026-10-03T11:16:22.670+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] c.a.d.s.b.a.DruidDataSourceAutoConfigure : Init DruidDataSource
+2026-10-03T11:16:22.824+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2026-10-03T11:16:23.463+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.s.c.JwtAuthenticationTokenFilter   : Filter 'jwtAuthenticationTokenFilter' configured for use
+2026-10-03T11:16:23.742+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "5.5.2"}, "os": {"type": "Darwin", "name": "Mac OS X", "architecture": "aarch64", "version": "27.0.1"}, "platform": "Java/Homebrew/17.0.19+0"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, commandListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsCommandListener@cdb764f], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@7885dda4, com.mongodb.Jep395RecordCodecProvider@db768a0, com.mongodb.KotlinCodecProvider@10b143da]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[io.micrometer.core.instrument.binder.mongodb.MongoMetricsConnectionPoolListener@3ef7b19f], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2026-10-03T11:16:23.749+08:00  INFO 3275 --- [mall-portal] [localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=9, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=11885792, minRoundTripTimeNanos=0}
+2026-10-03T11:16:24.150+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-10-03T11:16:24.170+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-10-03T11:16:24.454+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 53758 (http) with context path '/'
+2026-10-03T11:16:24.462+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] com.macro.mall.sdc.e7.QueryDemo          : Started QueryDemo in 3.043 seconds (process running for 5.097)
+2026-10-03T11:16:24.512+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.m.P.selectByExample_COUNT          : ==>  Preparing: SELECT count(0) FROM pms_product WHERE (delete_status = ? AND publish_status = ? AND name LIKE ?)
+2026-10-03T11:16:24.519+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.m.P.selectByExample_COUNT          : ==> Parameters: 0(Integer), 1(Integer), %HUAWEI%(String)
+2026-10-03T11:16:24.525+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.m.P.selectByExample_COUNT          : <==      Total: 1
+2026-10-03T11:16:24.526+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.m.P.selectByExample                : ==>  Preparing: select id, brand_id, product_category_id, feight_template_id, product_attribute_category_id, name, pic, product_sn, delete_status, publish_status, new_status, recommand_status, verify_status, sort, sale, price, promotion_price, gift_growth, gift_point, use_point_limit, sub_title, original_price, stock, low_stock, unit, weight, preview_status, service_ids, keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time, promotion_per_limit, promotion_type, brand_name, product_category_name from pms_product WHERE ( delete_status = ? and publish_status = ? and name like ? ) order by id desc LIMIT ?
+2026-10-03T11:16:24.527+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.m.P.selectByExample                : ==> Parameters: 0(Integer), 1(Integer), %HUAWEI%(String), 20(Integer)
+2026-10-03T11:16:24.531+08:00 DEBUG 3275 --- [mall-portal] [ueryDemo.main()] c.m.m.m.P.selectByExample                : <==      Total: 2
+{
+  "status" : "OK",
+  "source" : "existing",
+  "criteria" : {
+    "name" : "HUAWEI",
+    "priceLt" : null,
+    "stockLt" : null
+  },
+  "products" : [ {
+    "id" : 42,
+    "name" : "HUAWEI Mate 50 直屏旗舰 超光变XMAGE影像 北斗卫星消息",
+    "price" : 4999.00,
+    "stock" : 1000
+  }, {
+    "id" : 26,
+    "name" : "华为 HUAWEI P20 ",
+    "price" : 3788.00,
+    "stock" : 1000
+  } ],
+  "message" : "查询完成"
+}
+2026-10-03T11:16:24.546+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-10-03T11:16:24.548+08:00  INFO 3275 --- [mall-portal] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-10-03T11:16:24.557+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2026-10-03T11:16:24.559+08:00  INFO 3275 --- [mall-portal] [ueryDemo.main()] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+[WARNING] thread Thread[mysql-cj-abandoned-connection-cleanup,5,com.macro.mall.sdc.e7.QueryDemo] was interrupted but is still alive after waiting at least 15000msecs
+[WARNING] thread Thread[mysql-cj-abandoned-connection-cleanup,5,com.macro.mall.sdc.e7.QueryDemo] will linger despite being asked to die via interruption
+[WARNING] thread Thread[BufferPoolPruner-1-thread-1,5,com.macro.mall.sdc.e7.QueryDemo] will linger despite being asked to die via interruption
+[WARNING] NOTE: 2 thread(s) did not finish despite being asked to via interruption. This is not a problem with exec:java, it is a problem with the running code. Although not serious, it should be remedied.
+[WARNING] Couldn't destroy threadgroup org.codehaus.mojo.exec.ExecJavaMojo$IsolatedThreadGroup[name=com.macro.mall.sdc.e7.QueryDemo,maxpri=10]
+java.lang.IllegalThreadStateException
+    at java.lang.ThreadGroup.destroy (ThreadGroup.java:803)
+    at org.codehaus.mojo.exec.ExecJavaMojo.execute (ExecJavaMojo.java:330)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:126)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute2 (MojoExecutor.java:328)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:316)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:212)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:174)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.access$000 (MojoExecutor.java:75)
+    at org.apache.maven.lifecycle.internal.MojoExecutor$1.run (MojoExecutor.java:162)
+    at org.apache.maven.plugin.DefaultMojosExecutionStrategy.execute (DefaultMojosExecutionStrategy.java:39)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:159)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:105)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:73)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:53)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:118)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:261)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:919)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:285)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:207)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:77)
+    at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:569)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:362)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for mall 1.0-SNAPSHOT:
+[INFO] 
+[INFO] mall ............................................... SUCCESS [  0.000 s]
+[INFO] mall-common ........................................ SUCCESS [  0.294 s]
+[INFO] mall-mbg ........................................... SUCCESS [  0.079 s]
+[INFO] mall-security ...................................... SUCCESS [  0.017 s]
+[INFO] mall-portal ........................................ SUCCESS [  0.062 s]
+[INFO] SDC - software design and convenient ............... SUCCESS [  0.000 s]
+[INFO] SDC E7 ............................................. SUCCESS [ 20.090 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.684 s
+[INFO] Finished at: 2026-10-03T11:16:40+08:00
+[INFO] ------------------------------------------------------------------------

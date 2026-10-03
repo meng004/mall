@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "mall 模块直接依赖",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/macrozheng/mall",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "admin",
+      "type": "backend",
+      "label": "mall-admin",
+      "sublabel": "后台",
+      "pos": [40, 40],
+      "size": [150, 64],
+      "sources": [{ "path": "mall-admin/pom.xml", "line": 21, "end_line": 27, "label": "mbg 与 security" }]
+    },
+    {
+      "id": "security",
+      "type": "security",
+      "label": "mall-security",
+      "sublabel": "认证",
+      "pos": [360, 40],
+      "size": [150, 64],
+      "sources": [{ "path": "mall-security/pom.xml", "line": 20, "end_line": 23, "label": "mall-common" }]
+    },
+    {
+      "id": "mbg",
+      "type": "backend",
+      "label": "mall-mbg",
+      "sublabel": "生成代码",
+      "tag": "不可直接改",
+      "pos": [40, 220],
+      "size": [150, 64],
+      "sources": [{ "path": "mall-mbg/pom.xml", "line": 22, "end_line": 25, "label": "mall-common" }]
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "mall-portal",
+      "sublabel": "前台",
+      "tag": "主路径",
+      "pos": [360, 220],
+      "size": [150, 64],
+      "sources": [{ "path": "mall-portal/pom.xml", "line": 21, "end_line": 28, "label": "mbg 与 security" }]
+    },
+    {
+      "id": "search",
+      "type": "backend",
+      "label": "mall-search",
+      "sublabel": "检索",
+      "pos": [40, 400],
+      "size": [150, 64],
+      "sources": [{ "path": "mall-search/pom.xml", "line": 21, "end_line": 23, "label": "只依赖 mbg" }]
+    },
+    {
+      "id": "demo",
+      "type": "backend",
+      "label": "mall-demo",
+      "sublabel": "演示",
+      "pos": [360, 400],
+      "size": [150, 64],
+      "sources": [{ "path": "mall-demo/pom.xml", "line": 20, "end_line": 23, "label": "只依赖 mbg" }]
+    },
+    {
+      "id": "common",
+      "type": "backend",
+      "label": "mall-common",
+      "sublabel": "无内部模块依赖",
+      "pos": [680, 130],
+      "size": [170, 64],
+      "sources": [{ "path": "mall-common/pom.xml", "line": 8, "label": "根库" }]
+    }
+  ],
+  "connections": [
+    { "id": "admin-security", "from": "admin", "to": "security", "variant": "emphasis" },
+    { "id": "admin-mbg", "from": "admin", "to": "mbg" },
+    { "id": "portal-mbg", "from": "portal", "to": "mbg", "variant": "emphasis" },
+    { "id": "portal-security", "from": "portal", "to": "security" },
+    { "id": "search-mbg", "from": "search", "to": "mbg" },
+    { "id": "demo-mbg", "from": "demo", "to": "mbg" },
+    { "id": "security-common", "from": "security", "to": "common" },
+    { "id": "mbg-common", "from": "mbg", "to": "common", "variant": "emphasis", "fromSide": "bottom", "toSide": "bottom" }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "箭头含义",
+      "items": [
+        "每条边都是 pom 里写明的 mall 模块",
+        "没有字的边也是直接依赖，不是传递依赖"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "容易漏看的边",
+      "items": [
+        "mall-mbg 直接依赖 mall-common",
+        "search 和 demo 不依赖 mall-security"
+      ]
+    }
+  ]
+}

@@ -1,3 +1,5 @@
+> Java 教学实验入口：[SDC（E1–E7）](SDC/README.md)，包含实验说明、JUnit 测试及 IDEA / Maven 复现步骤。
+
 # mall
 
 <p>

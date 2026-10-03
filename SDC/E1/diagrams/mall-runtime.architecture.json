@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "mall 下单运行路径",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/macrozheng/mall",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "layout": {
+    "mode": "grid",
+    "cols": 3,
+    "origin": [48, 48],
+    "gapX": 120,
+    "gapY": 100,
+    "cellW": 210,
+    "cellH": 78
+  },
+  "components": [
+    {
+      "id": "shopper",
+      "type": "external",
+      "label": "门户用户",
+      "sublabel": "HTTP /order",
+      "row": 1,
+      "col": 0
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "mall-portal",
+      "sublabel": "下单与支付",
+      "tag": "主路径",
+      "row": 1,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 41,
+          "end_line": 69,
+          "label": "generateOrder / paySuccess / cancelOrder"
+        }
+      ]
+    },
+    {
+      "id": "mysql",
+      "type": "database",
+      "label": "MySQL",
+      "sublabel": "oms_order",
+      "row": 1,
+      "col": 2,
+      "sources": [
+        {
+          "path": "document/docker/docker-compose-env.yml",
+          "line": 3,
+          "end_line": 15,
+          "label": "mysql:5.7"
+        }
+      ]
+    },
+    {
+      "id": "rabbit",
+      "type": "messagebus",
+      "label": "RabbitMQ",
+      "sublabel": "TTL 后转入取消队列",
+      "row": 0,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/config/RabbitMqConfig.java",
+          "line": 49,
+          "end_line": 54,
+          "label": "死信转发 mall.order.cancel"
+        }
+      ]
+    },
+    {
+      "id": "mbg",
+      "type": "backend",
+      "label": "mall-mbg",
+      "sublabel": "生成的 Mapper",
+      "tag": "不可直接改",
+      "row": 2,
+      "col": 1,
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/resources/generatorConfig.xml",
+          "line": 6,
+          "label": "MyBatis Generator"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "生成代码边界",
+      "wraps": ["mbg"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "shopper-to-portal",
+      "from": "shopper",
+      "to": "portal",
+      "label": "POST /order",
+      "variant": "emphasis"
+    },
+    {
+      "id": "portal-to-mysql",
+      "from": "portal",
+      "to": "mysql",
+      "label": "写入订单",
+      "variant": "emphasis"
+    },
+    {
+      "id": "portal-to-rabbit",
+      "from": "portal",
+      "to": "rabbit",
+      "label": "投递 TTL，到期后回调"
+    },
+    {
+      "id": "portal-to-mbg",
+      "from": "portal",
+      "to": "mbg",
+      "label": "调用生成 Mapper",
+      "labelDy": 24
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "主路径",
+      "items": [
+        "下单由 mall-portal 写入 MySQL",
+        "支付成功走同一进程的 paySuccess"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "超时取消",
+      "items": [
+        "下单后投递 TTL 队列",
+        "到期转入 mall.order.cancel 再取消"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "不在这条路径上",
+      "items": [
+        "mall-admin 与 mall-search 是另外的进程",
+        "定时器 OrderTimeOutCancelTask 未注册为 Bean"
+      ]
+    }
+  ]
+}

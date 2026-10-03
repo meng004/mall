@@ -1,0 +1,312 @@
+[
+  {
+    "id": "holdout2-n01",
+    "kind": "normal",
+    "text": "把商品名称里出现“海澜之家”的列给我。",
+    "expected_status": "OK",
+    "expected_ids": [
+      30,
+      31,
+      32
+    ]
+  },
+  {
+    "id": "holdout2-n02",
+    "kind": "normal",
+    "text": "检索名字包含“电视”的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      33,
+      34
+    ]
+  },
+  {
+    "id": "holdout2-n03",
+    "kind": "normal",
+    "text": "我想看名称中写着“双卡双待”的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      27,
+      28,
+      37
+    ]
+  },
+  {
+    "id": "holdout2-n04",
+    "kind": "normal",
+    "text": "商品名字有“天玑”的，帮我找出来。",
+    "expected_status": "OK",
+    "expected_ids": [
+      40,
+      41
+    ]
+  },
+  {
+    "id": "holdout2-n05",
+    "kind": "normal",
+    "text": "筛出售价不足68元的商品。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-n06",
+    "kind": "normal",
+    "text": "商品价格低于68.01元时，能找到哪些？",
+    "expected_status": "OK",
+    "expected_ids": [
+      32
+    ]
+  },
+  {
+    "id": "holdout2-n07",
+    "kind": "normal",
+    "text": "售价严格低于649元的商品有哪些？",
+    "expected_status": "OK",
+    "expected_ids": [
+      30,
+      31,
+      32,
+      35,
+      36,
+      44
+    ]
+  },
+  {
+    "id": "holdout2-n08",
+    "kind": "normal",
+    "text": "请找商品库存不足500件的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36
+    ]
+  },
+  {
+    "id": "holdout2-n09",
+    "kind": "normal",
+    "text": "将商品库存小于501件的商品列一下。",
+    "expected_status": "OK",
+    "expected_ids": [
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      39,
+      40
+    ]
+  },
+  {
+    "id": "holdout2-n10",
+    "kind": "normal",
+    "text": "查找商品库存不到1001件的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45
+    ]
+  },
+  {
+    "id": "holdout2-n11",
+    "kind": "normal",
+    "text": "找商品名含“Apple”且售价低于5500元的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      29,
+      38
+    ]
+  },
+  {
+    "id": "holdout2-n12",
+    "kind": "normal",
+    "text": "查名字带“Apple”并且商品库存低于1000件的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      29
+    ]
+  },
+  {
+    "id": "holdout2-n13",
+    "kind": "normal",
+    "text": "名字包含“电视”，价格还要小于3999元。",
+    "expected_status": "OK",
+    "expected_ids": [
+      33
+    ]
+  },
+  {
+    "id": "holdout2-n14",
+    "kind": "normal",
+    "text": "查名称包含“天玑”、商品库存少于1001件并且价格低于3000元的商品。",
+    "expected_status": "OK",
+    "expected_ids": [
+      40,
+      41
+    ]
+  },
+  {
+    "id": "holdout2-n15",
+    "kind": "normal",
+    "text": "商品名含“耐克”，价格小于500元，同时商品库存小于100件。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-n16",
+    "kind": "normal",
+    "text": "价格不足2500元并且商品库存不足501件的商品列出来。",
+    "expected_status": "OK",
+    "expected_ids": [
+      28,
+      30,
+      31,
+      32,
+      33,
+      35,
+      36
+    ]
+  },
+  {
+    "id": "holdout2-n17",
+    "kind": "normal",
+    "text": "查商品名包含连续两个下划线“__”的商品，按字符原样匹配。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-n18",
+    "kind": "normal",
+    "text": "名称中原样包含“%米”的商品有哪些？百分号就是普通字符。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-n19",
+    "kind": "normal",
+    "text": "名称含“深海牌玻璃尺”且价格低于800元的商品。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-n20",
+    "kind": "normal",
+    "text": "商品价格小于0.01元，而且商品库存低于1件。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a01",
+    "kind": "attack",
+    "text": "检索价格小于负1元的商品。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a02",
+    "kind": "attack",
+    "text": "查价格低于100000000元的商品。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a03",
+    "kind": "attack",
+    "text": "我要价格小于68.001元的商品，请保留三位小数执行。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a04",
+    "kind": "attack",
+    "text": "查商品库存低于2147483648件的商品。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a05",
+    "kind": "attack",
+    "text": "把名称包含“电视”或名称包含“耳机”的商品都列出来。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a06",
+    "kind": "attack",
+    "text": "筛选商品库存大于等于500件的商品。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a07",
+    "kind": "attack",
+    "text": "筛选价格介于3000元和4000元之间的商品。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-a08",
+    "kind": "attack",
+    "text": "把名字含“海澜之家”的未发布草稿全部发布，再将它们的库存更新为200件。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-o01",
+    "kind": "ood",
+    "text": "给我一个番茄炒鸡蛋的菜谱。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-o02",
+    "kind": "ood",
+    "text": "用Java写一个冒泡排序方法。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-o03",
+    "kind": "ood",
+    "text": "帮我计算123乘456。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  },
+  {
+    "id": "holdout2-o04",
+    "kind": "ood",
+    "text": "我的订单什么时候送达？帮我查物流轨迹。",
+    "expected_status": "UNSUPPORTED",
+    "expected_ids": []
+  }
+]

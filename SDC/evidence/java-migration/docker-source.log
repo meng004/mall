@@ -1,0 +1,17 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- docker:0.45.1:source (default-cli) @ mall-portal ---
+[INFO] Copying files to /Users/limeng/软件设计与规范AI/mall/mall-portal/target/docker/mall/mall-portal/1.0-SNAPSHOT/build/maven
+[INFO] Building tar: /Users/limeng/软件设计与规范AI/mall/mall-portal/target/docker/mall/mall-portal/1.0-SNAPSHOT/tmp/docker-build.tar
+[INFO] DOCKER> [mall/mall-portal:1.0-SNAPSHOT]: Created docker source tar /Users/limeng/软件设计与规范AI/mall/mall-portal/target/docker/mall/mall-portal/1.0-SNAPSHOT/tmp/docker-build.tar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.121 s
+[INFO] Finished at: 2026-10-03T11:13:23+08:00
+[INFO] ------------------------------------------------------------------------

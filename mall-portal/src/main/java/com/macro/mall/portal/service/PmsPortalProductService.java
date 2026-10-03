@@ -5,6 +5,7 @@ import com.macro.mall.portal.domain.PmsPortalProductDetail;
 import com.macro.mall.portal.domain.PmsProductCategoryNode;
 
 import java.util.List;
+import com.macro.mall.portal.query.ProductQueryCriteria;
 
 /**
  * 前台商品管理Service
@@ -15,6 +16,9 @@ public interface PmsPortalProductService {
      * 综合搜索商品
      */
     List<PmsProduct> search(String keyword, Long brandId, Long productCategoryId, Integer pageNum, Integer pageSize, Integer sort);
+
+    /** Strict read-only conditions, applied in SQL before pagination. */
+    List<PmsProduct> search(ProductQueryCriteria criteria, Integer pageNum, Integer pageSize);
 
     /**
      * 以树形结构获取所有商品分类

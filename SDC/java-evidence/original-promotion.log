@@ -1,0 +1,135 @@
+command: ['rtk', 'proxy', 'mvn', '-B', '-o', '-pl', 'mall-portal', '-am', '-DskipTests=false', '-Dtest=ExperimentPromotionTest', '-Dsurefire.failIfNoSpecifiedTests=false', 'test']
+revision: dcaa93b3150352e5044708d7211b5bed0af4509f (reconstructed original)
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                         [1/5]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                  [2/5]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 14 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                     [3/5]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 230 source files with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                                [4/5]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 14 source files with javac [debug parameters release 17] to target/classes
+[INFO] /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-security/src/main/java/com/macro/mall/security/component/DynamicAuthorizationManager.java: 某些输入文件使用或覆盖了已过时的 API。
+[INFO] /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-security/src/main/java/com/macro/mall/security/component/DynamicAuthorizationManager.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                  [5/5]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 84 source files with javac [debug parameters release 17] to target/classes
+[INFO] /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java: /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java使用或覆盖了已过时的 API。
+[INFO] /private/var/folders/hb/hz54g18d48sbpj3s6kmtc00w0000gn/T/mall-original-p8juwx2j/mall-portal/src/main/java/com/macro/mall/portal/config/JacksonConfig.java: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 4 source files with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.portal.ExperimentPromotionTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.79 s -- in com.macro.mall.portal.ExperimentPromotionTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for mall 1.0-SNAPSHOT:
+[INFO] 
+[INFO] mall ............................................... SUCCESS [  0.000 s]
+[INFO] mall-common ........................................ SUCCESS [  0.887 s]
+[INFO] mall-mbg ........................................... SUCCESS [  1.394 s]
+[INFO] mall-security ...................................... SUCCESS [  0.307 s]
+[INFO] mall-portal ........................................ SUCCESS [ 11.882 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  14.586 s
+[INFO] Finished at: 2026-10-03T09:56:22+08:00
+[INFO] ------------------------------------------------------------------------
