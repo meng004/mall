@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-07 改后：按用户名读取委托给 MemberLookup（exp/e2-07 408ae0b7）",
+    "output": "e2-07.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "408ae0b788bfb990364cd4a74afee8ed3ef26f18"
+    }
+  },
+  "components": [
+    { "id": "login-ctl", "type": "frontend", "label": "UmsMemberController.login", "sublabel": "POST /sso/login", "pos": [40, 40], "size": [250, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberController.java", "line": 47, "end_line": 60, "label": "登录接口委托服务" }] },
+    { "id": "svc-login", "type": "backend", "label": "UmsMemberServiceImpl.login", "sublabel": "比对密码 → 签发 JWT", "tag": "未改", "pos": [390, 40], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 155, "end_line": 171, "label": "login" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 160, "label": "调用 loadUserByUsername" }
+      ] },
+    { "id": "jwt-filter", "type": "security", "label": "JwtAuthenticationTokenFilter", "sublabel": "每个带 Bearer 令牌的请求", "tag": "mall-security", "pos": [40, 320], "size": [250, 64],
+      "sources": [
+        { "path": "mall-security/src/main/java/com/macro/mall/security/component/JwtAuthenticationTokenFilter.java", "line": 40, "end_line": 46, "label": "从令牌取用户名并加载" },
+        { "path": "mall-security/src/main/java/com/macro/mall/security/config/SecurityConfig.java", "line": 62, "label": "加入过滤器链" }
+      ] },
+    { "id": "uds-bean", "type": "backend", "label": "MallSecurityConfig", "sublabel": "userDetailsService() 委托会员服务", "pos": [390, 320], "size": [240, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/config/MallSecurityConfig.java", "line": 19, "end_line": 23, "label": "lambda 调 loadUserByUsername" }] },
+    { "id": "load-user", "type": "backend", "label": "loadUserByUsername", "sublabel": "查不到抛 UsernameNotFound", "tag": "未改", "pos": [740, 180], "size": [240, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 146, "end_line": 153, "label": "148 行调 getByUsername" }] },
+    { "id": "get-by-username", "type": "backend", "label": "getByUsername", "sublabel": "一行委托，每次 new MemberLookup", "tag": "改为委托", "pos": [1090, 180], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 57, "end_line": 60, "label": "一行委托" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/UmsMemberService.java", "line": 15, "label": "接口声明（未改）" }
+      ] },
+    { "id": "member-lookup", "type": "backend", "label": "MemberLookup.findByUsername", "sublabel": "命中返回 → 查库 → 查到回填", "tag": "新增 35 行", "pos": [1090, 340], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberLookup.java", "line": 15, "end_line": 22, "label": "构造器收两个接口" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberLookup.java", "line": 24, "end_line": 34, "label": "读取编排（顺序未变）" }
+      ] },
+    { "id": "test", "type": "external", "label": "SDCE207Test", "sublabel": "5 项 · 改前改后都运行", "pos": [1440, 180], "size": [220, 64],
+      "sources": [
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE207Test.java", "line": 45, "end_line": 71, "label": "未命中：查询用户名 + 回填一次" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE207Test.java", "line": 85, "end_line": 115, "label": "读/回填异常原样抛出" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE207Test.java", "line": 133, "end_line": 137, "label": "反射替换两个字段" }
+      ] },
+    { "id": "aspect", "type": "security", "label": "RedisCacheAspect", "sublabel": "环绕 *CacheService，吞异常", "tag": "mall-security", "pos": [560, 540], "size": [240, 64],
+      "sources": [{ "path": "mall-security/src/main/java/com/macro/mall/security/aspect/RedisCacheAspect.java", "line": 27, "end_line": 47, "label": "无 @CacheException 只记日志" }] },
+    { "id": "cache-svc", "type": "backend", "label": "UmsMemberCacheServiceImpl", "sublabel": "getMember / setMember，TTL 24h", "tag": "未改", "pos": [910, 540], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCacheServiceImpl.java", "line": 42, "end_line": 52, "label": "按用户名读写缓存" },
+        { "path": "mall-portal/src/main/resources/application.yml", "line": 57, "end_line": 65, "label": "键前缀与过期秒数" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "UmsMemberMapper", "sublabel": "selectByExample · username =", "pos": [1270, 540], "size": [240, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/UmsMemberMapper.java", "line": 19 },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberMapper.xml", "line": 88, "end_line": 94, "label": "生成的查询 SQL" }
+      ] },
+    { "id": "redis", "type": "database", "label": "Redis", "sublabel": "键 mall:ums:member:用户名", "pos": [910, 720], "size": [240, 64],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/service/impl/RedisServiceImpl.java", "line": 20, "end_line": 33, "label": "RedisTemplate set/get" },
+        { "path": "mall-portal/src/main/resources/application-dev.yml", "line": 24, "end_line": 26, "label": "开发环境 6379" }
+      ] },
+    { "id": "mysql", "type": "database", "label": "MySQL", "sublabel": "表 ums_member", "pos": [1270, 720], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/resources/application-dev.yml", "line": 6, "label": "开发环境 3306" },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberMapper.xml", "line": 94 }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "UmsMemberServiceImpl：认证留在这里，读取只剩委托", "wraps": ["svc-login", "load-user", "get-by-username"] },
+    { "kind": "region", "label": "缓存层", "wraps": ["aspect", "cache-svc", "redis"] },
+    { "kind": "region", "label": "数据库层", "wraps": ["mapper", "mysql"] }
+  ],
+  "connections": [
+    { "id": "c-login", "from": "login-ctl", "to": "svc-login", "label": "login(u, p)", "variant": "emphasis" },
+    { "id": "c-login-load", "from": "svc-login", "to": "load-user", "label": "加载会员" },
+    { "id": "c-jwt", "from": "jwt-filter", "to": "uds-bean", "label": "加载用户" },
+    { "id": "c-uds", "from": "uds-bean", "to": "load-user", "label": "委托" },
+    { "id": "c-load-get", "from": "load-user", "to": "get-by-username", "label": "按用户名取", "variant": "emphasis" },
+    { "id": "c-delegate", "from": "get-by-username", "to": "member-lookup", "label": "new 后 findByUsername", "variant": "emphasis" },
+    { "id": "c-cache", "from": "member-lookup", "to": "cache-svc", "label": "① getMember ③ 查到才 setMember" },
+    { "id": "c-db", "from": "member-lookup", "to": "mapper", "label": "② 未命中才查库" },
+    { "id": "c-test", "from": "test", "to": "get-by-username", "label": "替身驱动", "variant": "dashed" },
+    { "id": "c-aspect", "from": "aspect", "to": "cache-svc", "label": "环绕拦截", "variant": "dashed" },
+    { "id": "c-redis", "from": "cache-svc", "to": "redis", "label": "GET / SET" },
+    { "id": "c-mysql", "from": "mapper", "to": "mysql", "label": "SELECT" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "新增 MemberLookup（35 行）：构造器收 UmsMemberCacheService、UmsMemberMapper 两个接口（19–22 行）；findByUsername 保持原顺序：命中即返回 → 按用户名 selectByExample → 查到才 setMember（24–34 行）",
+      "getByUsername 由 11 行编排改为一行委托（59 行）；login、loadUserByUsername、两条入口与缓存服务都未改动",
+      "改读取顺序或回填策略，改动落在 MemberLookup 一处，不必再打开承担认证的类的读取代码"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "多一个类和一次跳转；MemberLookup 不是 Spring Bean，getByUsername 每次调用都 new（59 行），服务层没有注入点，换实现仍要改认证类这一行",
+      "只有 getByUsername 一个调用方；假想删掉 MemberLookup，这段逻辑原样回到 getByUsername，复杂度不会消失：这是归属调整，不是消除重复",
+      "缓存失效 delMember 仍在本类（126、143 行），键与 TTL 仍在 UmsMemberCacheServiceImpl；MemberLookup 仍直接组装生成代码 UmsMemberExample（27–28 行）"
+    ] },
+    { "dot": "cyan", "title": "证据", "items": [
+      "SDCE207Test 5 项经 getByUsername 驱动，用反射替换缓存与 Mapper 字段（133–137 行）；改前 dcaa93b3、改后 408ae0b7 都是 5/5 通过（compare.txt）",
+      "锁住：命中不查库不回填；未命中按用户名查询并回填一次（69 行）、查询一次（70 行）；查不到不回填、查询一次（82 行）；缓存读、回填异常原样抛出",
+      "替身直接注入，绕过 RedisCacheAspect：异常原样传播只在类级成立，真实容器中 getMember/setMember 的异常会被切面吞掉（未运行验证）"
+    ] },
+    { "dot": "slate", "title": "与公共 4+1 视图的关系", "items": [
+      "逻辑视图：公共 mall-logical.html 画订单与改密，其中改密是 mall-admin 的 UmsAdminController/UmsAdminServiceImpl；本图换成 mall-portal 会员按用户名读取，下钻到类和方法",
+      "公共图指出服务直接使用生成查询对象；本例 UmsMemberExample 只是从服务挪进 MemberLookup，这一点未改",
+      "开发视图：新类在 mall-portal 的 service.impl 包，只依赖本模块缓存接口和 mall-mbg 的 Mapper，不新增模块依赖",
+      "进程与部署视图不变：同一请求线程内同步调用，经 TCP 6379 读写 Redis、JDBC 3306 查 MySQL"
+    ] }
+  ]
+}

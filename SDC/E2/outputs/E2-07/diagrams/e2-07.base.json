@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-07 改前：按用户名查会员的读取编排写在认证服务里（基线 dcaa93b3）",
+    "output": "e2-07.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "login-ctl", "type": "frontend", "label": "UmsMemberController.login", "sublabel": "POST /sso/login", "pos": [40, 40], "size": [250, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberController.java", "line": 47, "end_line": 60, "label": "登录接口委托服务" }] },
+    { "id": "svc-login", "type": "backend", "label": "UmsMemberServiceImpl.login", "sublabel": "比对密码 → 签发 JWT", "pos": [390, 40], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 165, "end_line": 181, "label": "login" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 170, "label": "调用 loadUserByUsername" }
+      ] },
+    { "id": "jwt-filter", "type": "security", "label": "JwtAuthenticationTokenFilter", "sublabel": "每个带 Bearer 令牌的请求", "tag": "mall-security", "pos": [40, 320], "size": [250, 64],
+      "sources": [
+        { "path": "mall-security/src/main/java/com/macro/mall/security/component/JwtAuthenticationTokenFilter.java", "line": 40, "end_line": 46, "label": "从令牌取用户名并加载" },
+        { "path": "mall-security/src/main/java/com/macro/mall/security/config/SecurityConfig.java", "line": 62, "label": "加入过滤器链" }
+      ] },
+    { "id": "uds-bean", "type": "backend", "label": "MallSecurityConfig", "sublabel": "userDetailsService() 委托会员服务", "pos": [390, 320], "size": [240, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/config/MallSecurityConfig.java", "line": 19, "end_line": 23, "label": "lambda 调 loadUserByUsername" }] },
+    { "id": "load-user", "type": "backend", "label": "loadUserByUsername", "sublabel": "查不到抛 UsernameNotFound", "pos": [740, 180], "size": [240, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 156, "end_line": 163, "label": "158 行调 getByUsername" }] },
+    { "id": "get-by-username", "type": "backend", "label": "getByUsername", "sublabel": "缓存 → 查库 → 回填，共 11 行", "tag": "靶点", "pos": [1090, 180], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 57, "end_line": 70, "label": "读取编排" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/UmsMemberService.java", "line": 15, "label": "接口声明" }
+      ] },
+    { "id": "aspect", "type": "security", "label": "RedisCacheAspect", "sublabel": "环绕 *CacheService，吞异常", "tag": "mall-security", "pos": [560, 540], "size": [240, 64],
+      "sources": [{ "path": "mall-security/src/main/java/com/macro/mall/security/aspect/RedisCacheAspect.java", "line": 27, "end_line": 47, "label": "无 @CacheException 只记日志" }] },
+    { "id": "cache-svc", "type": "backend", "label": "UmsMemberCacheServiceImpl", "sublabel": "getMember / setMember，TTL 24h", "pos": [910, 540], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCacheServiceImpl.java", "line": 42, "end_line": 52, "label": "按用户名读写缓存" },
+        { "path": "mall-portal/src/main/resources/application.yml", "line": 57, "end_line": 65, "label": "键前缀与过期秒数" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "UmsMemberMapper", "sublabel": "selectByExample · username =", "pos": [1270, 540], "size": [240, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/UmsMemberMapper.java", "line": 19 },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberMapper.xml", "line": 88, "end_line": 94, "label": "生成的查询 SQL" }
+      ] },
+    { "id": "redis", "type": "database", "label": "Redis", "sublabel": "键 mall:ums:member:用户名", "pos": [910, 720], "size": [240, 64],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/service/impl/RedisServiceImpl.java", "line": 20, "end_line": 33, "label": "RedisTemplate set/get" },
+        { "path": "mall-portal/src/main/resources/application-dev.yml", "line": 24, "end_line": 26, "label": "开发环境 6379" }
+      ] },
+    { "id": "mysql", "type": "database", "label": "MySQL", "sublabel": "表 ums_member", "pos": [1270, 720], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/resources/application-dev.yml", "line": 6, "label": "开发环境 3306" },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberMapper.xml", "line": 94 }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "UmsMemberServiceImpl 一个类：登录认证 + 按用户名读取编排", "wraps": ["svc-login", "load-user", "get-by-username"] },
+    { "kind": "region", "label": "缓存层", "wraps": ["aspect", "cache-svc", "redis"] },
+    { "kind": "region", "label": "数据库层", "wraps": ["mapper", "mysql"] }
+  ],
+  "connections": [
+    { "id": "c-login", "from": "login-ctl", "to": "svc-login", "label": "login(u, p)", "variant": "emphasis" },
+    { "id": "c-login-load", "from": "svc-login", "to": "load-user", "label": "加载会员" },
+    { "id": "c-jwt", "from": "jwt-filter", "to": "uds-bean", "label": "加载用户" },
+    { "id": "c-uds", "from": "uds-bean", "to": "load-user", "label": "委托" },
+    { "id": "c-load-get", "from": "load-user", "to": "get-by-username", "label": "按用户名取", "variant": "emphasis" },
+    { "id": "c-cache", "from": "get-by-username", "to": "cache-svc", "label": "① getMember ③ 查到才 setMember" },
+    { "id": "c-db", "from": "get-by-username", "to": "mapper", "label": "② 未命中才查库" },
+    { "id": "c-aspect", "from": "aspect", "to": "cache-svc", "label": "环绕拦截", "variant": "dashed" },
+    { "id": "c-redis", "from": "cache-svc", "to": "redis", "label": "GET / SET" },
+    { "id": "c-mysql", "from": "mapper", "to": "mysql", "label": "SELECT" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "UmsMemberServiceImpl 负责注册、改密、登录与签发令牌（login 166–181 行），又在 getByUsername（58–70 行）里决定“先读缓存、未命中查库、查到回填”：读取策略和认证是两种变化原因（SRP）",
+      "两条入口都汇到这 11 行：/sso/login 经 login → loadUserByUsername（170、158 行）；每个带令牌的请求经过滤器 46 行 → MallSecurityConfig 22 行 → loadUserByUsername",
+      "读取逻辑只有这一处，没有重复代码；问题在职责归属，不在 DRY",
+      "缓存相关决定本来就分散：失效 delMember 在本类 136、153 行，键与 TTL 在 UmsMemberCacheServiceImpl（44、50–51 行），Redis 异常由 RedisCacheAspect 吞掉（39–45 行）",
+      "缓存命中逻辑本身没有错误，本题只处理读取编排放在哪里"
+    ] }
+  ]
+}
