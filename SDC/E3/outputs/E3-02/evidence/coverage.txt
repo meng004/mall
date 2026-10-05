@@ -1,0 +1,37 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）。
+命令（主工作区，可联网，未加 -o）：
+mvn -B -pl mall-portal -am -DskipTests=false -Dtest=SDCE302Test -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-portal/target/site/jacoco/jacoco.xml（target 已被 mall-portal/.gitignore 忽略，不提交）。
+
+提交：测试 dbfd3616ca079f772d1ce846032518014370150a；修复 f1701c209c889c474252761a6421aa7f91edec02。覆盖率跑在该修复之上的工作区；docs 提交只收录本文件，不改被测代码。
+
+统计对象：OmsCartItemServiceImpl.add(OmsCartItem)。源码签名在第 39 行，JaCoCo 方法计数从第 41 行起，到第 54 行 return count 结束。
+
+行覆盖：covered=12 missed=0，12/12=100.0%。
+分支覆盖：covered=2 missed=0，2/2=100.0%。
+指令覆盖：covered=55 missed=0，合计 55。
+方法计数：missed=0 covered=1。
+
+唯一的分支是第 46 行 existCartItem == null（mb=0 cb=2），两个测试分别走了无旧项和有旧项。fix 改动的第 50 行 mi=0 ci=5 mb=0 cb=0，已覆盖。
+
+分支已经全部覆盖，但「保存的是已有项」要靠 assertSame(existing, argument) 锁住，覆盖率不能代替断言。
+
+未覆盖行：无
+未覆盖分支：无
+
+不计入统计的私有辅助方法 getCartItem：这个方法没有被修改，被 add 调用。它的行覆盖 8/9，分支 3/4。未覆盖的是第 65 行 andProductSkuIdEqualTo，第 64 行 getProductSkuId()!=null 的真分支也没有走到（mb=1 cb=1）。原因是两个测试的入参都没有设 productSkuId。这与本缺陷无关，不并入 add 的数字。同一个类里的 list、listPromotion、updateQuantity、delete、getCartProduct、updateAttr、clear 都是 0%，它们没有被修改，不是统计对象，不报类或模块平均值。
+
+逐行（只列 JaCoCo 有探针的行；nr mi ci mb cb）。ci 是该行已覆盖指令数，便于和 mi 对照。
+nr	mi	ci	mb	cb	源码
+41	0	4	0	0	        UmsMember currentMember =memberService.getCurrentMember();
+42	0	4	0	0	        cartItem.setMemberId(currentMember.getId());
+43	0	4	0	0	        cartItem.setMemberNickname(currentMember.getNickname());
+44	0	4	0	0	        cartItem.setDeleteStatus(0);
+45	0	4	0	0	        OmsCartItem existCartItem = getCartItem(cartItem);
+46	0	2	0	2	        if (existCartItem == null) {
+47	0	5	0	0	            cartItem.setCreateDate(new Date());
+48	0	6	0	0	            count = cartItemMapper.insert(cartItem);
+50	0	5	0	0	            existCartItem.setModifyDate(new Date());
+51	0	10	0	0	            existCartItem.setQuantity(existCartItem.getQuantity() + cartItem.getQuantity());
+52	0	5	0	0	            count = cartItemMapper.updateByPrimaryKey(existCartItem);
+54	0	2	0	0	        return count;
