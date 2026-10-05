@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E5-05 影响范围：收藏列表按商品名筛选（基线 dcaa93b3）",
+    "output": "e5-05.impact.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "member", "type": "security", "label": "getCurrentMember()", "sublabel": "会员 id 取自 SecurityContext", "tag": "不改：新查询须沿用会员条件", "pos": [800, 40], "size": [250, 84],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 140, "end_line": 145, "label": "getCurrentMember" }] },
+    { "id": "ctl-list", "type": "frontend", "label": "收藏控制器 list()", "sublabel": "GET /member/productCollection/list", "tag": "改：加可选 keyword", "pos": [40, 280], "size": [250, 84],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 49, "end_line": 56, "label": "list 入口" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 20, "label": "@RequestMapping" }
+      ] },
+    { "id": "svc-iface", "type": "backend", "label": "MemberCollectionService", "sublabel": "list(pageNum, pageSize)", "tag": "改：加三参数重载", "pos": [420, 280], "size": [250, 84],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/MemberCollectionService.java", "line": 21, "end_line": 24, "label": "两参数 list" }] },
+    { "id": "impl-list", "type": "backend", "label": "MemberCollectionServiceImpl", "sublabel": "list：取会员，PageRequest(页码-1)", "tag": "改：空关键字分支 + quote", "pos": [800, 280], "size": [250, 84],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 66, "end_line": 71, "label": "list" }] },
+    { "id": "repo", "type": "backend", "label": "收藏 Repository", "sublabel": "findByMemberId(memberId, pageable)", "tag": "改：加 ProductNameRegex 方法", "pos": [1180, 280], "size": [250, 84],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 23, "end_line": 26, "label": "findByMemberId" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 12, "label": "extends MongoRepository" }
+      ] },
+    { "id": "common-page", "type": "backend", "label": "CommonPage.restPage(Page)", "sublabel": "total = getTotalElements()", "tag": "不改：总数取自同一查询", "pos": [40, 520], "size": [250, 84],
+      "sources": [{ "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonPage.java", "line": 51, "end_line": 59, "label": "SpringData 分页转换" }] },
+    { "id": "add-write", "type": "backend", "label": "MemberCollectionServiceImpl.add", "sublabel": "写入 productName 快照", "tag": "sqlEnable=false 时名称来自请求体", "pos": [800, 520], "size": [250, 84],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 33, "end_line": 57, "label": "add" },
+        { "path": "mall-portal/src/main/resources/application.yml", "line": 67, "end_line": 69, "label": "sqlEnable: true" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 28, "label": "@RequestBody" }
+      ] },
+    { "id": "mongo-doc", "type": "database", "label": "MemberProductCollection", "sublabel": "Mongo @Document，productName 快照", "tag": "仅 memberId/productId 有索引", "pos": [1180, 520], "size": [250, 84],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberProductCollection.java", "line": 17, "end_line": 18, "label": "@Document" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberProductCollection.java", "line": 21, "end_line": 27, "label": "@Indexed 与 productName" }
+      ] },
+    { "id": "admin-update", "type": "backend", "label": "mall-admin 商品 update", "sublabel": "PmsProductServiceImpl.update", "tag": "只写 MySQL，不回写快照", "pos": [420, 760], "size": [250, 84],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 121, "end_line": 126, "label": "updateByPrimaryKeySelective" }] },
+    { "id": "pms-product", "type": "database", "label": "MySQL 商品表", "sublabel": "经 PmsProductMapper 读取", "tag": "列表不读", "pos": [800, 760], "size": [250, 84],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 44, "end_line": 52, "label": "selectByPrimaryKey 抄名称" }] },
+    { "id": "other-ops", "type": "backend", "label": "delete / detail / clear", "sublabel": "按会员+商品、按会员的派生方法", "tag": "不改：不经过列表", "pos": [1180, 760], "size": [250, 84],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 60, "end_line": 64, "label": "delete" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 73, "end_line": 77, "label": "detail" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 79, "end_line": 83, "label": "clear" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "间接：须沿用", "wraps": ["member"] },
+    { "kind": "region", "label": "直接受影响：拟议改动 4 处（唯一调用链）", "wraps": ["ctl-list", "svc-iface", "impl-list", "repo"] },
+    { "kind": "region", "label": "间接受影响", "wraps": ["common-page", "add-write", "mongo-doc"] },
+    { "kind": "region", "label": "已核实不受影响", "wraps": ["admin-update", "pms-product", "other-ops"] }
+  ],
+  "connections": [
+    { "id": "call-list", "from": "ctl-list", "to": "svc-iface", "label": "调用 list", "variant": "emphasis" },
+    { "id": "implements", "from": "svc-iface", "to": "impl-list", "label": "实现" },
+    { "id": "query", "from": "impl-list", "to": "repo", "label": "findByMemberId", "variant": "emphasis" },
+    { "id": "mongo-read", "from": "repo", "to": "mongo-doc", "label": "按会员查询 + 计数", "variant": "emphasis" },
+    { "id": "who", "from": "impl-list", "to": "member", "label": "getCurrentMember" },
+    { "id": "to-page", "from": "ctl-list", "to": "common-page", "label": "restPage(page)" },
+    { "id": "snapshot", "from": "add-write", "to": "mongo-doc", "label": "save 快照" },
+    { "id": "read-name", "from": "add-write", "to": "pms-product", "label": "sqlEnable 时读名称", "variant": "dashed" },
+    { "id": "admin-write", "from": "admin-update", "to": "pms-product", "label": "只写 MySQL", "variant": "dashed" },
+    { "id": "other-access", "from": "other-ops", "to": "mongo-doc", "label": "其他派生方法", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "拟议变更（影响分析“改”清单）", "items": [
+      "控制器 list 加可选 keyword，不新增路径；旧请求不传即可",
+      "MemberCollectionService 加三参数 list；两参数保留并委托",
+      "ServiceImpl.list：空关键字仍走 findByMemberId，否则 Pattern.quote(keyword)，大小写敏感",
+      "Repository 加 findByMemberIdAndProductNameRegex(Long, String, Pageable)，筛选、分页、计数在同一次查询"
+    ] },
+    { "dot": "amber", "title": "影响范围（基线源码核实）", "items": [
+      "唯一调用链：Controller.list:54 → Service.list:24 → Impl.list:67-71 → Repository.findByMemberId:26；git grep 只有这一个调用方",
+      "会员条件：Impl:68 取 getCurrentMember，70 行按 member.getId() 查询；新查询必须保留",
+      "分页总数：CommonPage.restPage 取 getTotalElements()（CommonPage:56），计数必须与筛选同一条件",
+      "名称来源：add 写快照；sqlEnable=true 时从商品表抄（Impl:44-53），为 false 时用请求体里的 productName（Controller:28）——分析未写此分支",
+      "productName 没有 @Indexed，只有 memberId、productId 有（domain:21-26）；查询成本未实测"
+    ] },
+    { "dot": "slate", "title": "已排除（不改）", "items": [
+      "MySQL 商品表 / PmsProductMapper：列表不读，只在 add 且 sqlEnable 时读（Impl:45）",
+      "mall-admin 商品 update 只写 MySQL（PmsProductServiceImpl:126），不回写快照：改名后筛选仍按收藏时的名称，与“不实时联查”一致",
+      "delete / detail / clear 用其他派生方法，不经过列表",
+      "浏览记录 MemberReadHistory 也有 productName（:27），但是另一个 @Document，不受影响"
+    ] },
+    { "dot": "emerald", "title": "锁定现状的测试（逐条层次）", "items": [
+      "SDCE505Test.listCapturesMemberIdForPaging：单元测试，Mockito 替身（Repository、UmsMemberService 均为 mock），无 Spring 上下文、无 Mongo",
+      "锁的是 Impl.list → Repository.findByMemberId 一段：会员 101（测试:51）、页码 2→1（52）、大小 5（53）、原样返回同一 Page（54）",
+      "没锁：控制器与 CommonPage 转换、Mongo 查询与计数、add 写快照",
+      "compare.txt：基线与测试提交 39897ce7 都是 1 项通过"
+    ] },
+    { "dot": "rose", "title": "“空关键字”口径不一致", "items": [
+      "E5-05 影响分析:42 回归表写“空／空白关键字…仍走 findByMemberId”",
+      "E6-05 规格（Issue #31）写“空关键字（null 或 \"\"）不筛选”；e6-05 分支 Impl:77 为 keyword == null || keyword.isEmpty()，纯空白进入 regex",
+      "候选靶点库:375 只写“空关键字维持原列表”，没有定义空白"
+    ] }
+  ]
+}
