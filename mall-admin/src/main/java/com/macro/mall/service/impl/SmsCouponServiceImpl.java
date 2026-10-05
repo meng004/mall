@@ -41,20 +41,7 @@ public class SmsCouponServiceImpl implements SmsCouponService {
         couponParam.setReceiveCount(0);
         //插入优惠券表
         int count = couponMapper.insert(couponParam);
-        //插入优惠券和商品关系表
-        if(couponParam.getUseType().equals(2)){
-            for(SmsCouponProductRelation productRelation:couponParam.getProductRelationList()){
-                productRelation.setCouponId(couponParam.getId());
-            }
-            productRelationDao.insertList(couponParam.getProductRelationList());
-        }
-        //插入优惠券和商品分类关系表
-        if(couponParam.getUseType().equals(1)){
-            for (SmsCouponProductCategoryRelation couponProductCategoryRelation : couponParam.getProductCategoryRelationList()) {
-                couponProductCategoryRelation.setCouponId(couponParam.getId());
-            }
-            productCategoryRelationDao.insertList(couponParam.getProductCategoryRelationList());
-        }
+        writeUseTypeRelations(couponParam, false, null);
         return count;
     }
 
@@ -85,23 +72,32 @@ public class SmsCouponServiceImpl implements SmsCouponService {
     public int update(Long id, SmsCouponParam couponParam) {
         couponParam.setId(id);
         int count =couponMapper.updateByPrimaryKey(couponParam);
-        //删除后插入优惠券和商品关系表
+        writeUseTypeRelations(couponParam, true, id);
+        return count;
+    }
+
+    /**
+     * 按适用范围填充券 ID 并插入关联。只有更新传入 replaceExisting，才会删除同类型旧关联。
+     */
+    private void writeUseTypeRelations(SmsCouponParam couponParam, boolean replaceExisting, Long couponId) {
         if(couponParam.getUseType().equals(2)){
             for(SmsCouponProductRelation productRelation:couponParam.getProductRelationList()){
                 productRelation.setCouponId(couponParam.getId());
             }
-            deleteProductRelation(id);
+            if (replaceExisting) {
+                deleteProductRelation(couponId);
+            }
             productRelationDao.insertList(couponParam.getProductRelationList());
         }
-        //删除后插入优惠券和商品分类关系表
         if(couponParam.getUseType().equals(1)){
             for (SmsCouponProductCategoryRelation couponProductCategoryRelation : couponParam.getProductCategoryRelationList()) {
                 couponProductCategoryRelation.setCouponId(couponParam.getId());
             }
-            deleteProductCategoryRelation(id);
+            if (replaceExisting) {
+                deleteProductCategoryRelation(couponId);
+            }
             productCategoryRelationDao.insertList(couponParam.getProductCategoryRelationList());
         }
-        return count;
     }
 
     @Override
