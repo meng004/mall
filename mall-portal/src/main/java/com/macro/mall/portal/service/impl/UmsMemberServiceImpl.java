@@ -56,17 +56,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
 
     @Override
     public UmsMember getByUsername(String username) {
-        UmsMember member = memberCacheService.getMember(username);
-        if(member!=null) return member;
-        UmsMemberExample example = new UmsMemberExample();
-        example.createCriteria().andUsernameEqualTo(username);
-        List<UmsMember> memberList = memberMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(memberList)) {
-            member = memberList.get(0);
-            memberCacheService.setMember(member);
-            return member;
-        }
-        return null;
+        return new MemberLookup(memberCacheService, memberMapper).findByUsername(username);
     }
 
     @Override
