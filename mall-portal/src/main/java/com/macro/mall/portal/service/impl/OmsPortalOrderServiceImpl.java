@@ -358,8 +358,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         PageHelper.startPage(pageNum,pageSize);
         OmsOrderExample orderExample = new OmsOrderExample();
         OmsOrderExample.Criteria criteria = orderExample.createCriteria();
-        criteria.andDeleteStatusEqualTo(0)
-                .andMemberIdEqualTo(member.getId());
+        limitToCurrentMemberAndActive(criteria, member.getId());
         if(status!=null){
             criteria.andStatusEqualTo(status);
         }
@@ -394,7 +393,14 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Override
     public OmsOrderDetail detail(Long orderId) {
-        OmsOrder omsOrder = orderMapper.selectByPrimaryKey(orderId);
+        UmsMember member = memberService.getCurrentMember();
+        OmsOrderExample orderExample = new OmsOrderExample();
+        limitToCurrentMemberAndActive(orderExample.createCriteria().andIdEqualTo(orderId), member.getId());
+        List<OmsOrder> orders = orderMapper.selectByExample(orderExample);
+        if (CollUtil.isEmpty(orders)) {
+            Asserts.fail("订单不存在");
+        }
+        OmsOrder omsOrder = orders.get(0);
         OmsOrderItemExample example = new OmsOrderItemExample();
         example.createCriteria().andOrderIdEqualTo(orderId);
         List<OmsOrderItem> orderItemList = orderItemMapper.selectByExample(example);
@@ -402,6 +408,10 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         BeanUtil.copyProperties(omsOrder,orderDetail);
         orderDetail.setOrderItemList(orderItemList);
         return orderDetail;
+    }
+
+    private void limitToCurrentMemberAndActive(OmsOrderExample.Criteria criteria, Long memberId) {
+        criteria.andDeleteStatusEqualTo(0).andMemberIdEqualTo(memberId);
     }
 
     @Override
