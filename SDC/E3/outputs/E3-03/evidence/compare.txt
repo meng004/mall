@@ -1,0 +1,9 @@
+示例：E3-03  模块：mall-admin  测试：SDCE303Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 9, Failures: 3, Errors: 2, Skipped: 0
+[ERROR]   SDCE303Test.duplicateIdCountedOnceAndMissingIdDoesNotDecrement:131 expected: <[1, 1]> but was: <[0, 2]>
+[ERROR]   SDCE303Test.mixedCategoriesEachLoseOneSpecification:97 expected: <[1, 1]> but was: <[0, 2]>
+[ERROR]   SDCE303Test.sameCategorySpecAndParamDecrementSeparateCounters:114 expected: <1> but was: <0>
+[ERROR]   SDCE303Test.allMissingIdsOnMysqlLeaveCountsUnchanged:201 » NullPointer Cannot invoke "com.macro.mall.model.PmsProductAttribute.getType()" because "pmsProductAttribute" is null
+[ERROR]   SDCE303Test.allMissingIdsReturnZeroWithoutDeleteOrCategoryUpdate:183 » NullPointer Cannot invoke "com.macro.mall.model.PmsProductAttribute.getType()" because "pmsProductAttribute" is null
+改后 d8ca32cb：pass（预期 pass）  [INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
