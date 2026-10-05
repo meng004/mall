@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E5-02 影响范围：品牌列表的可选厂家筛选（基线 dcaa93b3）",
+    "output": "e5-02.impact.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "ctl", "type": "frontend", "label": "PmsBrandController", "sublabel": "getList · GET /brand/list", "tag": "改：加可选参数", "pos": [40, 220], "size": [230, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java", "line": 76, "end_line": 85, "label": "keyword / showStatus / pageNum / pageSize" }
+      ] },
+    { "id": "iface", "type": "backend", "label": "PmsBrandService", "sublabel": "保留四参数，拟加五参数重载", "tag": "改", "pos": [400, 220], "size": [230, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/PmsBrandService.java", "line": 40, "end_line": 43, "label": "listBrand 四参数" }
+      ] },
+    { "id": "impl", "type": "backend", "label": "PmsBrandServiceImpl", "sublabel": "listBrand：startPage → 条件 → 查询", "tag": "改：先校验再 startPage", "pos": [760, 212], "size": [250, 96],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 76, "end_line": 89, "label": "listBrand 现状" }
+      ] },
+    { "id": "pagehelper", "type": "external", "label": "PageHelper 分页线程变量", "sublabel": "startPage 写入，下一次查询消费", "pos": [1150, 40], "size": [230, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 78, "label": "PageHelper.startPage" },
+        { "path": "mall-mbg/pom.xml", "line": 26, "end_line": 29, "label": "pagehelper-spring-boot-starter" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "PmsBrandMapper", "sublabel": "selectByExample · Criteria 内 AND", "pos": [1150, 220], "size": [230, 80],
+      "sources": [
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/PmsBrandMapper.xml", "line": 100, "end_line": 113, "label": "selectByExample" },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/PmsBrandMapper.xml", "line": 19, "end_line": 47, "label": "Example_Where_Clause" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsBrandExample.java", "line": 377, "label": "andFactoryStatusEqualTo 已存在" }
+      ] },
+    { "id": "table", "type": "database", "label": "pms_brand", "sublabel": "factory_status int(1)，可为 NULL", "pos": [1150, 400], "size": [230, 80],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 887, "end_line": 893, "label": "factory_status DEFAULT NULL" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsBrand.java", "line": 17, "label": "PmsBrand.factoryStatus" }
+      ] },
+    { "id": "commonPage", "type": "backend", "label": "CommonPage.restPage", "sublabel": "PageInfo 取 total / totalPage", "pos": [40, 400], "size": [230, 80],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonPage.java", "line": 37, "end_line": 46, "label": "restPage(List)" }
+      ] },
+    { "id": "geh", "type": "security", "label": "GlobalExceptionHandler", "sublabel": "ApiException → CommonResult.failed", "pos": [760, 400], "size": [250, 80],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java", "line": 22, "end_line": 29, "label": "ApiException 转失败结果" },
+        { "path": "mall-common/src/main/java/com/macro/mall/common/api/ResultCode.java", "line": 10, "label": "VALIDATE_FAILED" }
+      ] },
+    { "id": "factoryUpd", "type": "backend", "label": "updateFactoryStatus", "sublabel": "批量改状态，不是列表条件", "pos": [40, 580], "size": [230, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 105, "end_line": 112, "label": "按 id 批量写 factoryStatus" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java", "line": 120, "end_line": 124, "label": "@RequestParam 未校验取值" }
+      ] },
+    { "id": "listAll", "type": "backend", "label": "listAllBrand", "sublabel": "GET /brand/listAll，无条件", "pos": [400, 580], "size": [230, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 30, "end_line": 33, "label": "listAllBrand" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java", "line": 28, "end_line": 33, "label": "GET /brand/listAll" }
+      ] },
+    { "id": "demo", "type": "external", "label": "mall-demo listBrand", "sublabel": "另一模块，两参数", "pos": [760, 580], "size": [250, 80],
+      "sources": [
+        { "path": "mall-demo/src/main/java/com/macro/mall/demo/service/impl/DemoServiceImpl.java", "line": 50, "label": "listBrand(pageNum, pageSize)" },
+        { "path": "mall-demo/src/main/java/com/macro/mall/demo/controller/DemoController.java", "line": 87, "end_line": 89, "label": "DemoController.listBrand" }
+      ] },
+    { "id": "portalBrand", "type": "external", "label": "mall-portal 品牌接口", "sublabel": "直接用 PmsBrandMapper：分析未提及", "pos": [1150, 580], "size": [230, 80],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/PmsPortalBrandServiceImpl.java", "line": 26, "end_line": 38, "label": "PmsBrandMapper，非 PmsBrandService" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/PmsPortalBrandController.java", "line": 22, "end_line": 33, "label": "/brand/recommendList" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "直接受影响：要改的三个文件", "wraps": ["ctl", "iface", "impl"] },
+    { "kind": "region", "label": "间接受影响：分页与查询（不改）", "wraps": ["pagehelper", "mapper", "table"] },
+    { "kind": "region", "label": "间接受影响：响应组装（不改）", "wraps": ["commonPage", "geh"] },
+    { "kind": "region", "label": "已核实不受影响", "wraps": ["factoryUpd", "listAll", "demo", "portalBrand"] }
+  ],
+  "connections": [
+    { "id": "to-service", "from": "ctl", "to": "iface", "label": "listBrand 四参数", "variant": "emphasis" },
+    { "id": "to-impl", "from": "iface", "to": "impl", "label": "实现" },
+    { "id": "start-page", "from": "impl", "to": "pagehelper", "label": "① startPage" },
+    { "id": "select", "from": "impl", "to": "mapper", "label": "② selectByExample" },
+    { "id": "intercept", "from": "pagehelper", "to": "mapper", "label": "拦截下一次查询", "variant": "dashed" },
+    { "id": "sql", "from": "mapper", "to": "table" },
+    { "id": "rest-page", "from": "ctl", "to": "commonPage", "label": "restPage(list)" },
+    { "id": "reject", "from": "impl", "to": "geh", "label": "拟 Asserts.fail", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "拟议变更", "items": [
+      "GET /brand/list 增加可选 factoryStatus：不传保持旧结果；0/1 与 keyword、showStatus 做 AND，在分页前进入查询；2 等非法值按参数错误拒绝且不查库",
+      "改 3 个文件：控制器加参数；PmsBrandService 新增五参数重载、保留四参数；Impl 让四参数委托五参数并传 null，先校验、再 startPage、再加条件"
+    ] },
+    { "dot": "cyan", "title": "影响范围", "items": [
+      "调用链：Controller.getList（79–85 行）→ PmsBrandService.listBrand（43 行）→ Impl.listBrand（77–89 行）；四参数 listBrand 的调用方只有控制器 83 行",
+      "分页耦合：78 行 startPage 把分页写进线程变量，由 88 行 selectByExample 消费；若校验放在 startPage 之后抛异常，分页会遗留给下一次查询",
+      "总数：CommonPage.restPage（37–46 行）用 PageInfo 读 total，条件必须进 SQL，不能取一页后再过滤",
+      "数据：pms_brand.factory_status int(1) DEFAULT NULL（mall.sql:892）；模型 PmsBrand:17；条件方法 PmsBrandExample:377",
+      "拒绝：Asserts.fail → GlobalExceptionHandler（22–29 行）→ CommonResult；参数错误码 VALIDATE_FAILED 在 ResultCode.java:10"
+    ] },
+    { "dot": "slate", "title": "已排除", "items": [
+      "updateFactoryStatus（105–112 行）、listAllBrand（30–33 行）：不经过列表条件",
+      "mall-demo 的 listBrand（DemoServiceImpl:50）是另一模块的两参数方法；mall-portal 品牌接口直接用 PmsBrandMapper，不调用 PmsBrandService",
+      "mall-search、PmsProductServiceImpl：品牌列表读 MySQL 的 pms_brand，不读 EsProduct",
+      "分析未提及：写入侧已有 {0,1} 规则（PmsBrandParam:26 的 @FlagValidator，放行 null），批量接口 updateFactoryStatus（123 行）不校验；库中若有 NULL 或其他值，0/1 筛选都选不到"
+    ] },
+    { "dot": "emerald", "title": "锁定现状的测试", "items": [
+      "SDCE502Test（1 项）：调用真实 Impl 的四参数 listBrand(\"华为\", 1, 2, 5)，锁 Impl → PageHelper → Mapper 这一段，不经过控制器",
+      "层次：单元 / 替身（Mockito 替换 PmsBrandMapper，在 select 回调里读 Example 与 PageHelper.getLocalPage；无 Spring、无数据库）",
+      "断言：条件里没有 factory_status（53 行）；只有 name like %华为% 与 show_status = 1 两条、同一个 Criteria、sort desc、select 时为第 2 页每页 5 条（54–60 行）",
+      "按 exp/e6-02 源码推断，四参数委托五参数传 null 后断言仍成立，可留作回归；真实 SQL 与分页总数需隔离库，未验证"
+    ] }
+  ]
+}

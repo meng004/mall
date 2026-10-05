@@ -1,0 +1,4 @@
+示例：E5-02  模块：mall-admin  测试：SDCE502Test
+改前 baseline-dcaa93b3：pass（预期 pass）  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+改后 521f5fa2：pass（预期 pass）  [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
