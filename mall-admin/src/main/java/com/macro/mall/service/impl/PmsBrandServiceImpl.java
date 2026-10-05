@@ -2,6 +2,8 @@ package com.macro.mall.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
+import com.macro.mall.common.api.ResultCode;
+import com.macro.mall.common.exception.Asserts;
 import com.macro.mall.dto.PmsBrandParam;
 import com.macro.mall.mapper.PmsBrandMapper;
 import com.macro.mall.mapper.PmsProductMapper;
@@ -75,6 +77,14 @@ public class PmsBrandServiceImpl implements PmsBrandService {
 
     @Override
     public List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize) {
+        return listBrand(keyword, showStatus, pageNum, pageSize, null);
+    }
+
+    @Override
+    public List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize, Integer factoryStatus) {
+        if (factoryStatus != null && factoryStatus != 0 && factoryStatus != 1) {
+            Asserts.fail(ResultCode.VALIDATE_FAILED);
+        }
         PageHelper.startPage(pageNum, pageSize);
         PmsBrandExample pmsBrandExample = new PmsBrandExample();
         pmsBrandExample.setOrderByClause("sort desc");
@@ -84,6 +94,9 @@ public class PmsBrandServiceImpl implements PmsBrandService {
         }
         if(showStatus!=null){
             criteria.andShowStatusEqualTo(showStatus);
+        }
+        if (factoryStatus != null) {
+            criteria.andFactoryStatusEqualTo(factoryStatus);
         }
         return brandMapper.selectByExample(pmsBrandExample);
     }

@@ -43,6 +43,11 @@ public interface PmsBrandService {
     List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize);
 
     /**
+     * 分页查询品牌。factoryStatus 为空时不按厂家状态筛选。
+     */
+    List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize, Integer factoryStatus);
+
+    /**
      * 获取品牌详情
      */
     PmsBrand getBrand(Long id);
