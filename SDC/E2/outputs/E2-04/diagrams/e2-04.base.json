@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-04 改前：收藏与浏览记录各写一份商品快照规则（基线 dcaa93b3）",
+    "output": "e2-04.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "coll-ctl", "type": "frontend", "label": "MemberProductCollectionController", "sublabel": "POST /member/productCollection/add", "pos": [40, 60], "size": [290, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 25, "end_line": 35, "label": "add 委托服务" }] },
+    { "id": "coll-svc", "type": "backend", "label": "MemberCollectionServiceImpl.add", "sublabel": "填会员信息 → findBy… 查重", "pos": [440, 60], "size": [280, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 33, "end_line": 41, "label": "add 入口与会员信息" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 42, "end_line": 43, "label": "已收藏则跳过" }
+      ] },
+    { "id": "coll-snap", "type": "backend", "label": "收藏的商品快照段", "sublabel": "sqlEnable → 查商品 → 判缺失 → 4 字段", "tag": "副本 ①", "pos": [830, 60], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 44, "end_line": 53, "label": "快照段（价格文本在 51 行）" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 23, "end_line": 26, "label": "@Value sqlEnable 与 productMapper" },
+        { "path": "mall-portal/src/main/resources/application.yml", "line": 67, "end_line": 69, "label": "mongo.insert.sqlEnable 配置" }
+      ] },
+    { "id": "coll-repo", "type": "database", "label": "MemberProductCollectionRepository", "sublabel": "MongoRepository · save 收藏文档", "pos": [1200, 60], "size": [300, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 54, "label": "调用 save" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 12, "end_line": 16, "label": "继承 MongoRepository" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "PmsProductMapper", "sublabel": "selectByPrimaryKey(productId) · 商品表", "pos": [810, 260], "size": [300, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsProductMapper.java", "line": 23 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 45, "label": "收藏调用" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 48, "label": "浏览调用" }
+      ] },
+    { "id": "hist-ctl", "type": "frontend", "label": "MemberReadHistoryController", "sublabel": "POST /member/readHistory/create", "pos": [40, 460], "size": [290, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 27, "end_line": 37, "label": "create 委托服务" }] },
+    { "id": "hist-svc", "type": "backend", "label": "MemberReadHistoryServiceImpl.create", "sublabel": "填会员信息 · id 置空 · createTime", "pos": [440, 460], "size": [280, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 37, "end_line": 46, "label": "create 入口与会员信息" }] },
+    { "id": "hist-snap", "type": "backend", "label": "浏览记录的商品快照段", "sublabel": "sqlEnable → 查商品 → 判缺失 → 4 字段", "tag": "副本 ②", "pos": [830, 460], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 47, "end_line": 56, "label": "快照段（价格文本在 54 行）" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 28, "end_line": 31, "label": "@Value sqlEnable 与 productMapper" }
+      ] },
+    { "id": "hist-repo", "type": "database", "label": "MemberReadHistoryRepository", "sublabel": "MongoRepository · 每次追加 save", "pos": [1200, 460], "size": [300, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 57, "end_line": 58, "label": "调用 save 并返回 1" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java", "line": 12, "label": "继承 MongoRepository" }
+      ] }
+  ],
+  "connections": [
+    { "id": "c-http", "from": "coll-ctl", "to": "coll-svc", "label": "add(请求体)", "variant": "emphasis" },
+    { "id": "c-snap", "from": "coll-svc", "to": "coll-snap", "label": "仅未收藏时" },
+    { "id": "c-save", "from": "coll-snap", "to": "coll-repo", "label": "save 写入" },
+    { "id": "c-read", "from": "coll-snap", "to": "mapper", "label": "按商品 ID 读", "variant": "dashed" },
+    { "id": "h-http", "from": "hist-ctl", "to": "hist-svc", "label": "create(请求体)", "variant": "emphasis" },
+    { "id": "h-snap", "from": "hist-svc", "to": "hist-snap", "label": "每次都执行" },
+    { "id": "h-save", "from": "hist-snap", "to": "hist-repo", "label": "save 追加" },
+    { "id": "h-read", "from": "hist-snap", "to": "mapper", "label": "按商品 ID 读", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "同一套快照规则写了两遍：收藏 add 44–53 行、浏览 create 47–56 行逐行同构——sqlEnable 才查商品、null 或 deleteStatus == 1 返回 0、set 名称/副标题/价格/图片",
+      "价格文本 product.getPrice() + \"\" 出现两次（收藏 51 行、浏览 54 行）；改格式或增减快照字段必须同步改两个类，漏改一处两条链写进 MongoDB 的快照就不一致",
+      "两个服务各自 @Value 注入 sqlEnable、@Autowired PmsProductMapper（收藏 23–26 行，浏览 28–31 行），商品快照知识没有单一来源",
+      "应保留的差异：收藏先查重，已收藏既不查商品也不保存（42–43 行）；浏览每次追加，id 置空、写 createTime（45–46 行）"
+    ] }
+  ]
+}

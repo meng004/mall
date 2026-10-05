@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-04 改后：两条链共用 ProductSnapshotLookup（exp/e2-04 5869acf5）",
+    "output": "e2-04.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "5869acf5c42b6be9ec49606f4b1446861e8b854d"
+    }
+  },
+  "components": [
+    { "id": "coll-ctl", "type": "frontend", "label": "MemberProductCollectionController", "sublabel": "POST /member/productCollection/add", "tag": "未改", "pos": [40, 60], "size": [290, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 25, "end_line": 35, "label": "add 委托服务" }] },
+    { "id": "coll-svc", "type": "backend", "label": "MemberCollectionServiceImpl.add", "sublabel": "填会员信息 → findBy… 查重", "pos": [440, 60], "size": [280, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 33, "end_line": 41, "label": "add 入口与会员信息（未改）" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 42, "end_line": 43, "label": "已收藏则跳过（未改）" }
+      ] },
+    { "id": "coll-snap", "type": "backend", "label": "收藏：按来源赋值", "sublabel": "MISSING → 0 · PRODUCT → set 4 字段", "tag": "赋值仍各一份", "pos": [830, 60], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 44, "label": "调用 read" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 45, "end_line": 53, "label": "按 Source 分支并赋值" }
+      ] },
+    { "id": "coll-repo", "type": "database", "label": "MemberProductCollectionRepository", "sublabel": "MongoRepository · save 收藏文档", "tag": "未改", "pos": [1200, 60], "size": [300, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 54, "label": "调用 save" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 12, "end_line": 16, "label": "继承 MongoRepository" }
+      ] },
+    { "id": "test", "type": "external", "label": "SDCE204Test", "sublabel": "改前改后同跑 · 5 项", "pos": [460, 260], "size": [240, 64],
+      "sources": [
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE204Test.java", "line": 64, "end_line": 85, "label": "开启：名称、副标题、图片与价格" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE204Test.java", "line": 87, "end_line": 130, "label": "关闭、不存在、已删除" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE204Test.java", "line": 132, "end_line": 144, "label": "已收藏时浏览仍追加" }
+      ] },
+    { "id": "lookup", "type": "backend", "label": "ProductSnapshotLookup.read", "sublabel": "REQUEST / MISSING / PRODUCT + Snapshot", "tag": "新增 · 包内类", "pos": [830, 260], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 86, "end_line": 96, "label": "写在收藏服务文件内：枚举与 record" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 98, "end_line": 111, "label": "read：开关、读取、缺失、映射" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 113, "end_line": 115, "label": "priceText 唯一价格格式" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "PmsProductMapper", "sublabel": "selectByPrimaryKey(productId) · 商品表", "tag": "未改", "pos": [1200, 260], "size": [300, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsProductMapper.java", "line": 23 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 102, "label": "只剩 read 内一处调用" }
+      ] },
+    { "id": "hist-ctl", "type": "frontend", "label": "MemberReadHistoryController", "sublabel": "POST /member/readHistory/create", "tag": "未改", "pos": [40, 460], "size": [290, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 27, "end_line": 37, "label": "create 委托服务" }] },
+    { "id": "hist-svc", "type": "backend", "label": "MemberReadHistoryServiceImpl.create", "sublabel": "填会员信息 · id 置空 · createTime", "pos": [440, 460], "size": [280, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 36, "end_line": 45, "label": "create 入口与会员信息（未改）" }] },
+    { "id": "hist-snap", "type": "backend", "label": "浏览：按来源赋值", "sublabel": "MISSING → 0 · PRODUCT → set 4 字段", "tag": "赋值仍各一份", "pos": [830, 460], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 46, "label": "调用 read" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 47, "end_line": 55, "label": "按 Source 分支并赋值" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 27, "end_line": 30, "label": "仍各自注入 sqlEnable 与 productMapper" }
+      ] },
+    { "id": "hist-repo", "type": "database", "label": "MemberReadHistoryRepository", "sublabel": "MongoRepository · 每次追加 save", "tag": "未改", "pos": [1200, 460], "size": [300, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 56, "end_line": 57, "label": "调用 save 并返回 1" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java", "line": 12, "label": "继承 MongoRepository" }
+      ] }
+  ],
+  "connections": [
+    { "id": "c-http", "from": "coll-ctl", "to": "coll-svc", "label": "add(请求体)", "variant": "emphasis" },
+    { "id": "c-snap", "from": "coll-svc", "to": "coll-snap", "label": "仅未收藏时" },
+    { "id": "c-save", "from": "coll-snap", "to": "coll-repo", "label": "save 写入" },
+    { "id": "c-lookup", "from": "coll-snap", "to": "lookup", "label": "read(...)", "variant": "emphasis" },
+    { "id": "l-read", "from": "lookup", "to": "mapper", "label": "按商品 ID 读", "variant": "dashed" },
+    { "id": "h-http", "from": "hist-ctl", "to": "hist-svc", "label": "create(请求体)", "variant": "emphasis" },
+    { "id": "h-snap", "from": "hist-svc", "to": "hist-snap", "label": "每次都执行" },
+    { "id": "h-save", "from": "hist-snap", "to": "hist-repo", "label": "save 追加" },
+    { "id": "h-lookup", "from": "hist-snap", "to": "lookup", "label": "read(...)", "variant": "emphasis" },
+    { "id": "t-coll", "from": "test", "to": "coll-svc", "label": "add()", "variant": "dashed" },
+    { "id": "t-hist", "from": "test", "to": "hist-svc", "label": "create()", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "新增包内 final 类 ProductSnapshotLookup（86–116 行）：read(sqlEnable, productId, mapper) 一次返回来源 REQUEST / MISSING / PRODUCT 与 Snapshot 四字段",
+      "开关判断、按主键读取、缺失/已删除判断、四字段映射都只剩 read 一处（98–111 行）；价格文本只在 priceText（113–115 行）",
+      "两个服务的快照段各换成一次 read 调用加按来源赋值：收藏 44–53 行、浏览 46–55 行；浏览服务不再 import PmsProduct",
+      "查重与追加、id 与 createTime、返回值、两个 MongoDB 仓库调用都未改"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "ProductSnapshotLookup 写在 MemberCollectionServiceImpl.java 末尾，却被浏览服务使用；按文件名找不到它",
+      "按 Source 分支和四个 set 仍在两个服务各写一份；改价格格式只动 priceText，增减快照字段仍要改 Snapshot、read 和两处赋值",
+      "sqlEnable、productMapper 仍由两个服务各自注入后作参数传入；read 是静态方法，没有可替换的接缝",
+      "多一个类型、一个枚举和两个 record，调用方要先理解三种来源"
+    ] },
+    { "dot": "cyan", "title": "证据", "items": [
+      "SDCE204Test 5 项改前（dcaa93b3）改后（5869acf5）都通过（compare.txt）",
+      "覆盖 sqlEnable 开/关、商品不存在、已删除、已收藏时浏览仍追加；开启时验证 selectByPrimaryKey 共 2 次（84 行）",
+      "开启时浏览记录断言名称（76 行）、副标题（77 行）、图片（78 行），以及价格与收藏相同（80–83 行）；副标题改取 name、图片置 null 会使该用例失败",
+      "价格只与同式 product.getPrice() + \"\" 比较（79 行），不是字面期望值；“只改一处规则、两条链同时变化”没有演示测试"
+    ] },
+    { "dot": "slate", "title": "与公共 4+1 视图的关系", "items": [
+      "公共逻辑视图 mall-logical.html 只画订单与改密，没有收藏和浏览记录；本图补上这两条链并下钻到类和代码段",
+      "公共部署图（E2 说明.md）有 MySQL 与 MongoDB 节点，但没画谁读写；本图标出商品经 PmsProductMapper 读取、两类记录经 MongoRepository 写入",
+      "开发视图：新类型仍在 mall-portal 的 service.impl 包，不新增模块依赖；进程视图不变，同一请求线程内同步执行"
+    ] }
+  ]
+}
