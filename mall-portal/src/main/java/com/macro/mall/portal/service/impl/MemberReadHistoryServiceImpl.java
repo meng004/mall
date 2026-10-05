@@ -1,5 +1,6 @@
 package com.macro.mall.portal.service.impl;
 
+import com.macro.mall.common.exception.Asserts;
 import com.macro.mall.mapper.PmsProductMapper;
 import com.macro.mall.model.PmsProduct;
 import com.macro.mall.model.UmsMember;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,5 +83,14 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
     public void clear() {
         UmsMember member = memberService.getCurrentMember();
         memberReadHistoryRepository.deleteAllByMemberId(member.getId());
+    }
+
+    @Override
+    public long clearBefore(Instant cutoff) {
+        if (cutoff == null || cutoff.getNano() % 1_000_000 != 0) {
+            Asserts.fail("截止时刻无效");
+        }
+        UmsMember member = memberService.getCurrentMember();
+        return memberReadHistoryRepository.deleteByMemberIdAndCreateTimeBefore(member.getId(), Date.from(cutoff));
     }
 }

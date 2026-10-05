@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DateTimeException;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 /**
@@ -54,6 +56,22 @@ public class MemberReadHistoryController {
     public CommonResult clear() {
         memberReadHistoryService.clear();
         return CommonResult.success(null);
+    }
+
+    @Operation(summary = "清除截止时刻以前的浏览记录")
+    @RequestMapping(value = "/clearBefore", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult<Long> clearBefore(@RequestParam String before) {
+        OffsetDateTime parsed;
+        try {
+            parsed = OffsetDateTime.parse(before);
+        } catch (DateTimeException ex) {
+            return CommonResult.validateFailed("截止时刻无效");
+        }
+        if (parsed.getNano() % 1_000_000 != 0) {
+            return CommonResult.validateFailed("截止时刻精度超过毫秒");
+        }
+        return CommonResult.success(memberReadHistoryService.clearBefore(parsed.toInstant()));
     }
 
     @Operation(summary = "分页获取浏览记录")

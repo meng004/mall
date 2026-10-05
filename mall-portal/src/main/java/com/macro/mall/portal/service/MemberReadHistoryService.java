@@ -3,6 +3,7 @@ package com.macro.mall.portal.service;
 import com.macro.mall.portal.domain.MemberReadHistory;
 import org.springframework.data.domain.Page;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -29,4 +30,6 @@ public interface MemberReadHistoryService {
      * 清空浏览记录
      */
     void clear();
+
+    long clearBefore(Instant cutoff);
 }
