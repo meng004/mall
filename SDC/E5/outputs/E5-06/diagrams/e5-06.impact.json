@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E5-06 影响范围：首页人气推荐批量创建按商品去重（基线 dcaa93b3）",
+    "output": "e5-06.impact.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "admin-ctl", "type": "frontend", "label": "人气推荐 Controller.create", "sublabel": "POST /home/recommendProduct/create", "tag": "count>0 才返回成功", "pos": [40, 250], "size": [210, 72],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeRecommendProductController.java", "line": 27, "end_line": 35, "label": "create" }] },
+    { "id": "svc-if", "type": "backend", "label": "Service.create（接口）", "sublabel": "@Transactional 声明在接口上", "tag": "签名不变", "pos": [350, 250], "size": [210, 72],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/SmsHomeRecommendProductService.java", "line": 16, "end_line": 17, "label": "@Transactional create" }] },
+    { "id": "impl-create", "type": "backend", "label": "ServiceImpl.create", "sublabel": "逐条 insert；return list.size()", "tag": "拟议唯一改动点", "pos": [660, 250], "size": [210, 72],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java", "line": 22, "end_line": 30, "label": "create 循环 24-28，返回 29" }] },
+    { "id": "mapper", "type": "backend", "label": "RecommendProductMapper", "sublabel": "insert（mall-mbg 生成，不改）", "pos": [970, 250], "size": [210, 72],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsHomeRecommendProductMapper.java", "line": 15, "label": "int insert(row)" },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/SmsHomeRecommendProductMapper.xml", "line": 102, "end_line": 110, "label": "insert SQL" }
+      ] },
+    { "id": "table", "type": "database", "label": "sms_home_recommend_product", "sublabel": "仅主键 id；product_id 可空、无唯一约束", "tag": "表结构不改", "pos": [1280, 250], "size": [230, 72],
+      "sources": [{ "path": "document/sql/mall.sql", "line": 2111, "end_line": 2118, "label": "CREATE TABLE" }] },
+    { "id": "admin-list", "type": "backend", "label": "ServiceImpl.list", "sublabel": "后台分页列表，sort desc，不去重", "tag": "间接：读同一张表", "pos": [1290, 60], "size": [210, 72],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java", "line": 56, "end_line": 69, "label": "list → selectByExample" }] },
+    { "id": "portal-ctl", "type": "frontend", "label": "前台 HomeController", "sublabel": "GET /home/content、/home/hotProductList", "pos": [660, 450], "size": [230, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/HomeController.java", "line": 28, "end_line": 34, "label": "content" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/HomeController.java", "line": 63, "end_line": 70, "label": "hotProductList" }
+      ] },
+    { "id": "portal-svc", "type": "backend", "label": "HomeServiceImpl", "sublabel": "content 取前 4 条；hotProductList 分页", "pos": [970, 450], "size": [210, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 52, "label": "getHotProductList(0,4)" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 91, "end_line": 95, "label": "hotProductList" }
+      ] },
+    { "id": "portal-dao", "type": "backend", "label": "HomeDao.getHotProductList", "sublabel": "LEFT JOIN pms_product，无 DISTINCT", "pos": [1290, 450], "size": [210, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/resources/dao/HomeDao.xml", "line": 51, "end_line": 62, "label": "getHotProductList SQL" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/dao/HomeDao.java", "line": 34 }
+      ] },
+    { "id": "sib-new", "type": "backend", "label": "新品推荐 create", "sublabel": "SmsHomeNewProductServiceImpl", "tag": "同构写法，需求外", "pos": [40, 660], "size": [210, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeNewProductServiceImpl.java", "line": 22, "end_line": 30, "label": "create" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeNewProductController.java", "line": 29, "end_line": 30 }
+      ] },
+    { "id": "sib-brand", "type": "backend", "label": "品牌推荐 create", "sublabel": "SmsHomeBrandServiceImpl", "tag": "同构写法，需求外", "pos": [350, 660], "size": [210, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeBrandServiceImpl.java", "line": 22, "end_line": 30, "label": "create" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeBrandController.java", "line": 29, "end_line": 30 }
+      ] },
+    { "id": "sib-subject", "type": "backend", "label": "专题推荐 create", "sublabel": "SmsHomeRecommendSubjectServiceImpl", "tag": "同构写法，需求外", "pos": [660, 660], "size": [230, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendSubjectServiceImpl.java", "line": 22, "end_line": 30, "label": "create" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeRecommendSubjectController.java", "line": 29, "end_line": 30 }
+      ] },
+    { "id": "same-svc", "type": "backend", "label": "同服务其他方法", "sublabel": "updateSort、delete、updateRecommendStatus", "tag": "按 id 操作，不收批量输入", "pos": [970, 660], "size": [230, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java", "line": 32, "end_line": 54 },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeRecommendProductController.java", "line": 37, "end_line": 68 }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "直接受影响：mall-admin 人气推荐批量创建链（改动只落在 ServiceImpl.create）", "wraps": ["admin-ctl", "svc-if", "impl-create", "mapper", "table"] },
+    { "kind": "region", "label": "间接受影响：mall-portal 首页人气推荐读取同一张表（代码不改）", "wraps": ["portal-ctl", "portal-svc", "portal-dao"] },
+    { "kind": "region", "label": "已核实不受影响：同构 create 与同服务其他方法", "wraps": ["sib-new", "sib-brand", "sib-subject", "same-svc"] }
+  ],
+  "connections": [
+    { "id": "c-create", "from": "admin-ctl", "to": "svc-if", "label": "create(list)", "variant": "emphasis" },
+    { "id": "c-proxy", "from": "svc-if", "to": "impl-create", "label": "事务代理", "variant": "emphasis" },
+    { "id": "c-insert", "from": "impl-create", "to": "mapper", "label": "insert ×N", "variant": "emphasis" },
+    { "id": "c-sql", "from": "mapper", "to": "table", "label": "INSERT" },
+    { "id": "c-admin-read", "from": "admin-list", "to": "table", "label": "SELECT", "variant": "dashed" },
+    { "id": "c-portal-1", "from": "portal-ctl", "to": "portal-svc" },
+    { "id": "c-portal-2", "from": "portal-svc", "to": "portal-dao" },
+    { "id": "c-portal-read", "from": "portal-dao", "to": "table", "label": "SELECT", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "拟议变更", "items": [
+      "需求：同一次 create 中重复的 productId 只保留首次出现的记录，返回 Mapper 实际插入数之和；空列表 0；异常原样抛出；不承诺跨请求或并发唯一",
+      "唯一落点 ServiceImpl.create（22–30）：现状循环 24–28 对每条都设状态 1、排序 0 并 insert，29 行返回 list.size()",
+      "E6-06 对照（9c4b58aa）：产品代码只改这一个方法（+9/−2，LinkedHashMap.putIfAbsent 后累加 insert 返回值），与分析的“改”清单一致"
+    ] },
+    { "dot": "amber", "title": "影响范围", "items": [
+      "直接：Controller.create（27–35）用 count>0 判成功，count 由“列表长度”变为“实际插入数”",
+      "直接：Service 接口 create 上的 @Transactional（16–17）不变，异常仍须原样抛出才能回滚",
+      "数据：sms_home_recommend_product（mall.sql 2111–2118）只有主键 id，product_id 可空且无唯一约束",
+      "间接（分析未提）：前台 HomeDao.getHotProductList（HomeDao.xml 51–62）LEFT JOIN 读本表、无 DISTINCT，经 HomeServiceImpl 52、91–95 供 /home/content 与 /home/hotProductList",
+      "间接：后台 ServiceImpl.list（56–69）原样分页显示表中各行"
+    ] },
+    { "dot": "slate", "title": "已排除", "items": [
+      "新品、品牌、专题推荐的 create（各 Impl 22–30，29 行同样 return size()）写法相同，但不在需求内，分析未提及，E6-06 也未改",
+      "同服务 updateSort、delete、updateRecommendStatus（32–54）按 id 操作，不处理批量输入",
+      "Controller、Service 接口、mall-mbg Mapper、表结构：E6-06 均未改动",
+      "唯一索引、幂等框架、HashSet 去重：分析已排除（改表 / 超出需求 / 丢顺序）"
+    ] },
+    { "dot": "violet", "title": "锁定现状的测试（SDCE506Test，exp/e5-06）", "items": [
+      "层次：4 项都是单元测试 + 替身。直接 new ServiceImpl，Mapper 为 Mockito mock，经反射注入；无 Spring 上下文、无事务代理、无数据库、不经 Controller",
+      "测试 1（28–44）锁 Impl.create→Mapper.insert：7/7/8 插入 3 次、顺序 FIRST/SECOND/EIGHT、状态 1 排序 0、返回 3 —— 新需求实施后须改写",
+      "测试 2（47–53）锁 create 的返回值：Mapper 返回 0 时仍返回 2 —— 新需求实施后须改写",
+      "测试 3（56–62）空列表返回 0 且不 insert；测试 4（65–73）Mapper 异常原样传出 —— 新需求下保持",
+      "compare.txt：基线与 6fa43cda 均 4/0/0"
+    ] }
+  ]
+}
