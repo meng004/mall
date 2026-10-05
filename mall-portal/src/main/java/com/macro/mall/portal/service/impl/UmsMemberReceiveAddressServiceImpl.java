@@ -1,5 +1,6 @@
 package com.macro.mall.portal.service.impl;
 
+import com.macro.mall.common.exception.Asserts;
 import com.macro.mall.mapper.UmsMemberReceiveAddressMapper;
 import com.macro.mall.model.UmsMember;
 import com.macro.mall.model.UmsMemberReceiveAddress;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * 用户地址管理Service实现类
@@ -18,12 +20,14 @@ import java.util.List;
  */
 @Service
 public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddressService {
+    private static final Pattern SIX_ASCII_DIGITS = Pattern.compile("[0-9]{6}");
     @Autowired
     private UmsMemberService memberService;
     @Autowired
     private UmsMemberReceiveAddressMapper addressMapper;
     @Override
     public int add(UmsMemberReceiveAddress address) {
+        normalizePostCode(address);
         UmsMember currentMember = memberService.getCurrentMember();
         address.setMemberId(currentMember.getId());
         return addressMapper.insert(address);
@@ -39,6 +43,7 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
 
     @Override
     public int update(Long id, UmsMemberReceiveAddress address) {
+        normalizePostCode(address);
         address.setId(null);
         UmsMember currentMember = memberService.getCurrentMember();
         UmsMemberReceiveAddressExample example = new UmsMemberReceiveAddressExample();
@@ -77,5 +82,17 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
             return addressList.get(0);
         }
         return null;
+    }
+
+    private void normalizePostCode(UmsMemberReceiveAddress address) {
+        String postCode = address.getPostCode();
+        if (postCode == null) {
+            return;
+        }
+        String stripped = postCode.strip();
+        if (!stripped.isEmpty() && !SIX_ASCII_DIGITS.matcher(stripped).matches()) {
+            Asserts.fail("邮政编码须为六位数字");
+        }
+        address.setPostCode(stripped);
     }
 }
