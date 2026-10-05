@@ -1,0 +1,22 @@
+示例：E7-00  模块：mall-portal  测试：ProductQueryTest,QueryEvaluationTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[80,12] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/ProductQueryTest.java:[3,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryDemo.java:[4,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluation.java:[6,33] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluation.java:[16,46] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluation.java:[5,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluationTest.java:[3,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[80,12] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/ProductQueryTest.java:[3,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryDemo.java:[4,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluation.java:[6,33] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluation.java:[16,46] cannot find symbol
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluation.java:[5,1] package com.macro.mall.portal.query does not exist
+[ERROR] /tmp/tmp.VShwhH610B/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/QueryEvaluationTest.java:[3,1] package com.macro.mall.portal.query does not exist
+改后 7b22339e：pass（预期 pass）  [INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
