@@ -1,0 +1,7 @@
+示例：E3-01  模块：mall-portal  测试：SDCE301Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 7, Failures: 3, Errors: 0, Skipped: 0
+[ERROR]   SDCE301Test.categoryRejectsNinetyNineNinety:66 expected: <0> but was: <1>
+[ERROR]   SDCE301Test.ninetyNineNinetyIsBelowOneHundred:48 expected: <0> but was: <1>
+[ERROR]   SDCE301Test.productRejectsNinetyNineNinety:74 expected: <0> but was: <1>
+改后 b108e022：pass（预期 pass）  [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

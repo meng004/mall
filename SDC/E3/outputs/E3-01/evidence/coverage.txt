@@ -1,0 +1,61 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）。
+命令（主工作区，可联网，未加 -o）：
+mvn -B -pl mall-portal -am -DskipTests=false -Dtest=SDCE301Test -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-portal/target/site/jacoco/jacoco.xml（target 已被 mall-portal/.gitignore 忽略，不提交）。
+
+提交：测试 2f21d5f75172056d53b6247b945778a54ad8d437；修复 b108e02242d23e148e27443f8a9d7cd7feb9b734。覆盖率跑在该修复之上的工作区；docs 提交只收录本文件，不改被测代码。
+
+统计对象：UmsMemberCouponServiceImpl.listCart(List,Integer)。源码签名在第 115 行，JaCoCo 方法计数从第 116 行起，到第 168 行 return 结束。
+
+行覆盖：covered=36 missed=0，36/36=100.0%。
+分支覆盖：covered=30 missed=0，30/30=100.0%。
+指令覆盖：covered=184 missed=0，合计 184。
+方法计数：missed=0 covered=1。
+
+fix 改动行：第 132 行 mi=0 ci=8 mb=0 cb=4；第 145 行 mi=0 ci=11 mb=0 cb=6；第 158 行 mi=0 ci=11 mb=0 cb=6。三行全部覆盖。
+
+第 145、158 行分支已经全部覆盖，但相等边界是靠分类、商品范围在 100.00 可用与 98.90 不可用的断言锁住的，覆盖率不能代替断言。
+
+未覆盖行：无
+未覆盖分支：无
+
+同文件的 add、listHistory、listByProduct、list、generateCouponCode 未被修改，不是统计对象，不报类或模块平均值。三个 calcTotalAmount* 辅助方法行与分支均为 100%，也不纳入本次数字。
+
+逐行（只列 JaCoCo 有探针的行；nr mi ci mb cb）。ci 是该行已覆盖指令数，便于和 mi 对照。
+nr	mi	ci	mb	cb	源码
+116	0	4	0	0	        UmsMember currentMember = memberService.getCurrentMember();
+117	0	4	0	0	        Date now = new Date();
+119	0	6	0	0	        List<SmsCouponHistoryDetail> allList = couponHistoryDao.getDetailList(currentMember.getId());
+121	0	4	0	0	        List<SmsCouponHistoryDetail> enableList = new ArrayList<>();
+122	0	4	0	0	        List<SmsCouponHistoryDetail> disableList = new ArrayList<>();
+123	0	10	0	2	        for (SmsCouponHistoryDetail couponHistoryDetail : allList) {
+124	0	4	0	0	            Integer useType = couponHistoryDetail.getCoupon().getUseType();
+125	0	4	0	0	            BigDecimal minPoint = couponHistoryDetail.getCoupon().getMinPoint();
+126	0	4	0	0	            Date endTime = couponHistoryDetail.getCoupon().getEndTime();
+127	0	5	0	2	            if(useType.equals(0)){
+131	0	4	0	0	                BigDecimal totalAmount = calcTotalAmount(cartItemList);
+132	0	8	0	4	                if(now.before(endTime)&&totalAmount.compareTo(minPoint)>=0){
+133	0	5	0	0	                    enableList.add(couponHistoryDetail);
+135	0	4	0	0	                    disableList.add(couponHistoryDetail);
+137	0	6	0	2	            }else if(useType.equals(1)){
+140	0	4	0	0	                List<Long> productCategoryIds = new ArrayList<>();
+141	0	11	0	2	                for (SmsCouponProductCategoryRelation categoryRelation : couponHistoryDetail.getCategoryRelationList()) {
+142	0	5	0	0	                    productCategoryIds.add(categoryRelation.getProductCategoryId());
+143	0	1	0	0	                }
+144	0	5	0	0	                BigDecimal totalAmount = calcTotalAmountByproductCategoryId(cartItemList,productCategoryIds);
+145	0	11	0	6	                if(now.before(endTime)&&totalAmount.intValue()>0&&totalAmount.compareTo(minPoint)>=0){
+146	0	5	0	0	                    enableList.add(couponHistoryDetail);
+148	0	4	0	0	                    disableList.add(couponHistoryDetail);
+150	0	6	0	2	            }else if(useType.equals(2)){
+153	0	4	0	0	                List<Long> productIds = new ArrayList<>();
+154	0	11	0	2	                for (SmsCouponProductRelation productRelation : couponHistoryDetail.getProductRelationList()) {
+155	0	5	0	0	                    productIds.add(productRelation.getProductId());
+156	0	1	0	0	                }
+157	0	5	0	0	                BigDecimal totalAmount = calcTotalAmountByProductId(cartItemList,productIds);
+158	0	11	0	6	                if(now.before(endTime)&&totalAmount.intValue()>0&&totalAmount.compareTo(minPoint)>=0){
+159	0	5	0	0	                    enableList.add(couponHistoryDetail);
+161	0	4	0	0	                    disableList.add(couponHistoryDetail);
+164	0	1	0	0	        }
+165	0	5	0	2	        if(type.equals(1)){
+166	0	2	0	0	            return enableList;
+168	0	2	0	0	            return disableList;
