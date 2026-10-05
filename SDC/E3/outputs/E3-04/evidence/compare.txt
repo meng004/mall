@@ -1,0 +1,17 @@
+示例：E3-04  模块：mall-admin  测试：SDCE304Test,SDCE304TransactionTest
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 17, Failures: 13, Errors: 0, Skipped: 0
+[ERROR]   SDCE304Test.missingTargetCategoryRejectsBeforeWrite:169 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE304Test.movingParameterFromZeroParamCountStaysZero:250->persisted:287 category 101 count was not persisted ==> expected: not <null>
+[ERROR]   SDCE304Test.movingSpecificationFromZeroAttributeCountStaysZero:239->persisted:287 category 101 count was not persisted ==> expected: not <null>
+[ERROR]   SDCE304Test.onlyCategoryChangeKeepsTypeCounter:142 expected: <0> but was: <1>
+[ERROR]   SDCE304Test.onlyCategoryChangeMovesParameterCount:158 expected: <0> but was: <1>
+[ERROR]   SDCE304Test.onlyTypeChangeFromParameterMaintainsBothCounters:128 expected: <1> but was: <0>
+[ERROR]   SDCE304Test.onlyTypeChangeMaintainsBothCounters:114 expected: <0> but was: <1>
+[ERROR]   SDCE304Test.specificationMovesToAnotherCategoryParameter:77 expected: <0> but was: <1>
+[ERROR]   SDCE304TransactionTest.crossCategoryMovePersistsAttributeAndCounts:57->run:98->lambda$crossCategoryMovePersistsAttributeAndCounts$0:59 expected: <CategoryCounts[attributeCount=3, paramCount=7]> but was: <CategoryCounts[attributeCount=4, paramCount=7]>
+[ERROR]   SDCE304TransactionTest.newCategoryWriteFailureRestoresPreviousState:80->run:96 Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+[ERROR]   SDCE304TransactionTest.oldCategoryWriteFailureRestoresPreviousState:75->run:96 Expected java.lang.RuntimeException to be thrown, but nothing was thrown.
+[ERROR]   SDCE304TransactionTest.sameCategoryTypeChangePersistsBothCounters:66->run:98->lambda$sameCategoryTypeChangePersistsBothCounters$1:68 expected: <CategoryCounts[attributeCount=3, paramCount=8]> but was: <CategoryCounts[attributeCount=4, paramCount=7]>
+[ERROR]   SDCE304TransactionTest.updateTransactionAttributeIsPresent:52 expected: not <null>
+改后 34a77329：pass（预期 pass）  [INFO] Tests run: 17, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

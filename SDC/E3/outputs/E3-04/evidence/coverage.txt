@@ -1,0 +1,67 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）。
+命令（主工作区，可联网，未加 -o）：
+mvn -B -pl mall-admin -am -DskipTests=false -Dtest=SDCE304Test,SDCE304TransactionTest -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-admin/target/site/jacoco/jacoco.xml（target 已被 mall-admin/.gitignore 忽略，不提交）。
+
+提交：测试 6a483a025bd4ce9993e6fea41057d75d6ae97d0a；修复 34a7732952321c231c933f4a6b591efed217af54。覆盖率跑在该修复之上的工作区；docs 提交只收录本文件和 AI 记录、对照结果，不改被测代码。
+
+统计对象：PmsProductAttributeServiceImpl.update(Long, PmsProductAttributeParam)。源码签名在第 59 行，JaCoCo 方法计数从第 60 行起，到第 102 行 return count 结束。接口上的注解没有探针。
+
+行覆盖：covered=35 missed=1，35/36=97.2%。
+分支覆盖：covered=24 missed=2，24/26=92.3%。
+指令覆盖：covered=152 missed=2，合计 154。
+方法计数：missed=0 covered=1。
+
+统计时 13306 已连通，Tests run: 17, Skipped: 0；13306 不可连时事务类 4 例会被 assumeTrue 跳过（SDCE304TransactionTest.java:164、:178），那次的结果不能作为依据。
+
+未覆盖行：只有 1 行，即第 79 行 Asserts.fail("商品属性分类不存在")（mi=2 ci=0）。Asserts.fail 总是抛出 ApiException，JaCoCo 插在调用之后的探针执行不到，所以这一行被记为未覆盖。第 79 行的执行由 :169-172 的断言证明。
+
+未覆盖分支：共 2 个。
+- 第 90 行 else if (oldType == 1) 的假分支（mb=1 cb=1）。
+- 第 95 行 else if (newType == 1) 的假分支（mb=1 cb=1）。
+要走到这两个分支，类型必须既不是 0 也不是 1。规格和 Issue 只定义了规格（0）、参数（1）两种类型；基线 create（本分支第 49–53 行）对其他类型同样不改计数；现有数据里 type 不是 0/1 的有 0 行。这两条是规格未定义，不为凑 100% 补测试。
+
+第 69–71 行入参为 null 时沿用旧值的两个分支都已覆盖（mb=0 cb=2）。第 4 行的 import 没有探针。
+
+分支覆盖不能代替断言。计数下限由 :239、:250 两例锁住。
+
+不统计的方法：同一个类里的 getList、create、getItem、delete、getProductAttrInfo 行覆盖都是 0%。它们没有被修改，不是统计对象，不报类或模块平均值。
+
+逐行（只列 JaCoCo 有探针的行；nr mi ci mb cb）。ci 是该行已覆盖指令数，便于和 mi 对照。
+nr	mi	ci	mb	cb	源码
+60	0	4	0	0	        PmsProductAttribute pmsProductAttribute = new PmsProductAttribute();
+61	0	3	0	0	        pmsProductAttribute.setId(id);
+62	0	3	0	0	        BeanUtils.copyProperties(productAttributeParam, pmsProductAttribute);
+63	0	5	0	0	        PmsProductAttribute existing = productAttributeMapper.selectByPrimaryKey(id);
+64	0	2	0	2	        if (existing == null) {
+65	0	5	0	0	            return productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+67	0	3	0	0	        Long oldCategoryId = existing.getProductAttributeCategoryId();
+68	0	3	0	0	        Integer oldType = existing.getType();
+69	0	3	0	2	        Long newCategoryId = pmsProductAttribute.getProductAttributeCategoryId() != null
+70	0	5	0	0	                ? pmsProductAttribute.getProductAttributeCategoryId() : oldCategoryId;
+71	0	8	0	2	        Integer newType = pmsProductAttribute.getType() != null ? pmsProductAttribute.getType() : oldType;
+72	0	4	0	0	        boolean sameCategory = oldCategoryId.equals(newCategoryId);
+73	0	4	0	0	        boolean sameType = oldType.equals(newType);
+74	0	4	0	4	        if (sameCategory && sameType) {
+75	0	5	0	0	            return productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+77	0	5	0	0	        PmsProductAttributeCategory destination = productAttributeCategoryMapper.selectByPrimaryKey(newCategoryId);
+78	0	2	0	2	        if (destination == null) {
+79	2	0	0	0	            Asserts.fail("商品属性分类不存在");
+81	0	5	0	0	        int count = productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+82	0	2	0	2	        if (count <= 0) {
+83	0	2	0	0	            return count;
+85	0	2	0	2	        PmsProductAttributeCategory source = sameCategory
+86	0	2	0	0	                ? destination
+87	0	5	0	0	                : productAttributeCategoryMapper.selectByPrimaryKey(oldCategoryId);
+88	0	3	0	2	        if (oldType == 0) {
+89	0	11	0	0	            source.setAttributeCount(Math.max(0, source.getAttributeCount() - 1));
+90	0	4	1	1	        } else if (oldType == 1) {
+91	0	10	0	0	            source.setParamCount(Math.max(0, source.getParamCount() - 1));
+93	0	3	0	2	        if (newType == 0) {
+94	0	9	0	0	            destination.setAttributeCount(destination.getAttributeCount() + 1);
+95	0	4	1	1	        } else if (newType == 1) {
+96	0	8	0	0	            destination.setParamCount(destination.getParamCount() + 1);
+98	0	5	0	0	        productAttributeCategoryMapper.updateByPrimaryKey(source);
+99	0	2	0	2	        if (!sameCategory) {
+100	0	5	0	0	            productAttributeCategoryMapper.updateByPrimaryKey(destination);
+102	0	2	0	0	        return count;
