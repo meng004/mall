@@ -1,0 +1,838 @@
+{
+  "evaluatedAt" : "2026-10-04T07:58:46.736882Z",
+  "harnessNote" : "验收文件把模型输入放在 input.llm 或 input.text，普通输入放在 input.form。本次只改评测器入参组装：expected、kind 和标准答案不进入模型。这不是盲测调参，也没有改产品提示词。",
+  "humanReview" : "独立人工核对尚未进行",
+  "courseOfflineTests" : "关联 CandidateEvaluationTest 离线回放 model-eval.json。不是新盲测。",
+  "model" : "grok-4.7-high-fast",
+  "cost" : "无数据",
+  "usage" : "适配器未暴露",
+  "isolatedDatabase" : true,
+  "databaseNote" : "离线回放，未调用在线模型。",
+  "stopped" : false,
+  "modelCalls" : 0,
+  "elapsedMillis" : 1,
+  "codeVerdict" : "INCOMPLETE",
+  "decision" : "未完成",
+  "note" : "离线回放已公开 model-eval 响应，不是新盲测，不覆盖首次报告。",
+  "oldCodeVerdict" : "REJECT",
+  "oldDecision" : "不放行",
+  "oldLlmPassed" : "27/32 首次报告分数，不是当前质量结论",
+  "newLlmPassed" : "27/32 可评分，完整题量 32。不是全套准确率，不是新盲测。",
+  "tally" : {
+    "总题数" : 32,
+    "已执行" : 32,
+    "可评分通过" : 27,
+    "可评分失败" : 5,
+    "待人工" : 0,
+    "传输未完成" : 0,
+    "未执行" : 0,
+    "不可重算" : 0
+  },
+  "uncomputable" : 0,
+  "difference" : "可重算的模型行：维持通过 27，失败转为通过 0，通过转为失败 0，改为待人工核对 0，缺公开响应不可重算 0。传输未完成和未执行不进业务失败分母。局部可评分比例不是全套准确率。这不是新盲测。",
+  "results" : [ {
+    "id" : "E7-04-N01",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "快递太慢",
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N01",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "快递太慢",
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N02",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "QUALITY" : "开胶",
+      "AFTER_SALES" : "客服"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N02",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "鞋子开胶",
+      "AFTER_SALES" : "客服不给退"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N03",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "快递太慢",
+      "AFTER_SALES" : "售后"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N03",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "快递太慢",
+      "AFTER_SALES" : "售后也不回复"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N04",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "QUALITY" : "做工"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N04",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "做工粗糙"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N05",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "物流"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N05",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "物流三天还没更新"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N06",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "AFTER_SALES" : "退货"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N06",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "AFTER_SALES" : "申请退货后没人处理"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N07",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "OTHER" : "价格"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N07",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "OTHER" : "价格偏高"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N08",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "物流",
+      "QUALITY" : "质量",
+      "AFTER_SALES" : "退货"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N08",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "物流也快",
+      "QUALITY" : "质量很好",
+      "AFTER_SALES" : "退货也顺利"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N09",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "QUALITY" : "质量"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N09",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "质量不行"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N10",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "快递",
+      "QUALITY" : "质量"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N10",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "快递把盒子压坏了"
+    },
+    "failedFields" : "topics",
+    "errorCategory" : "业务",
+    "detail" : "主题集合或状态不一致",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N11",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "AFTER_SALES" : "客服"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N11",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "AFTER_SALES" : "客服态度差"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N12",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "state",
+    "errorCategory" : "业务",
+    "detail" : "主题集合或状态不一致",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N12",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "送货上门准时"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N13",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "state",
+    "errorCategory" : "业务",
+    "detail" : "主题集合或状态不一致",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N13",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "线头很多"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N14",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "AFTER_SALES" : "换货"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N14",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "AFTER_SALES" : "换货流程清楚"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N15",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N15",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N16",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "快递太慢",
+      "QUALITY" : "开胶"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N16",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "快递太慢",
+      "QUALITY" : "鞋底还开胶"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N17",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "AFTER_SALES" : "售后"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N17",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "AFTER_SALES" : "售后不给开发票"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N18",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "OTHER" : "价格",
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N18",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "OTHER" : "价格能接受",
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N19",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "快递"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N19",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "快递破损了箱子"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N20",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "QUALITY" : "开胶",
+      "AFTER_SALES" : "客服"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-N20",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "AFTER_SALES" : "客服让我自己承担运费",
+      "QUALITY" : "鞋底也开胶"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A01",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A01",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A02",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A02",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A03",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A03",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "failedFields" : "协议",
+    "errorCategory" : "协议",
+    "detail" : "非法JSON",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A04",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A04",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A05",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A05",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A06",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A06",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A07",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A07",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "QUALITY" : "质量没问题"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A08",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "LOGISTICS" : "物流"
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "同标签引文不在教师片段集合，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-A08",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "LOGISTICS" : "物流很慢"
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O01",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O01",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "AFTER_SALES" : "请批准退款"
+    },
+    "failedFields" : "state",
+    "errorCategory" : "业务",
+    "detail" : "主题集合或状态不一致",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O02",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O02",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "failedFields" : "协议",
+    "errorCategory" : "协议",
+    "detail" : "非法JSON",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O03",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O03",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O04",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : { },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-04-O04",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "failedFields" : "协议",
+    "errorCategory" : "协议",
+    "detail" : "非法JSON",
+    "countedAsCorrectRejection" : false
+  } ]
+}

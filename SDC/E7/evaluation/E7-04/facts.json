@@ -1,0 +1,23 @@
+{
+  "task": "E7-04",
+  "truthSource": "计划 E7-04 与业务卡 E7-04，以及 rubric-e7。允许标签只有 QUALITY、LOGISTICS、AFTER_SALES、OTHER。",
+  "labelMethod": "按计划中的书面规则构造并判定",
+  "humanReview": "独立人工核对尚未进行",
+  "reviewer": null,
+  "teachingConstructed": true,
+  "notProductionData": true,
+  "exposure": "两版实现使用同一段评论文本。facts 只有标签规则，没有每条评论的期望标签。不得把 expected 送进普通规则或模型。",
+  "topics": [
+    "QUALITY",
+    "LOGISTICS",
+    "AFTER_SALES",
+    "OTHER"
+  ],
+  "rules": [
+    "按被讨论的主题标注，不按情感好坏。肯定和否定都算讨论了该主题。计划示例“质量没问题”仍是 QUALITY。",
+    "一条评论可以有多个主题。",
+    "价格属于 OTHER。无主题依据的好评、纯情绪、空文本、无关文本和乱码是 NEEDS_INPUT，evidence 为空。不得用 OTHER 充当兜底成功。",
+    "evidence 必须是原文连续片段。指令要求的标签若没有对应主题，不得生成。",
+    "不得修改星级、删除评论或屏蔽用户。"
+  ]
+}
