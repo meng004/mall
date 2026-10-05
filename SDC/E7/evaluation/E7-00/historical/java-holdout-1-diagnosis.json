@@ -1,0 +1,24 @@
+{
+  "evaluatedAt" : "2026-10-03T03:33:04.897501Z",
+  "evidenceType" : "case-set comparison; independence and model accuracy require separate provenance",
+  "cases" : "mall/SDC/E7/evaluation/java-holdout-1-failures.json",
+  "pageSize" : 100,
+  "verdict" : "FAILED",
+  "results" : [ {
+    "id" : "fresh-n19",
+    "kind" : "normal",
+    "passed" : false,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  }, {
+    "id" : "fresh-n20",
+    "kind" : "normal",
+    "passed" : false,
+    "actualStatus" : "UNSUPPORTED",
+    "actualIds" : [ ]
+  } ],
+  "modelResponses" : {
+    "fresh-n19" : [ "{\"action\":\"query\",\"name\":\"%\"}" ],
+    "fresh-n20" : [ "{\"action\":\"query\",\"name\":\"_\"}" ]
+  }
+}

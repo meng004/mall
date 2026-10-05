@@ -1,0 +1,16 @@
+[
+  {
+    "id": "fresh-n19",
+    "kind": "normal",
+    "text": "按字面查商品名称中包含百分号“%”的商品。",
+    "expected_status": "OK",
+    "expected_ids": []
+  },
+  {
+    "id": "fresh-n20",
+    "kind": "normal",
+    "text": "查询商品名称中带下划线“_”这个字符的商品。",
+    "expected_status": "OK",
+    "expected_ids": []
+  }
+]
