@@ -1,0 +1,4 @@
+示例：E2-03  模块：mall-portal  测试：SDCE203Test  仅改后：SDCE203SelectorDatabaseTest
+改前 baseline-dcaa93b3：pass（预期 pass）  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+改后 604d0ffc：pass（预期 pass）  [INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

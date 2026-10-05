@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-03 改后：秒杀时间规则移入 HomeFlashPromotionSelector（exp/e2-03 604d0ffc）",
+    "output": "e2-03.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "604d0ffc719f512c7c7fca30d53f835957605968"
+    }
+  },
+  "components": [
+    { "id": "charTest", "type": "external", "label": "SDCE203Test", "sublabel": "4 项 · 经 content() · 改前改后都跑", "pos": [40, 70], "size": [220, 64],
+      "sources": [
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE203Test.java", "line": 45, "end_line": 49, "label": "只经现有入口 content()" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE203Test.java", "line": 176, "end_line": 188, "label": "调用前后时间窗口核对" }
+      ] },
+    { "id": "controller", "type": "frontend", "label": "HomeController.content", "sublabel": "GET /home/content", "pos": [40, 250], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/HomeController.java", "line": 28, "end_line": 34, "label": "仍只调 homeService.content()" }] },
+    { "id": "content", "type": "backend", "label": "HomeServiceImpl.content(now)", "sublabel": "content() 委托；组装六块", "pos": [370, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 36, "end_line": 39, "label": "content() 一行委托" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 41, "end_line": 59, "label": "content(Date now) 六块聚合" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 21, "end_line": 34, "label": "仍是 7 个 @Autowired 依赖" }
+      ] },
+    { "id": "now", "type": "external", "label": "new Date()", "sublabel": "入口 content() 取当前时间", "tag": "上移一层", "pos": [395, 70], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 38, "label": "content(new Date())" }] },
+    { "id": "selTest", "type": "external", "label": "SDCE203SelectorDatabaseTest", "sublabel": "仅改后 · 8 项 · 固定时刻 + 真实 SQL", "pos": [720, 70], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE203SelectorDatabaseTest.java", "line": 39, "end_line": 44, "label": "教学库数据与中止规则" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE203SelectorDatabaseTest.java", "line": 67, "end_line": 76, "label": "真实 Mapper + HomeDao 替身" },
+        { "path": "mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE203SelectorDatabaseTest.java", "line": 85, "end_line": 125, "label": "8 个固定时刻" }
+      ] },
+    { "id": "flash", "type": "backend", "label": "HomeFlashPromotionSelector", "sublabel": "select(now)：活动→场次→下一场→商品", "tag": "新类", "pos": [720, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 51, "label": "content 内 new 并调用" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 27, "end_line": 33, "label": "构造器接收三个依赖" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 35, "end_line": 57, "label": "select(Date now)" }
+      ] },
+    { "id": "rules", "type": "backend", "label": "三组查询条件", "sublabel": "3 个查询 + 3 个静态 Example 构造", "tag": "private", "pos": [1100, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 59, "end_line": 84, "label": "三个查询方法" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 86, "end_line": 114, "label": "条件与运算符，未改" }
+      ] },
+    { "id": "others", "type": "database", "label": "其余五块首页内容", "sublabel": "广告 Mapper + HomeDao 四个查询", "pos": [370, 440], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 46, "end_line": 57, "label": "广告、品牌、新品、人气、专题" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 106, "end_line": 111, "label": "广告查询" }
+      ] },
+    { "id": "flashDao", "type": "database", "label": "HomeDao.getFlashProductList", "sublabel": "按活动 + 场次取秒杀商品", "pos": [720, 440], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 52, "label": "调用点" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/dao/HomeDao.java", "line": 25 },
+        { "path": "mall-portal/src/main/resources/dao/HomeDao.xml", "line": 24, "end_line": 36, "label": "关联表查询" }
+      ] },
+    { "id": "promoMapper", "type": "database", "label": "SmsFlashPromotionMapper", "sublabel": "selectByExample 活动", "pos": [1030, 440], "size": [220, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 70, "label": "调用点" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsFlashPromotionMapper.java", "line": 19 }
+      ] },
+    { "id": "sessionMapper", "type": "database", "label": "SmsFlashPromotionSessionMapper", "sublabel": "selectByExample 当前场 / 下一场", "pos": [1290, 440], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 79, "label": "当前场调用点" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeFlashPromotionSelector.java", "line": 61, "label": "下一场调用点" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsFlashPromotionSessionMapper.java", "line": 19 }
+      ] },
+    { "id": "mysql", "type": "database", "label": "MySQL · mall 库", "sublabel": "JDBC，同一请求线程内同步查询", "pos": [370, 630], "size": [1180, 60],
+      "sources": [{ "path": "mall-portal/src/main/resources/application-dev.yml", "line": 5, "end_line": 6, "label": "datasource" }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "HomeServiceImpl：只组装六块，仍持有秒杀 Mapper", "wraps": ["content", "now"] },
+    { "kind": "region", "label": "HomeFlashPromotionSelector：时刻由 select(now) 参数给入", "wraps": ["flash", "rules"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "content", "label": "content()", "variant": "emphasis" },
+    { "id": "read-now", "from": "content", "to": "now", "label": "取当前时间", "variant": "dashed" },
+    { "id": "to-flash", "from": "content", "to": "flash", "label": "select(now)", "variant": "emphasis" },
+    { "id": "to-rules", "from": "flash", "to": "rules", "label": "按 now 选择" },
+    { "id": "to-others", "from": "content", "to": "others", "label": "五块查询" },
+    { "id": "to-flashDao", "from": "flash", "to": "flashDao", "label": "取秒杀商品" },
+    { "id": "to-promo", "from": "rules", "to": "promoMapper", "label": "活动查询" },
+    { "id": "to-session", "from": "rules", "to": "sessionMapper", "label": "场次查询 ×2" },
+    { "id": "sql-others", "from": "others", "to": "mysql" },
+    { "id": "sql-flashDao", "from": "flashDao", "to": "mysql" },
+    { "id": "sql-promo", "from": "promoMapper", "to": "mysql" },
+    { "id": "sql-session", "from": "sessionMapper", "to": "mysql" },
+    { "id": "char-drive", "from": "charTest", "to": "content", "label": "经 content()", "variant": "dashed" },
+    { "id": "sel-drive", "from": "selTest", "to": "flash", "label": "固定时刻 select", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "新增 HomeFlashPromotionSelector（115 行）：select(Date now)（35–57 行）与三组查询从服务搬入；条件提成三个静态 Example 构造（86–114 行），运算符与 start_time asc 未改",
+      "content() 变为一行 content(new Date())（37–38 行）；content(Date now)（44–59 行）只组装六块，秒杀一块在 51 行一行委托选择器",
+      "选择器在 51 行用服务已有的三个依赖 new 出来；Spring 装配、HomeService 接口、HomeController 都没有改"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "多一个类和一次跳转；HomeServiceImpl 仍注入两个秒杀 Mapper（25–28 行），只为转交给选择器，服务的依赖数没有减少",
+      "选择器在 content(Date) 内每次 new，不是 Bean，从服务外部换不掉；content(Date) 只在实现类上，接口和 Controller 仍走 content()，也没有测试调用它",
+      "时间仍由 content() 入口的 new Date()（38 行）取得，只是上移一层，不是由调用方注入",
+      "10:00:00 同时落在两场闭区间内，当前场查询不排序，取先返回的一行（现状，本次未改）"
+    ] },
+    { "dot": "cyan", "title": "证据", "items": [
+      "SDCE203Test 4 项经 content()，改前改后都通过；compare.txt：改前 4 项、改后 12 项全部通过",
+      "SDCE203SelectorDatabaseTest 8 项只在改后运行：固定时刻直接驱动选择器，在教学库 MySQL 上执行真实 SQL；HomeDao 用替身，库不可达时中止而不是通过",
+      "变异：当前场结束 >= 改 > → 2 项变红；下一场 > 改 >= → 7 项变红；活动末日 >= 改 > → 2 项变红"
+    ] },
+    { "dot": "slate", "title": "与公共 4+1 视图的关系", "items": [
+      "公共逻辑视图 mall-logical.html 只画订单与改密，没有首页或秒杀；本图是补充的逻辑视图切片，下钻到类和方法",
+      "开发视图：新类仍在 mall-portal 的 service.impl 包，Mapper 来自 mall-mbg，模块依赖不变",
+      "进程与部署视图不变：同一请求线程内同步查询，经 JDBC 读 MySQL；公共进程视图画的是取消订单，与本题无关",
+      "+1 场景：公共场景是下单；本题场景“打开首页看到当前秒杀场次”在公共视图中没有"
+    ] }
+  ]
+}

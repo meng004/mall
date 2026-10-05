@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-03 改前：首页聚合与秒杀时间规则同在 HomeServiceImpl（基线 dcaa93b3）",
+    "output": "e2-03.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "HomeController.content", "sublabel": "GET /home/content", "pos": [40, 250], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/HomeController.java", "line": 28, "end_line": 34, "label": "只调 homeService.content()" }] },
+    { "id": "content", "type": "backend", "label": "HomeServiceImpl.content()", "sublabel": "组装六块首页内容", "pos": [370, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 25, "end_line": 38, "label": "7 个 @Autowired 依赖" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 40, "end_line": 56, "label": "六块聚合，48 行取秒杀" }
+      ] },
+    { "id": "now", "type": "external", "label": "new Date()", "sublabel": "方法内部取当前时间", "pos": [745, 70], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 106, "label": "getHomeFlashPromotion 内" }] },
+    { "id": "flash", "type": "backend", "label": "getHomeFlashPromotion", "sublabel": "活动→场次→下一场→商品", "tag": "private", "pos": [720, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 48, "label": "content 内调用点" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 103, "end_line": 126, "label": "秒杀选择与组装" }
+      ] },
+    { "id": "rules", "type": "backend", "label": "三个私有查询方法", "sublabel": "活动日 / 当前场 / 下一场条件", "tag": "private", "pos": [1100, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 149, "end_line": 161, "label": "活动日 <= / >=" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 164, "end_line": 175, "label": "当前场 <= / >=" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 129, "end_line": 139, "label": "下一场 > 且 start_time asc" }
+      ] },
+    { "id": "others", "type": "database", "label": "其余五块首页内容", "sublabel": "广告 Mapper + HomeDao 四个查询", "pos": [370, 440], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 43, "end_line": 54, "label": "广告、品牌、新品、人气、专题" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 141, "end_line": 146, "label": "广告查询" }
+      ] },
+    { "id": "flashDao", "type": "database", "label": "HomeDao.getFlashProductList", "sublabel": "按活动 + 场次取秒杀商品", "pos": [720, 440], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 121, "label": "调用点" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/dao/HomeDao.java", "line": 25 },
+        { "path": "mall-portal/src/main/resources/dao/HomeDao.xml", "line": 24, "end_line": 36, "label": "关联表查询" }
+      ] },
+    { "id": "promoMapper", "type": "database", "label": "SmsFlashPromotionMapper", "sublabel": "selectByExample 活动", "pos": [1030, 440], "size": [220, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 156, "label": "调用点" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsFlashPromotionMapper.java", "line": 19 }
+      ] },
+    { "id": "sessionMapper", "type": "database", "label": "SmsFlashPromotionSessionMapper", "sublabel": "selectByExample 当前场 / 下一场", "pos": [1290, 440], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 170, "label": "当前场调用点" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 134, "label": "下一场调用点" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsFlashPromotionSessionMapper.java", "line": 19 }
+      ] },
+    { "id": "mysql", "type": "database", "label": "MySQL · mall 库", "sublabel": "JDBC，同一请求线程内同步查询", "pos": [370, 630], "size": [1180, 60],
+      "sources": [{ "path": "mall-portal/src/main/resources/application-dev.yml", "line": 5, "end_line": 6, "label": "datasource" }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "HomeServiceImpl：首页聚合与秒杀时间规则在同一个类", "wraps": ["content", "now", "flash", "rules"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "content", "label": "content()", "variant": "emphasis" },
+    { "id": "to-flash", "from": "content", "to": "flash", "label": "取秒杀信息" },
+    { "id": "read-now", "from": "flash", "to": "now", "label": "隐藏时间输入", "variant": "dashed" },
+    { "id": "to-rules", "from": "flash", "to": "rules", "label": "按 now 选择" },
+    { "id": "to-others", "from": "content", "to": "others", "label": "五块查询" },
+    { "id": "to-flashDao", "from": "flash", "to": "flashDao", "label": "取秒杀商品" },
+    { "id": "to-promo", "from": "rules", "to": "promoMapper", "label": "活动查询" },
+    { "id": "to-session", "from": "rules", "to": "sessionMapper", "label": "场次查询 ×2" },
+    { "id": "sql-others", "from": "others", "to": "mysql" },
+    { "id": "sql-flashDao", "from": "flashDao", "to": "mysql" },
+    { "id": "sql-promo", "from": "promoMapper", "to": "mysql" },
+    { "id": "sql-session", "from": "sessionMapper", "to": "mysql" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "一个类承担两种独立变化：content()（40–56 行）决定首页六块各取几条，getHomeFlashPromotion 与三个私有查询（103–139、148–175 行）决定“此刻是哪个活动、哪一场”",
+      "时刻在 106 行方法内部 new Date() 取得，签名里看不到：调用方无法指定时刻，活动日 <= / >=、当前场 <= / >=、下一场 > 只能跟着真实时钟执行",
+      "秒杀规则全是 private，唯一入口 content() 会连带查广告、品牌等五块；经它测时间规则，至少要替身 4 个依赖（广告 Mapper、HomeDao、两个秒杀 Mapper）",
+      "因此特征测试 SDCE203Test 只能核对“条件值来自调用前后某一时刻”，无法构造正好落在场次起止上的时刻"
+    ] }
+  ]
+}
