@@ -43,9 +43,9 @@ B=$(outcome "$TMP/base.log" $BASE_EXIT) H=$(outcome "$TMP/head.log" $HEAD_EXIT)
 mkdir -p "$ROOT/$DIR/evidence"
 {
   echo "示例：${ID}  模块：${MODULE}  测试：${TESTS}"
-  echo "改前 ${BASE}：$B（预期 ${EXPECT_BASE}）  $(summary "$TMP/base.log")"
+  echo "改前 ${BASE}：${B}（预期 ${EXPECT_BASE}）  $(summary "$TMP/base.log")"
   details "$TMP/base.log"
-  echo "改后 ${HEAD_SHA}：$H（预期 pass）  $(summary "$TMP/head.log")"
+  echo "改后 ${HEAD_SHA}：${H}（预期 pass）  $(summary "$TMP/head.log")"
   details "$TMP/head.log"
   echo "结论：${VERDICT}"
 } | tee "$ROOT/$DIR/evidence/compare.txt"
