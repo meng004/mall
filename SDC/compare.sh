@@ -13,7 +13,8 @@ DIR=SDC/${ID%%-*}/outputs/$ID
 ROOT=$(git rev-parse --show-toplevel)
 source "$ROOT/$DIR/compare.env"
 BASE=baseline-dcaa93b3
-HEAD_SHA=$(git rev-parse --short HEAD)
+# 记录最后一次改动代码的提交；补交证据不会改变它。
+HEAD_SHA=$(git log -1 --format=%h -- . ':!SDC/*/outputs')
 TMP=$(mktemp -d) WT=$(mktemp -d)/base
 MVN=(mvn -B ${MVN_OFFLINE--o} -pl "$MODULE" -am -DskipTests=false -Dtest="$TESTS" -Dsurefire.failIfNoSpecifiedTests=false test)
 
