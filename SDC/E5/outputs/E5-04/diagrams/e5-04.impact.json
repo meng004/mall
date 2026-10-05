@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E5-04 影响范围：截止时刻清理浏览记录（基线 dcaa93b3）",
+    "output": "e5-04.impact.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "member", "type": "external", "label": "已登录会员", "sublabel": "JWT，非白名单路径", "pos": [40, 220], "size": [150, 72],
+      "sources": [{ "path": "mall-portal/src/main/resources/application.yml", "line": 21, "end_line": 37, "label": "白名单不含 /member/**" }] },
+    { "id": "controller", "type": "frontend", "label": "MemberReadHistoryController", "sublabel": "POST /member/readHistory/clear", "tag": "改：+clearBefore", "pos": [300, 220], "size": [230, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 22, "label": "@RequestMapping 前缀" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 51, "end_line": 57, "label": "clear()" }
+      ] },
+    { "id": "service", "type": "backend", "label": "MemberReadHistoryService", "sublabel": "接口 void clear()", "tag": "改：+clearBefore", "pos": [620, 220], "size": [220, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/MemberReadHistoryService.java", "line": 31, "label": "void clear()" }] },
+    { "id": "impl", "type": "backend", "label": "MemberReadHistoryServiceImpl", "sublabel": "clear()：取会员后按会员删", "tag": "改：+clearBefore", "pos": [920, 220], "size": [240, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 80, "end_line": 84, "label": "clear()" }] },
+    { "id": "repo", "type": "backend", "label": "MemberReadHistoryRepository", "sublabel": "deleteAllByMemberId(Long)", "tag": "改：+deleteBy…Before", "pos": [1270, 220], "size": [240, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java", "line": 12, "label": "extends MongoRepository" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java", "line": 21, "label": "deleteAllByMemberId" }
+      ] },
+    { "id": "current-member", "type": "security", "label": "UmsMemberServiceImpl", "sublabel": "getCurrentMember 读 SecurityContext", "tag": "不改", "pos": [920, 40], "size": [240, 68],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 140, "end_line": 145, "label": "getCurrentMember" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 82, "label": "clear 内调用" }
+      ] },
+    { "id": "mongo", "type": "database", "label": "MongoDB：MemberReadHistory 文档", "sublabel": "库 mall-port（dev）· memberId 有索引 · createTime 为 Date、无索引", "tag": "模型不改", "pos": [920, 430], "size": [590, 88],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberReadHistory.java", "line": 17, "end_line": 31, "label": "@Document 未指定集合名" },
+        { "path": "mall-portal/src/main/resources/application-dev.yml", "line": 18, "end_line": 22, "label": "database: mall-port" }
+      ] },
+    { "id": "list-chain", "type": "backend", "label": "list 链", "sublabel": "GET /list 按会员倒序分页", "tag": "不改 · 已锁定", "pos": [940, 640], "size": [170, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 59, "end_line": 66, "label": "list()" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 73, "end_line": 78, "label": "list()" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java", "line": 16, "label": "findByMemberId…Desc" }
+      ] },
+    { "id": "create-chain", "type": "backend", "label": "create 链", "sublabel": "createTime=new Date()", "tag": "分析未列", "pos": [1140, 640], "size": [170, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 27, "end_line": 37, "label": "create()" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 46, "label": "服务器时间写 createTime" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 57, "label": "save" }
+      ] },
+    { "id": "delete-chain", "type": "backend", "label": "delete(ids) 链", "sublabel": "按 id 删，无会员条件", "tag": "分析未列", "pos": [1340, 640], "size": [170, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java", "line": 39, "end_line": 49, "label": "delete()" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java", "line": 61, "end_line": 71, "label": "deleteAll(实体列表)" }
+      ] },
+    { "id": "collection-repo", "type": "database", "label": "MemberProductCollectionRepository", "sublabel": "同名 deleteAllByMemberId · 收藏实体", "tag": "已排除", "pos": [40, 440], "size": [330, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 31, "label": "deleteAllByMemberId" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 82, "label": "唯一调用方" }
+      ] },
+    { "id": "attention-repo", "type": "database", "label": "MemberBrandAttentionRepository", "sublabel": "同名 deleteAllByMemberId · 品牌关注实体", "tag": "已排除", "pos": [40, 600], "size": [330, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberBrandAttentionRepository.java", "line": 31, "label": "deleteAllByMemberId" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberAttentionServiceImpl.java", "line": 85, "label": "唯一调用方" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "直接受影响：clear 调用链（4 处要改，取会员不改）", "wraps": ["controller", "service", "impl", "repo", "current-member"] },
+    { "kind": "region", "label": "间接受影响：同一 Mongo 文档的其他读写入口（不改，属回归范围）", "wraps": ["mongo", "list-chain", "create-chain", "delete-chain"] },
+    { "kind": "region", "label": "已核实不受影响：同名方法、不同实体", "wraps": ["collection-repo", "attention-repo"] }
+  ],
+  "connections": [
+    { "id": "http-clear", "from": "member", "to": "controller", "label": "POST /clear", "variant": "emphasis" },
+    { "id": "ctrl-to-service", "from": "controller", "to": "service", "label": "clear()" },
+    { "id": "service-to-impl", "from": "service", "to": "impl", "label": "实现" },
+    { "id": "impl-member", "from": "impl", "to": "current-member", "label": "getCurrentMember()", "variant": "security" },
+    { "id": "impl-to-repo", "from": "impl", "to": "repo", "label": "按会员删除" },
+    { "id": "repo-to-mongo", "from": "repo", "to": "mongo", "label": "派生删除 memberId=", "variant": "emphasis" },
+    { "id": "list-read", "from": "list-chain", "to": "mongo", "label": "分页查 Repo:16" },
+    { "id": "create-write", "from": "create-chain", "to": "mongo", "label": "save 写入" },
+    { "id": "delete-ids", "from": "delete-chain", "to": "mongo", "label": "deleteAll 按 id", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "拟议变更（基线中尚不存在）", "items": [
+      "Controller：新增 POST /member/readHistory/clearBefore?before=，解析为 OffsetDateTime 再转 Instant；无偏移、无法解析、亚毫秒非零一律拒绝，不截断",
+      "Service 接口与 Impl：新增 clearBefore(Instant)，会员仍取自 getCurrentMember()",
+      "Repository：新增 deleteByMemberIdAndCreateTimeBefore(Long, Date)，会员条件与 createTime < 截止时刻在同一次删除里",
+      "不改：clear、list 及其 Repository 方法，MemberReadHistory 文档模型",
+      "对照 E6-04：实际只改了这 4 个文件，与“改”清单一致，没有多改或漏改"
+    ] },
+    { "dot": "cyan", "title": "影响范围", "items": [
+      "直接链：Controller.clear 51–57 → Service.clear 31 → Impl.clear 80–84 → Repository.deleteAllByMemberId 21 → Mongo",
+      "会员来自登录态：Impl 82 调 getCurrentMember（UmsMemberServiceImpl 140–145）；/member/** 不在白名单（application.yml 21–37），新路径同样要登录",
+      "数据：MemberReadHistory @Document（17）未指定集合名；memberId @Indexed（21–22）；createTime 是 Date（31），无索引",
+      "createTime 由 create 在服务器端写入 new Date()（Impl 46），截止时刻比较的是服务器时钟",
+      "同一文档的其他入口：list（分析已列，测试已锁）；create、delete(ids)（分析未列）"
+    ] },
+    { "dot": "slate", "title": "已排除", "items": [
+      "收藏、品牌关注的同名 deleteAllByMemberId（两个 Repository 各第 31 行；调用方 MemberCollectionServiceImpl 82、MemberAttentionServiceImpl 85）：实体不同，不受影响",
+      "git grep MemberReadHistory：只出现在 mall-portal 的 5 个文件里，mall-admin、mall-search 等模块没有引用",
+      "安全配置：新路径落在 /member/readHistory 前缀下，本来就要求登录，不用改",
+      "delete(ids) 只按 id 删、不带会员条件（Impl 61–71，删除在 69 行）：现状如此，与本需求无关，未纳入改动",
+      "分析排除的方案：给 clear 加可选参数、先查后逐条删、按墙钟字符串比较"
+    ] },
+    { "dot": "emerald", "title": "锁定现状的测试（SDCE504Test，2 项）", "items": [
+      "层次：两项都是单元测试 + Mockito 替身。服务是真实的 MemberReadHistoryServiceImpl，Repository 与 UmsMemberService 用 mock（会员 101）；没有 Spring 容器、Mongo 或 HTTP",
+      "clearDeletesByCurrentMember 锁直接链：verify deleteAllByMemberId(101L)（46 行），并验证从未调用无参 deleteAll()（47 行）",
+      "listStaysMemberScoped 锁 list 链：Repository 收到 memberId=101、页码 0、大小 5（53–55 行）",
+      "compare.txt：基线与 ee8a1976 都是 2 项通过、0 失败、0 错误",
+      "未覆盖：Controller、Mongo 实际删除条数、create 写 createTime、delete(ids)；隔离 Mongo 测试和控制器单测只在计划中"
+    ] }
+  ]
+}
