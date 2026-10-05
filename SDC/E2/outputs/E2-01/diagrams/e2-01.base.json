@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-01 改前：领取优惠券时生成码的隐藏依赖（基线 dcaa93b3）",
+    "output": "e2-01.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "UmsMemberCouponController", "sublabel": "POST /member/coupon/add/{couponId}", "pos": [40, 250], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberCouponController.java", "line": 37, "end_line": 43, "label": "add 委托服务" }] },
+    { "id": "service-add", "type": "backend", "label": "UmsMemberCouponServiceImpl.add", "sublabel": "资格校验 → 写领取记录", "pos": [370, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 43, "end_line": 63, "label": "资格校验" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 64, "end_line": 79, "label": "组装记录并写库" }
+      ] },
+    { "id": "now", "type": "external", "label": "new Date()", "sublabel": "领取时间校验 + createTime", "pos": [395, 70], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 53, "end_line": 55, "label": "add 内取当前时间" }] },
+    { "id": "gen-method", "type": "backend", "label": "generateCouponCode", "sublabel": "签名只有 memberId", "tag": "private", "pos": [720, 250], "size": [230, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 67, "label": "调用点" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 82, "end_line": 100, "label": "16 位码拼接" }
+      ] },
+    { "id": "clock", "type": "external", "label": "System.currentTimeMillis()", "sublabel": "方法内直接读，取后 8 位", "pos": [990, 440], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 87, "end_line": 89 }] },
+    { "id": "random", "type": "external", "label": "new Random() × 4", "sublabel": "每位新建，nextInt(10)", "pos": [1240, 440], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 90, "end_line": 92 }] },
+    { "id": "history", "type": "database", "label": "SmsCouponHistoryMapper", "sublabel": "insert 领取记录", "pos": [240, 440], "size": [210, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 75, "label": "调用 insert" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsCouponHistoryMapper.java", "line": 15 }
+      ] },
+    { "id": "coupon", "type": "database", "label": "SmsCouponMapper", "sublabel": "update 剩余/领取数量", "pos": [500, 440], "size": [210, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 76, "end_line": 79, "label": "调用 updateByPrimaryKey" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/SmsCouponMapper.java", "line": 29 }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "隐藏输入：签名之外，方法内部直接取时间和随机源", "wraps": ["gen-method", "clock", "random"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "service-add", "label": "add(couponId)", "variant": "emphasis" },
+    { "id": "read-now", "from": "service-add", "to": "now", "label": "取当前时间", "variant": "dashed" },
+    { "id": "to-gen", "from": "service-add", "to": "gen-method", "label": "生成优惠码" },
+    { "id": "read-clock", "from": "gen-method", "to": "clock", "label": "直接读时钟", "variant": "dashed" },
+    { "id": "new-random", "from": "gen-method", "to": "random", "label": "直接 new", "variant": "dashed" },
+    { "id": "insert", "from": "service-add", "to": "history", "label": "① insert" },
+    { "id": "update", "from": "service-add", "to": "coupon", "label": "② update" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "generateCouponCode(memberId) 只声明会员 ID，却在 87 行读系统时间、91 行每位 new Random()：同一显式输入得不到同一输出",
+      "码格式规则写在领取服务的私有方法（85–100 行），与资格校验、insert → update 编排在同一个类",
+      "mapper、memberService 是 @Autowired 字段，测试可以替换；时间和随机源没有任何替换点",
+      "经 add() 测码只能取调用前后的时间窗口，并用 mockConstruction(Random) 拦截构造（SDCE201Test）"
+    ] },
+    { "dot": "slate", "title": "与公共 4+1 视图的关系", "items": [
+      "细化逻辑视图：公共 mall-logical.html 画订单与改密，本图换成优惠券领取，下钻到类和方法",
+      "开发视图上全部在 mall-portal 模块，Mapper 来自 mall-mbg；进程与部署视图不变：同一请求线程内同步执行，写 MySQL",
+      "差异：公共视图只画 Spring 组件；本图把 System 时钟、Random 这类非组件依赖也画成节点"
+    ] }
+  ]
+}
