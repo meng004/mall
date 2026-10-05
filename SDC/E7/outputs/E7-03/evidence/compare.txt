@@ -1,0 +1,24 @@
+示例：E7-03  模块：mall-portal  测试：SDCE703Test
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[5,40] package com.macro.mall.portal.ai.returns does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[6,40] package com.macro.mall.portal.ai.returns does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[7,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[8,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[9,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[27,111] cannot find symbol
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[140,20] cannot find symbol
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[80,12] cannot find symbol
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE703Test.java:[3,40] package com.macro.mall.portal.ai.returns does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE703Test.java:[4,40] package com.macro.mall.portal.ai.returns does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE703Test.java:[5,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE703Test.java:[6,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE703Test.java:[7,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE703Test.java:[8,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[5,40] package com.macro.mall.portal.ai.returns does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[6,40] package com.macro.mall.portal.ai.returns does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[7,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+[ERROR] /tmp/tmp.WX1G3gQGIc/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE703Evaluation.java:[8,62] package com.macro.mall.portal.ai.returns.ReturnMaterialService does not exist
+改后 77614ec5：pass（预期 pass）  [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
