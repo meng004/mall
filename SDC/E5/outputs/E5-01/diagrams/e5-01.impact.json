@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E5-01 影响范围：分类删除限制（基线 dcaa93b3）",
+    "output": "e5-01.impact.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "siblings", "type": "backend", "label": "getList / update（同类）", "sublabel": "不改，需回归", "pos": [370, 40], "size": [250, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 70, "end_line": 92, "label": "update：按分类 id 同步商品分类名" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 95, "end_line": 102, "label": "getList：按 parentId 查下级" }
+      ] },
+    { "id": "ctl", "type": "frontend", "label": "PmsProductCategoryController", "sublabel": "POST /productCategory/delete/{id}", "pos": [40, 236], "size": [230, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductCategoryController.java", "line": 73, "end_line": 83, "label": "count>0 成功，否则 failed()" }
+      ] },
+    { "id": "svc", "type": "backend", "label": "PmsProductCategoryServiceImpl", "sublabel": "delete：现仅 deleteByPrimaryKey", "tag": "唯一落点 · 改", "pos": [370, 228], "size": [250, 88],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 104, "end_line": 107, "label": "delete 现状" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/PmsProductCategoryService.java", "line": 35, "label": "delete 未标 @Transactional" }
+      ] },
+    { "id": "mapperCat", "type": "database", "label": "PmsProductCategoryMapper", "sublabel": "拟加 select / countByExample", "pos": [790, 140], "size": [230, 72],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsProductCategoryMapper.java", "line": 9, "end_line": 13, "label": "countByExample / deleteByPrimaryKey" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsProductCategoryExample.java", "line": 177, "label": "andParentIdEqualTo" }
+      ] },
+    { "id": "mapperProd", "type": "database", "label": "PmsProductMapper", "sublabel": "拟加 countByExample", "pos": [790, 330], "size": [230, 72],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsProductMapper.java", "line": 9, "label": "countByExample" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsProductExample.java", "line": 239, "label": "andProductCategoryIdEqualTo" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsProductExample.java", "line": 629, "label": "andDeleteStatusEqualTo（不应使用）" }
+      ] },
+    { "id": "tblCat", "type": "database", "label": "pms_product_category", "sublabel": "parent_id：直接子分类", "pos": [1090, 140], "size": [220, 72],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 1428, "end_line": 1430, "label": "parent_id" }
+      ] },
+    { "id": "tblProd", "type": "database", "label": "pms_product", "sublabel": "product_category_id · delete_status", "pos": [1090, 330], "size": [220, 72],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 1088, "label": "product_category_id" },
+        { "path": "document/sql/mall.sql", "line": 1094, "label": "delete_status" }
+      ] },
+    { "id": "geh", "type": "security", "label": "GlobalExceptionHandler", "sublabel": "ApiException → CommonResult.failed(msg)", "pos": [40, 440], "size": [230, 72],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java", "line": 22, "end_line": 29, "label": "ApiException 转失败结果" },
+        { "path": "mall-common/src/main/java/com/macro/mall/common/exception/Asserts.java", "line": 10, "end_line": 12, "label": "Asserts.fail 抛 ApiException" }
+      ] },
+    { "id": "search", "type": "external", "label": "mall-search（EsProduct）", "sublabel": "mall-admin 不依赖；删除不调用", "pos": [370, 600], "size": [250, 72],
+      "sources": [
+        { "path": "mall-admin/pom.xml", "line": 19, "end_line": 27, "label": "模块依赖：mall-mbg、mall-security" },
+        { "path": "mall-search/src/main/java/com/macro/mall/search/domain/EsProduct.java", "line": 32, "label": "文档存 productCategoryId" }
+      ] },
+    { "id": "attrRel", "type": "database", "label": "筛选属性关系表", "sublabel": "pms_product_category_attribute_relation", "pos": [790, 600], "size": [230, 72],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 1492, "end_line": 1494, "label": "product_category_id" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 82, "end_line": 91, "label": "只有 update 维护它" }
+      ] },
+    { "id": "otherRefs", "type": "database", "label": "其他存 product_category_id 的表", "sublabel": "优惠券/会员偏好/购物车等：分析未提及", "pos": [1090, 600], "size": [220, 72],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 1855, "end_line": 1858, "label": "sms_coupon_product_category_relation" },
+        { "path": "document/sql/mall.sql", "line": 2818, "end_line": 2821, "label": "ums_member_product_category_relation" },
+        { "path": "document/sql/mall.sql", "line": 288, "end_line": 303, "label": "oms_cart_item（另有 oms_order_item:578）" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "直接受影响：唯一改动点", "wraps": ["svc"] },
+    { "kind": "region", "label": "需回归：同类方法（不改）", "wraps": ["siblings"] },
+    { "kind": "region", "label": "间接受影响：新增读取的 Mapper 与表（不改代码、不改表）", "wraps": ["mapperCat", "mapperProd", "tblCat", "tblProd"] },
+    { "kind": "region", "label": "间接受影响：失败响应通路（不改）", "wraps": ["ctl", "geh"] },
+    { "kind": "region", "label": "已核实不受影响 / 需求外", "wraps": ["search", "attrRel", "otherRefs"] }
+  ],
+  "connections": [
+    { "id": "call-delete", "from": "ctl", "to": "svc", "label": "delete(id)", "variant": "emphasis" },
+    { "id": "pk-delete", "from": "svc", "to": "mapperCat", "label": "deleteByPrimaryKey" },
+    { "id": "count-products", "from": "svc", "to": "mapperProd", "label": "拟 countByExample", "variant": "dashed" },
+    { "id": "cat-table", "from": "mapperCat", "to": "tblCat" },
+    { "id": "prod-table", "from": "mapperProd", "to": "tblProd" },
+    { "id": "reject", "from": "svc", "to": "geh", "label": "拟 Asserts.fail", "variant": "dashed" },
+    { "id": "sibling-mapper", "from": "siblings", "to": "mapperCat", "label": "共用 Mapper", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "拟议变更", "items": [
+      "分类不存在返回 0；有直接子分类，或任意商品引用它（含 delete_status=1 的逻辑删除商品）时拒绝且不删除",
+      "落点只有 PmsProductCategoryServiceImpl.delete（105–107 行）：先查存在 → 查子分类 → 查商品 → 主键删除",
+      "拒绝走 Asserts.fail → ApiException → GlobalExceptionHandler（23–29 行）→ CommonResult.failed(message)"
+    ] },
+    { "dot": "cyan", "title": "影响范围", "items": [
+      "调用链：Controller.delete（76–83 行）→ Service.delete（105–107 行）→ deleteByPrimaryKey；delete 的调用方只有控制器 77 行",
+      "数据：pms_product_category.parent_id（mall.sql:1430）；pms_product.product_category_id / delete_status（1088 / 1094 行）",
+      "现成条件与计数：andParentIdEqualTo（Example:177）、andProductCategoryIdEqualTo（239）、两个 Mapper 的 countByExample（第 9 行）",
+      "同类 getList（95–102）、update（70–92）共用 Mapper，不改但需回归",
+      "接口 delete（Service:35）没有 @Transactional：检查与删除之间存在并发窗口"
+    ] },
+    { "dot": "slate", "title": "已排除", "items": [
+      "mall-search：mall-admin 的 pom 只依赖 mall-mbg、mall-security，删除路径不调用搜索",
+      "筛选属性关系表、级联删除、外键、只在控制器检查：分析已排除并给出理由",
+      "分析未提及：优惠券分类关系、会员偏好分类关系、购物车与订单项也存 product_category_id；新规则只要求子分类与商品，不检查它们"
+    ] },
+    { "dot": "emerald", "title": "锁定现状的测试", "items": [
+      "SDCE501Test（仅 1 项测试）：锁 Service.delete → Mapper 这一段，不经过控制器",
+      "层次：单元 / 替身（Mockito 替换两个 Mapper，无 Spring 容器、无数据库）",
+      "断言：deleteByPrimaryKey(101) 被调用（30 行）；selectByPrimaryKey、两处 countByExample、商品 deleteByExample 都未调用（31–34 行）",
+      "未覆盖：真实 SQL 与删除行数、HTTP 响应、并发；never 断言锁的正是新规则要改变的行为"
+    ] }
+  ]
+}
