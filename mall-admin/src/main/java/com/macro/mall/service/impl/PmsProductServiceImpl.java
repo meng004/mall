@@ -85,7 +85,8 @@ public class PmsProductServiceImpl implements PmsProductService {
         //添加sku库存信息
         relateAndInsertList(skuStockDao, productParam.getSkuStockList(), productId);
         //添加商品参数,添加自定义商品规格
-        relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), productId);
+        insertProductAttributeValues(productParam.getProductAttributeValueList(), productId,
+                productAttributeValueDao::insertList);
         //关联专题
         relateAndInsertList(subjectProductRelationDao, productParam.getSubjectProductRelationList(), productId);
         //关联优选
@@ -145,7 +146,8 @@ public class PmsProductServiceImpl implements PmsProductService {
         PmsProductAttributeValueExample productAttributeValueExample = new PmsProductAttributeValueExample();
         productAttributeValueExample.createCriteria().andProductIdEqualTo(id);
         productAttributeValueMapper.deleteByExample(productAttributeValueExample);
-        relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), id);
+        insertProductAttributeValues(productParam.getProductAttributeValueList(), id,
+                productAttributeValueDao::insertList);
         //关联专题
         CmsSubjectProductRelationExample subjectProductRelationExample = new CmsSubjectProductRelationExample();
         subjectProductRelationExample.createCriteria().andProductIdEqualTo(id);
@@ -298,6 +300,27 @@ public class PmsProductServiceImpl implements PmsProductService {
             productExample.or().andDeleteStatusEqualTo(0).andProductSnLike("%" + keyword + "%");
         }
         return productMapper.selectByExample(productExample);
+    }
+
+    /**
+     * 商品属性值的显式写入。元素类型与 DAO 插入签名在编译期固定。
+     * 空列表不调用 DAO。插入抛出的运行时异常原样传播，不包装成成功。
+     */
+    private void insertProductAttributeValues(List<PmsProductAttributeValue> values, Long productId,
+                                               ProductAttributeValueInsert insert) {
+        if (CollectionUtils.isEmpty(values)) {
+            return;
+        }
+        for (PmsProductAttributeValue value : values) {
+            value.setId(null);
+            value.setProductId(productId);
+        }
+        insert.insert(values);
+    }
+
+    @FunctionalInterface
+    private interface ProductAttributeValueInsert {
+        int insert(List<PmsProductAttributeValue> values);
     }
 
     /**
