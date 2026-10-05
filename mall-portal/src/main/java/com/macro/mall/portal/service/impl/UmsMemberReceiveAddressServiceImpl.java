@@ -43,6 +43,9 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
         UmsMember currentMember = memberService.getCurrentMember();
         UmsMemberReceiveAddressExample example = new UmsMemberReceiveAddressExample();
         example.createCriteria().andMemberIdEqualTo(currentMember.getId()).andIdEqualTo(id);
+        if(CollectionUtils.isEmpty(addressMapper.selectByExample(example))){
+            return 0;
+        }
         if(address.getDefaultStatus()==null){
             address.setDefaultStatus(0);
         }
