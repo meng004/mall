@@ -16,10 +16,10 @@ jobs:
           java-version: '17'
           distribution: temurin
           cache: maven
-      - name: 启动课程 MySQL（13306，导入 mall.sql）
+      - name: 启动课程 MySQL（13306，导入 mall.sql）与 Mongo（27018）
         run: |
           C="docker compose -f SDC/environment/compose.yml"
-          $C up -d mysql
+          $C up -d mysql mongo
           for i in $(seq 60); do
             $C exec -T mysql sh -c 'mysql -umall -p"$MYSQL_PASSWORD" -e "select 1 from mall.pms_product limit 1"' >/dev/null 2>&1 && exit 0
             sleep 5
