@@ -17,7 +17,7 @@ git diff --name-only "$BASE" HEAD -- '*/src/test/*' | while read -r f; do
   mkdir -p "$WT/$(dirname "$f")" && cp "$ROOT/$f" "$WT/$f"
 done
 # 实验环境配置不是产品代码，基线运行也需要它。
-[ -d "$ROOT/SDC/environment" ] && cp -R "$ROOT/SDC/environment" "$WT/SDC/"
+[ -d "$ROOT/SDC/environment" ] && mkdir -p "$WT/SDC" && cp -R "$ROOT/SDC/environment" "$WT/SDC/"
 
 summary() { grep -E 'Tests run:.*(Fail|Err)' "$1" | grep -v ' in ' | tail -1; }
 (cd "$WT" && "${MVN[@]}" >"$WT/../base.log" 2>&1); BASE_EXIT=$?
