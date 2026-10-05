@@ -177,10 +177,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             order.setCouponAmount(calcCouponAmount(orderItemList));
         }
         if (orderParam.getUseIntegration() == null) {
-            order.setIntegration(0);
             order.setIntegrationAmount(new BigDecimal(0));
         } else {
-            order.setIntegration(orderParam.getUseIntegration());
+            order.setUseIntegration(orderParam.getUseIntegration());
             order.setIntegrationAmount(calcIntegrationAmount(orderItemList));
         }
         order.setPayAmount(calcPayAmount(order));
@@ -233,7 +232,6 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         //如使用积分需要扣除积分
         if (orderParam.getUseIntegration() != null) {
-            order.setUseIntegration(orderParam.getUseIntegration());
             if(currentMember.getIntegration()==null){
                 currentMember.setIntegration(0);
             }
