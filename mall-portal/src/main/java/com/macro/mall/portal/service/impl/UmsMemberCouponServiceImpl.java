@@ -39,6 +39,11 @@ public class UmsMemberCouponServiceImpl implements UmsMemberCouponService {
     private SmsCouponProductCategoryRelationMapper couponProductCategoryRelationMapper;
     @Autowired
     private PmsProductMapper productMapper;
+    private final List<CouponScopePolicy> scopePolicies = List.of(
+            new UniversalScopePolicy(),
+            new CategoryScopePolicy(),
+            new ProductScopePolicy());
+
     @Override
     public void add(Long couponId) {
         UmsMember currentMember = memberService.getCurrentMember();
@@ -121,51 +126,91 @@ public class UmsMemberCouponServiceImpl implements UmsMemberCouponService {
         List<SmsCouponHistoryDetail> enableList = new ArrayList<>();
         List<SmsCouponHistoryDetail> disableList = new ArrayList<>();
         for (SmsCouponHistoryDetail couponHistoryDetail : allList) {
-            Integer useType = couponHistoryDetail.getCoupon().getUseType();
-            BigDecimal minPoint = couponHistoryDetail.getCoupon().getMinPoint();
-            Date endTime = couponHistoryDetail.getCoupon().getEndTime();
-            if(useType.equals(0)){
-                //0->全场通用
-                //判断是否满足优惠起点
-                //计算购物车商品的总价
-                BigDecimal totalAmount = calcTotalAmount(cartItemList);
-                if(now.before(endTime)&&totalAmount.subtract(minPoint).intValue()>=0){
-                    enableList.add(couponHistoryDetail);
-                }else{
-                    disableList.add(couponHistoryDetail);
-                }
-            }else if(useType.equals(1)){
-                //1->指定分类
-                //计算指定分类商品的总价
-                List<Long> productCategoryIds = new ArrayList<>();
-                for (SmsCouponProductCategoryRelation categoryRelation : couponHistoryDetail.getCategoryRelationList()) {
-                    productCategoryIds.add(categoryRelation.getProductCategoryId());
-                }
-                BigDecimal totalAmount = calcTotalAmountByproductCategoryId(cartItemList,productCategoryIds);
-                if(now.before(endTime)&&totalAmount.intValue()>0&&totalAmount.subtract(minPoint).intValue()>=0){
-                    enableList.add(couponHistoryDetail);
-                }else{
-                    disableList.add(couponHistoryDetail);
-                }
-            }else if(useType.equals(2)){
-                //2->指定商品
-                //计算指定商品的总价
-                List<Long> productIds = new ArrayList<>();
-                for (SmsCouponProductRelation productRelation : couponHistoryDetail.getProductRelationList()) {
-                    productIds.add(productRelation.getProductId());
-                }
-                BigDecimal totalAmount = calcTotalAmountByProductId(cartItemList,productIds);
-                if(now.before(endTime)&&totalAmount.intValue()>0&&totalAmount.subtract(minPoint).intValue()>=0){
-                    enableList.add(couponHistoryDetail);
-                }else{
-                    disableList.add(couponHistoryDetail);
-                }
+            CouponScopePolicy policy = policyFor(couponHistoryDetail.getCoupon().getUseType());
+            if (policy == null) {
+                continue;
+            }
+            if (policy.usable(couponHistoryDetail, cartItemList, now)) {
+                enableList.add(couponHistoryDetail);
+            } else {
+                disableList.add(couponHistoryDetail);
             }
         }
         if(type.equals(1)){
             return enableList;
         }else{
             return disableList;
+        }
+    }
+
+    private CouponScopePolicy policyFor(Integer useType) {
+        for (CouponScopePolicy policy : scopePolicies) {
+            if (policy.supports(useType)) {
+                return policy;
+            }
+        }
+        return null;
+    }
+
+    private interface CouponScopePolicy {
+        boolean supports(Integer useType);
+
+        boolean usable(SmsCouponHistoryDetail detail, List<CartPromotionItem> cartItemList, Date now);
+    }
+
+    /** 0->全场通用。门槛仍用起点的 intValue 截断，不在本次重构里改。 */
+    private final class UniversalScopePolicy implements CouponScopePolicy {
+        @Override
+        public boolean supports(Integer useType) {
+            return useType.equals(0);
+        }
+
+        @Override
+        public boolean usable(SmsCouponHistoryDetail detail, List<CartPromotionItem> cartItemList, Date now) {
+            BigDecimal minPoint = detail.getCoupon().getMinPoint();
+            Date endTime = detail.getCoupon().getEndTime();
+            BigDecimal totalAmount = calcTotalAmount(cartItemList);
+            return now.before(endTime) && totalAmount.subtract(minPoint).intValue() >= 0;
+        }
+    }
+
+    /** 1->指定分类。 */
+    private final class CategoryScopePolicy implements CouponScopePolicy {
+        @Override
+        public boolean supports(Integer useType) {
+            return useType.equals(1);
+        }
+
+        @Override
+        public boolean usable(SmsCouponHistoryDetail detail, List<CartPromotionItem> cartItemList, Date now) {
+            BigDecimal minPoint = detail.getCoupon().getMinPoint();
+            Date endTime = detail.getCoupon().getEndTime();
+            List<Long> productCategoryIds = new ArrayList<>();
+            for (SmsCouponProductCategoryRelation categoryRelation : detail.getCategoryRelationList()) {
+                productCategoryIds.add(categoryRelation.getProductCategoryId());
+            }
+            BigDecimal totalAmount = calcTotalAmountByproductCategoryId(cartItemList, productCategoryIds);
+            return now.before(endTime) && totalAmount.intValue() > 0 && totalAmount.subtract(minPoint).intValue() >= 0;
+        }
+    }
+
+    /** 2->指定商品。 */
+    private final class ProductScopePolicy implements CouponScopePolicy {
+        @Override
+        public boolean supports(Integer useType) {
+            return useType.equals(2);
+        }
+
+        @Override
+        public boolean usable(SmsCouponHistoryDetail detail, List<CartPromotionItem> cartItemList, Date now) {
+            BigDecimal minPoint = detail.getCoupon().getMinPoint();
+            Date endTime = detail.getCoupon().getEndTime();
+            List<Long> productIds = new ArrayList<>();
+            for (SmsCouponProductRelation productRelation : detail.getProductRelationList()) {
+                productIds.add(productRelation.getProductId());
+            }
+            BigDecimal totalAmount = calcTotalAmountByProductId(cartItemList, productIds);
+            return now.before(endTime) && totalAmount.intValue() > 0 && totalAmount.subtract(minPoint).intValue() >= 0;
         }
     }
 
