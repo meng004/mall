@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Pattern;
+
 /**
  * 会员收藏Service实现类
  * Created by macro on 2018/8/2.
@@ -65,9 +67,18 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
 
     @Override
     public Page<MemberProductCollection> list(Integer pageNum, Integer pageSize) {
+        return list(pageNum, pageSize, null);
+    }
+
+    @Override
+    public Page<MemberProductCollection> list(Integer pageNum, Integer pageSize, String keyword) {
         UmsMember member = memberService.getCurrentMember();
         Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
-        return productCollectionRepository.findByMemberId(member.getId(), pageable);
+        if (keyword == null || keyword.isEmpty()) {
+            return productCollectionRepository.findByMemberId(member.getId(), pageable);
+        }
+        return productCollectionRepository.findByMemberIdAndProductNameRegex(
+            member.getId(), Pattern.quote(keyword), pageable);
     }
 
     @Override

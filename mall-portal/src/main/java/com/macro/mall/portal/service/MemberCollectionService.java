@@ -23,6 +23,8 @@ public interface MemberCollectionService {
      */
     Page<MemberProductCollection> list(Integer pageNum, Integer pageSize);
 
+    Page<MemberProductCollection> list(Integer pageNum, Integer pageSize, String keyword);
+
     /**
      * 查看收藏详情
      */

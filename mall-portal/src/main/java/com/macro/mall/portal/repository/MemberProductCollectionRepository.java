@@ -25,6 +25,8 @@ public interface MemberProductCollectionRepository extends MongoRepository<Membe
      */
     Page<MemberProductCollection> findByMemberId(Long memberId, Pageable pageable);
 
+    Page<MemberProductCollection> findByMemberIdAndProductNameRegex(Long memberId, String pattern, Pageable pageable);
+
     /**
      * 根据会员ID删除记录
      */

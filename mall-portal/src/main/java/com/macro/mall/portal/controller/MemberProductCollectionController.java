@@ -50,8 +50,9 @@ public class MemberProductCollectionController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<CommonPage<MemberProductCollection>> list(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
-        Page<MemberProductCollection> page = memberCollectionService.list(pageNum,pageSize);
+                                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                                                  @RequestParam(value = "keyword", required = false) String keyword) {
+        Page<MemberProductCollection> page = memberCollectionService.list(pageNum, pageSize, keyword);
         return CommonResult.success(CommonPage.restPage(page));
     }
 
