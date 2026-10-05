@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-07 改前：购物车优惠券可用判定（基线 dcaa93b3）",
+    "output": "e4-07.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "UmsMemberCouponController", "sublabel": "GET /member/coupon/list/cart/{type}", "pos": [40, 210], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberCouponController.java", "line": 28, "label": "/member/coupon" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberCouponController.java", "line": 68, "end_line": 74, "label": "listCart 接口" }
+      ] },
+    { "id": "order", "type": "backend", "label": "OmsPortalOrderServiceImpl", "sublabel": "确认单与下单都取可用券", "pos": [40, 306], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 80, "label": "generateConfirmOrder" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 710, "end_line": 718, "label": "getUseCoupon" }
+      ] },
+    { "id": "list-cart", "type": "backend", "label": "listCart", "sublabel": "取券 → 按 useType 分三段", "tag": "56 行", "pos": [460, 210], "size": [240, 160],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 115, "end_line": 170, "label": "UmsMemberCouponServiceImpl.listCart" }] },
+    { "id": "dao", "type": "database", "label": "SmsCouponHistoryDao", "sublabel": "getDetailList(memberId)", "pos": [470, 30], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 119, "label": "getDetailList 调用" }] },
+    { "id": "lists", "type": "backend", "label": "enableList / disableList", "sublabel": "type==1 返回可用，否则不可用", "pos": [460, 480], "size": [240, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 121, "end_line": 122, "label": "两个结果列表" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 165, "end_line": 169, "label": "按 type 选返回列表" }
+      ] },
+    { "id": "universal", "type": "backend", "label": "useType==0 全场通用", "sublabel": "全部求和 → 判定 → 放入列表", "tag": "intValue 截断", "pos": [1260, 90], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 127, "end_line": 136, "label": "全场分支" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 213, "end_line": 220, "label": "calcTotalAmount" }
+      ] },
+    { "id": "category", "type": "backend", "label": "useType==1 指定分类", "sublabel": "按分类求和 → 判定 → 放入列表", "tag": "intValue 截断", "pos": [1260, 254], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 137, "end_line": 149, "label": "分类分支" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 222, "end_line": 231, "label": "calcTotalAmountByproductCategoryId" }
+      ] },
+    { "id": "product", "type": "backend", "label": "useType==2 指定商品", "sublabel": "按商品求和 → 判定 → 放入列表", "tag": "intValue 截断", "pos": [1260, 418], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 150, "end_line": 162, "label": "商品分支" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 233, "end_line": 242, "label": "calcTotalAmountByProductId" }
+      ] },
+    { "id": "unknown", "type": "backend", "label": "其他 useType", "sublabel": "if 链没有 else：两边都不放", "pos": [1260, 570], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 124, "label": "读取 useType" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 150, "end_line": 163, "label": "最后一个分支，之后无 else" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "listCart 循环体（123–164 行）：三段各写一遍“求和 → 判定 → 放入列表”", "wraps": ["universal", "category", "product", "unknown"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "list-cart", "label": "listCart(type)", "variant": "emphasis" },
+    { "id": "checkout", "from": "order", "to": "list-cart", "label": "listCart(…, 1)" },
+    { "id": "load", "from": "list-cart", "to": "dao", "label": "getDetailList" },
+    { "id": "pick-universal", "from": "list-cart", "to": "universal", "label": "useType==0" },
+    { "id": "pick-category", "from": "list-cart", "to": "category", "label": "useType==1" },
+    { "id": "pick-product", "from": "list-cart", "to": "product", "label": "useType==2" },
+    { "id": "pick-unknown", "from": "list-cart", "to": "unknown", "label": "其他值", "variant": "dashed" },
+    { "id": "split", "from": "list-cart", "to": "lists", "label": "三段各自 add" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "重复代码：三段各写一遍“有效期 && 门槛 → 放入可用/不可用”（132–136、145–149、158–162 行），变化点只是按哪种范围求和",
+      "按类型码 useType 的 if/else 链（127/137/150 行）：新增一种范围要在 listCart 里再复制一段判定与分列",
+      "过长方法：listCart 一个方法包办取券、按范围求和、判定、分列、选返回列表（115–170 行）",
+      "未知 useType 两边都不放，只靠 if 链没有 else 隐式表达（163 行）",
+      "门槛 subtract(minPoint).intValue() 截断三段各一份（132/145/158 行，已知缺陷属 E3-01），本示例不修"
+    ] }
+  ]
+}

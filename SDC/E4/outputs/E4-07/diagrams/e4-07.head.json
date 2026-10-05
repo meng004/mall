@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-07 改后：按范围选择策略（exp/e4-07 37e30f14）",
+    "output": "e4-07.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "37e30f148f8b2e11d41fd32181860536a3266574"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "UmsMemberCouponController", "sublabel": "GET /member/coupon/list/cart/{type}", "pos": [40, 210], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberCouponController.java", "line": 28, "label": "/member/coupon" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberCouponController.java", "line": 68, "end_line": 74, "label": "listCart 接口" }
+      ] },
+    { "id": "order", "type": "backend", "label": "OmsPortalOrderServiceImpl", "sublabel": "确认单与下单都取可用券", "pos": [40, 306], "size": [250, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 80, "label": "generateConfirmOrder" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 710, "end_line": 718, "label": "getUseCoupon" }
+      ] },
+    { "id": "list-cart", "type": "backend", "label": "listCart", "sublabel": "取券 → 查策略 → usable → 分列", "tag": "25 行", "pos": [460, 210], "size": [240, 160],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 120, "end_line": 144, "label": "UmsMemberCouponServiceImpl.listCart" }] },
+    { "id": "dao", "type": "database", "label": "SmsCouponHistoryDao", "sublabel": "getDetailList(memberId)", "pos": [470, 30], "size": [220, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 124, "label": "getDetailList 调用" }] },
+    { "id": "lists", "type": "backend", "label": "enableList / disableList", "sublabel": "type==1 返回可用，否则不可用", "pos": [460, 480], "size": [240, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 126, "end_line": 127, "label": "两个结果列表" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 133, "end_line": 137, "label": "按 usable 结果分列" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 139, "end_line": 143, "label": "按 type 选返回列表" }
+      ] },
+    { "id": "policy-for", "type": "backend", "label": "policyFor", "sublabel": "遍历 scopePolicies，取首个 supports", "tag": "新增", "pos": [860, 220], "size": [260, 140],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 146, "end_line": 153, "label": "policyFor" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 42, "end_line": 45, "label": "scopePolicies 登记" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 155, "end_line": 159, "label": "CouponScopePolicy 接口" }
+      ] },
+    { "id": "universal", "type": "backend", "label": "UniversalScopePolicy", "sublabel": "usable：全部求和 → 判定", "tag": "intValue 截断保留", "pos": [1260, 90], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 161, "end_line": 175, "label": "全场策略" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 258, "end_line": 265, "label": "calcTotalAmount" }
+      ] },
+    { "id": "category", "type": "backend", "label": "CategoryScopePolicy", "sublabel": "usable：按分类求和 → 判定", "tag": "intValue 截断保留", "pos": [1260, 254], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 177, "end_line": 195, "label": "分类策略" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 267, "end_line": 276, "label": "calcTotalAmountByproductCategoryId" }
+      ] },
+    { "id": "product", "type": "backend", "label": "ProductScopePolicy", "sublabel": "usable：按商品求和 → 判定", "tag": "intValue 截断保留", "pos": [1260, 418], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 197, "end_line": 215, "label": "商品策略" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 278, "end_line": 287, "label": "calcTotalAmountByProductId" }
+      ] },
+    { "id": "unknown", "type": "backend", "label": "其他 useType", "sublabel": "policyFor 返回 null → continue", "pos": [1260, 570], "size": [270, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 152, "label": "return null" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberCouponServiceImpl.java", "line": 130, "end_line": 132, "label": "两边都不放" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "CouponScopePolicy 私有内部类：一种范围一个类，只返回 boolean", "wraps": ["universal", "category", "product"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "list-cart", "label": "listCart(type)", "variant": "emphasis" },
+    { "id": "checkout", "from": "order", "to": "list-cart", "label": "listCart(…, 1)" },
+    { "id": "load", "from": "list-cart", "to": "dao", "label": "getDetailList" },
+    { "id": "to-policy-for", "from": "list-cart", "to": "policy-for", "label": "每张券的 useType" },
+    { "id": "pick-universal", "from": "policy-for", "to": "universal", "label": "supports(0)" },
+    { "id": "pick-category", "from": "policy-for", "to": "category", "label": "supports(1)" },
+    { "id": "pick-product", "from": "policy-for", "to": "product", "label": "supports(2)" },
+    { "id": "pick-unknown", "from": "policy-for", "to": "unknown", "label": "都不支持", "variant": "dashed" },
+    { "id": "split", "from": "list-cart", "to": "lists", "label": "按 usable 结果 add" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "listCart 只剩“取券 → 查策略 → usable → 分列”（120–144 行），不再随范围种类增长",
+      "替换条件式为策略：每种范围一个私有策略类（162/178/198 行），在 scopePolicies 登记（42–45 行）",
+      "未知 useType 由隐式“没有 else”变为显式：policyFor 返回 null，listCart continue（130–132、152 行）",
+      "新增一种范围：新增一个策略类 + scopePolicies 登记 1 行（改 2 处），不复制分列逻辑、不改 listCart"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "多一个接口、三个内部类和一次查找间接；文件净增 45 行（+84/−39）",
+      "取 minPoint/endTime、有效期 && 门槛判定仍在三个策略里各写一份；intValue 截断故意原样保留（173/193/213 行）",
+      "policyFor 取第一个 supports 为真的策略：目前三者互斥，顺序无影响；新策略若与已有重叠，先登记者生效",
+      "策略是私有内部类，对外接口不变，测试仍只能经 listCart 观察"
+    ] },
+    { "dot": "cyan", "title": "行为保持证据", "items": [
+      "SDCE407Test 5 项，改前 dcaa93b3 与改后 37e30f14 都是 5/0/0，断言不改（evidence/compare.txt）",
+      "终审实测变异：未知范围改为放入不可用 → 1 项变红",
+      "终审实测：门槛改为 compareTo → 仍绿；测试只打印 THRESHOLD_BASELINE，不锁定截断，未混入修复靠读 diff 核对"
+    ] }
+  ]
+}
