@@ -5,6 +5,7 @@
 #   MODULE=mall-portal        被测 Maven 模块
 #   TESTS=SDCE301Test          测试类，逗号分隔
 #   EXPECT_BASE=fail           改前预期：fail 测试运行且失败；pass 测试通过；absent 被测功能尚不存在（编译失败）
+#   HEAD_ONLY_TESTS=           可选：只在改后运行的测试类，逗号分隔。用于依赖新接缝、在基线上无法编译的测试；不拷到基线
 # 改后必须通过。结果写入同目录 evidence/compare.txt；与预期不符时退出码为 1。
 # 需要 JDK 17；默认离线（-o），设 MVN_OFFLINE= 允许下载依赖。
 set -uo pipefail
@@ -12,21 +13,23 @@ ID=$1
 DIR=SDC/${ID%%-*}/outputs/$ID
 ROOT=$(git rev-parse --show-toplevel)
 source "$ROOT/$DIR/compare.env"
+HEAD_ONLY_TESTS=${HEAD_ONLY_TESTS:-}
 BASE=baseline-dcaa93b3
 # 记录最后一次改动代码的提交；补交证据不会改变它。
 HEAD_SHA=$(git log -1 --format=%h -- . ':!SDC/*/outputs/*')
 TMP=$(mktemp -d) WT=$(mktemp -d)/base
-MVN=(mvn -B ${MVN_OFFLINE--o} -pl "$MODULE" -am -DskipTests=false -Dtest="$TESTS" -Dsurefire.failIfNoSpecifiedTests=false test)
+mvn_test() { mvn -B ${MVN_OFFLINE--o} -pl "$MODULE" -am -DskipTests=false -Dtest="$1" -Dsurefire.failIfNoSpecifiedTests=false test; }
 
 git worktree add -q --detach "$WT" "$BASE"
-# 只把示例新增或修改的测试文件带到基线；产品代码保持基线原样。实验环境配置也带过去。
+# 只把示例新增或修改的测试文件带到基线（HEAD_ONLY_TESTS 除外）；产品代码保持基线原样。实验环境配置也带过去。
 git diff --name-only "$BASE" HEAD -- '*/src/test/*' | while read -r f; do
+  case ",$HEAD_ONLY_TESTS," in *",$(basename "$f" .java),"*) continue ;; esac
   mkdir -p "$WT/$(dirname "$f")" && cp "$ROOT/$f" "$WT/$f"
 done
 [ -d "$ROOT/SDC/environment" ] && mkdir -p "$WT/SDC" && cp -R "$ROOT/SDC/environment" "$WT/SDC/"
 
-(cd "$WT" && "${MVN[@]}" >"$TMP/base.log" 2>&1); BASE_EXIT=$?
-(cd "$ROOT" && "${MVN[@]}" >"$TMP/head.log" 2>&1); HEAD_EXIT=$?
+(cd "$WT" && mvn_test "$TESTS" >"$TMP/base.log" 2>&1); BASE_EXIT=$?
+(cd "$ROOT" && mvn_test "$TESTS${HEAD_ONLY_TESTS:+,$HEAD_ONLY_TESTS}" >"$TMP/head.log" 2>&1); HEAD_EXIT=$?
 git worktree remove --force "$WT"
 
 # 结果：pass / fail（测试运行但失败）/ absent（编译失败）/ error（其他原因，如未找到测试）
@@ -43,7 +46,7 @@ B=$(outcome "$TMP/base.log" $BASE_EXIT) H=$(outcome "$TMP/head.log" $HEAD_EXIT)
 
 mkdir -p "$ROOT/$DIR/evidence"
 {
-  echo "示例：${ID}  模块：${MODULE}  测试：${TESTS}"
+  echo "示例：${ID}  模块：${MODULE}  测试：${TESTS}${HEAD_ONLY_TESTS:+  仅改后：${HEAD_ONLY_TESTS}}"
   echo "改前 ${BASE}：${B}（预期 ${EXPECT_BASE}）  $(summary "$TMP/base.log")"
   details "$TMP/base.log"
   echo "改后 ${HEAD_SHA}：${H}（预期 pass）  $(summary "$TMP/head.log")"
