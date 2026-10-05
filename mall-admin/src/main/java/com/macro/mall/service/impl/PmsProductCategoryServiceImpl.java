@@ -1,6 +1,7 @@
 package com.macro.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.macro.mall.common.exception.Asserts;
 import com.macro.mall.dao.PmsProductCategoryAttributeRelationDao;
 import com.macro.mall.dao.PmsProductCategoryDao;
 import com.macro.mall.dto.PmsProductCategoryParam;
@@ -103,6 +104,19 @@ public class PmsProductCategoryServiceImpl implements PmsProductCategoryService 
 
     @Override
     public int delete(Long id) {
+        if (productCategoryMapper.selectByPrimaryKey(id) == null) {
+            return 0;
+        }
+        PmsProductCategoryExample children = new PmsProductCategoryExample();
+        children.createCriteria().andParentIdEqualTo(id);
+        if (productCategoryMapper.countByExample(children) > 0) {
+            Asserts.fail("分类存在直接子分类，不能删除");
+        }
+        PmsProductExample products = new PmsProductExample();
+        products.createCriteria().andProductCategoryIdEqualTo(id);
+        if (productMapper.countByExample(products) > 0) {
+            Asserts.fail("分类存在商品引用，不能删除");
+        }
         return productCategoryMapper.deleteByPrimaryKey(id);
     }
 
