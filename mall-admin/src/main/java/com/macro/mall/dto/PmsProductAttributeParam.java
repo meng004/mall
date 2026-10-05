@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 商品属性参数
@@ -14,7 +15,7 @@ import jakarta.validation.constraints.NotEmpty;
 @Data
 @EqualsAndHashCode
 public class PmsProductAttributeParam {
-    @NotEmpty
+    @NotNull
     @Schema(title = "属性分类ID")
     private Long productAttributeCategoryId;
     @NotEmpty

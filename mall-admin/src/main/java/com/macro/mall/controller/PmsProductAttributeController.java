@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class PmsProductAttributeController {
     @Operation(summary = "添加商品属性信息")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult create(@RequestBody PmsProductAttributeParam productAttributeParam) {
+    public CommonResult create(@Validated @RequestBody PmsProductAttributeParam productAttributeParam) {
         int count = productAttributeService.create(productAttributeParam);
         if (count > 0) {
             return CommonResult.success(count);
@@ -56,7 +57,7 @@ public class PmsProductAttributeController {
     @Operation(summary = "修改商品属性信息")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult update(@PathVariable Long id, @RequestBody PmsProductAttributeParam productAttributeParam) {
+    public CommonResult update(@PathVariable Long id, @Validated @RequestBody PmsProductAttributeParam productAttributeParam) {
         int count = productAttributeService.update(id, productAttributeParam);
         if (count > 0) {
             return CommonResult.success(count);
