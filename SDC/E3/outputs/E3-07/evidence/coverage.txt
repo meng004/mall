@@ -1,0 +1,48 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）。
+命令（主工作区，可联网，未加 -o）：
+mvn -B -pl mall-portal -am -DskipTests=false -Dtest=SDCE307Test -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-portal/target/site/jacoco/jacoco.xml（target 已被 mall-portal/.gitignore 忽略，不提交）。
+
+提交：测试 a65aaaa897d6e0d096e47824697e733df5e1983f；修复 2b3ab80f2de8f169e072bfffd836b1141f1e1ae1。覆盖率跑在该修复之上的工作区；docs 提交只收录本文件和 AI 记录、对照结果，不改被测代码。
+
+统计对象：修复提交改动的产品方法。
+
+UmsMemberReceiveAddressServiceImpl.update(Long, UmsMemberReceiveAddress)：源码签名在第 41 行，探针第 42–62 行。
+行覆盖：covered=17 missed=0，17/17=100%。
+分支覆盖：covered=6 missed=0，6/6=100%。
+指令覆盖：covered=72 missed=0，合计 72。
+圈复杂度：covered=4 missed=0，4/4。
+方法计数：missed=0 covered=1。
+
+本示例不连数据库，Tests run: 6, Skipped: 0。
+
+未覆盖：没有未覆盖的行或分支。三处分支各两侧都有覆盖。
+行	条件	真分支	假分支
+46	查询结果为空	missingDefaultTargetDoesNotWrite（:38-46）、addressOwnedByAnotherMemberDoesNotWrite（:48-65）	其余 4 例
+49	defaultStatus 为 null	nullDefaultStatusBecomesZeroWithoutClearingOthers（:126-142）	`:67-86`、`:88-105`、`:107-124` 三例（两例无效目标在第 47 行已返回）
+52	defaultStatus 等于 1	ownedNonDefaultBecomesDefaultAfterClear（:67-86）、alreadyDefaultAddressCanBeUpdatedAgain（:88-105）	plainUpdateKeepsSingleMemberScopedWrite（:107-124）及 null 例
+第 48、51、61 行的 `}`、第 53 行注释、第 63 行没有探针。
+
+100% 不等于锁住了全部验收准则。只在 `defaultStatus=1` 时检查目标的写法同样 6 例全绿；会员条件、两次写入顺序和 null 视为 0 由注入改动证明。
+
+不统计：同一个类里的 `add`、`delete`、`list`、`getItem` 行覆盖都是 0%。类合计行 18/36，多出的 1 行是构造器第 20 行。这些方法没有被修改，不报类平均值。
+
+逐行（只列 JaCoCo 有探针的行；nr mi ci mb cb）。ci 是该行已覆盖指令数，便于和 mi 对照。
+nr	mi	ci	mb	cb	源码
+42	0	3	0	0	        address.setId(null);
+43	0	4	0	0	        UmsMember currentMember = memberService.getCurrentMember();
+44	0	4	0	0	        UmsMemberReceiveAddressExample example = new UmsMemberReceiveAddressExample();
+45	0	8	0	0	        example.createCriteria().andMemberIdEqualTo(currentMember.getId()).andIdEqualTo(id);
+46	0	6	0	2	        if(CollectionUtils.isEmpty(addressMapper.selectByExample(example))){
+47	0	2	0	0	            return 0;
+49	0	3	0	2	        if(address.getDefaultStatus()==null){
+50	0	4	0	0	            address.setDefaultStatus(0);
+52	0	5	0	2	        if(address.getDefaultStatus()==1){
+54	0	4	0	0	            UmsMemberReceiveAddress record= new UmsMemberReceiveAddress();
+55	0	4	0	0	            record.setDefaultStatus(0);
+56	0	4	0	0	            UmsMemberReceiveAddressExample updateExample = new UmsMemberReceiveAddressExample();
+57	0	3	0	0	            updateExample.createCriteria()
+58	0	3	0	0	                    .andMemberIdEqualTo(currentMember.getId())
+59	0	3	0	0	                    .andDefaultStatusEqualTo(1);
+60	0	6	0	0	            addressMapper.updateByExampleSelective(record,updateExample);
+62	0	6	0	0	        return addressMapper.updateByExampleSelective(address,example);

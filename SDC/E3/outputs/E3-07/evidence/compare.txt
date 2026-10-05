@@ -1,0 +1,6 @@
+示例：E3-07  模块：mall-portal  测试：SDCE307Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 6, Failures: 2, Errors: 0, Skipped: 0
+[ERROR]   SDCE307Test.addressOwnedByAnotherMemberDoesNotWrite:63 
+[ERROR]   SDCE307Test.missingDefaultTargetDoesNotWrite:45 
+改后 2b3ab80f：pass（预期 pass）  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
