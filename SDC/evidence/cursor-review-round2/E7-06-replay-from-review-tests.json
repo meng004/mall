@@ -1,0 +1,1913 @@
+{
+  "evaluatedAt" : "2026-10-04T07:30:27.802480Z",
+  "harnessNote" : "验收文件把模型输入放在 input.llm 或 input.text，普通输入放在 input.form。本次只改评测器入参组装：expected、kind 和标准答案不进入模型。这不是盲测调参，也没有改产品提示词。",
+  "humanReview" : "独立人工核对尚未进行",
+  "courseOfflineTests" : "关联 CandidateEvaluationTest 离线回放 model-eval.json。不是新盲测。",
+  "model" : "grok-4.7-high-fast",
+  "cost" : "无数据",
+  "usage" : "适配器未暴露",
+  "isolatedDatabase" : true,
+  "databaseNote" : "离线回放，未调用在线模型。",
+  "stopped" : false,
+  "modelCalls" : 0,
+  "elapsedMillis" : 0,
+  "codeVerdict" : "INCOMPLETE",
+  "decision" : "不放行",
+  "note" : "离线回放已公开 model-eval 响应，不是新盲测，不覆盖首次报告。",
+  "oldCodeVerdict" : "INCOMPLETE",
+  "oldDecision" : "阻塞",
+  "oldLlmPassed" : "10/12",
+  "newLlmPassed" : "1/3",
+  "uncomputable" : 20,
+  "difference" : "可重算的模型行：维持通过 1，失败转为通过 0，通过转为失败 0，改为待人工核对 9，缺公开响应不可重算 20。原因：不再把 expected 引文的唯一字符串当答案，证据须命中既有规则。待人工核对不计通过，也不计模型业务失败。这不是新盲测。",
+  "results" : [ {
+    "id" : "E7-06-N01",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N01",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "QUALITY",
+        "evidence" : "鞋底开胶",
+        "failed" : false
+      } ],
+      "counts" : {
+        "QUALITY" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "QUALITY" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N02",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N02",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "LOGISTICS",
+        "evidence" : "快递一直不派送",
+        "failed" : false
+      } ],
+      "counts" : {
+        "LOGISTICS" : 1,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 1.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N03",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N03",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "SIZE_SPEC",
+        "evidence" : "尺码偏小",
+        "failed" : false
+      } ],
+      "counts" : {
+        "SIZE_SPEC" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "SIZE_SPEC" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N04",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N04",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "PREFERENCE",
+        "evidence" : "不喜欢这个颜色",
+        "failed" : false
+      } ],
+      "counts" : {
+        "PREFERENCE" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "PREFERENCE" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N05",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N05",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "OTHER",
+        "evidence" : "要补开发票",
+        "failed" : false
+      } ],
+      "counts" : {
+        "OTHER" : 1,
+        "LOGISTICS" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "OTHER" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N06",
+    "implementation" : "existing",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "业务",
+    "detail" : "证据为空或不在原文",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N06",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "QUALITY",
+        "evidence" : "鞋底开胶",
+        "failed" : false
+      } ],
+      "counts" : {
+        "QUALITY" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "QUALITY" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N07",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 2,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N07",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "QUALITY",
+        "evidence" : "鞋底开胶",
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "LOGISTICS",
+        "evidence" : "快递一直不派送",
+        "failed" : false
+      } ],
+      "counts" : {
+        "LOGISTICS" : 1,
+        "QUALITY" : 1,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 0.5000,
+        "QUALITY" : 0.5000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N08",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 2,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N08",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "SIZE_SPEC",
+        "evidence" : "尺码偏大",
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "PREFERENCE",
+        "evidence" : "不想要了",
+        "failed" : false
+      } ],
+      "counts" : {
+        "PREFERENCE" : 1,
+        "SIZE_SPEC" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "QUALITY" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "PREFERENCE" : 0.5000,
+        "SIZE_SPEC" : 0.5000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "QUALITY" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N09",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b03",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 3,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 3,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N09",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "QUALITY",
+        "evidence" : "鞋底开胶",
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "QUALITY",
+        "evidence" : "缝线断开",
+        "failed" : false
+      }, {
+        "anonymousId" : "b03",
+        "label" : "LOGISTICS",
+        "evidence" : "物流破损",
+        "failed" : false
+      } ],
+      "counts" : {
+        "QUALITY" : 2,
+        "LOGISTICS" : 1,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "QUALITY" : 0.6667,
+        "LOGISTICS" : 0.3333,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 3,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N10",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b03",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 3,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 3,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N10",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "QUALITY",
+        "evidence" : "鞋底开胶",
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "LOGISTICS",
+        "evidence" : "快递破损",
+        "failed" : false
+      }, {
+        "anonymousId" : "b03",
+        "label" : "SIZE_SPEC",
+        "evidence" : "尺码偏大",
+        "failed" : false
+      } ],
+      "counts" : {
+        "LOGISTICS" : 1,
+        "QUALITY" : 1,
+        "SIZE_SPEC" : 1,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 0.3333,
+        "QUALITY" : 0.3333,
+        "SIZE_SPEC" : 0.3333,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 3,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N11",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N11",
+    "implementation" : "llm",
+    "oldPassed" : true,
+    "passed" : false,
+    "scored" : false,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "LOGISTICS",
+        "evidence" : "快递把盒子压坏了",
+        "failed" : false
+      } ],
+      "counts" : {
+        "LOGISTICS" : 1,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 1.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "待人工核对",
+    "detail" : "没有现成主因规则，待人工核对",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N12",
+    "implementation" : "existing",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N12",
+    "implementation" : "llm",
+    "oldPassed" : false,
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "PARTIAL",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : null,
+        "evidence" : null,
+        "failed" : true
+      } ],
+      "counts" : {
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 1
+    },
+    "failedFields" : "state",
+    "errorCategory" : "业务",
+    "detail" : "state",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N13",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "QUALITY",
+        "evidence" : "质量问题",
+        "failed" : false
+      } ],
+      "counts" : {
+        "QUALITY" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "QUALITY" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N13",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N14",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N14",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N15",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N15",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N16",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N16",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N17",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b03",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 3,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 3,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N17",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N18",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 2,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N18",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N19",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N19",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N20",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b03",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 3,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 3,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-N20",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A01",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "UNSUPPORTED",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : null,
+        "evidence" : null,
+        "failed" : true
+      }, {
+        "anonymousId" : "b01",
+        "label" : null,
+        "evidence" : null,
+        "failed" : true
+      } ],
+      "counts" : {
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 2
+    },
+    "failedFields" : "重复匿名编号 b01",
+    "errorCategory" : "比较器",
+    "detail" : "重复匿名编号 b01",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A01",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A02",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "UNSUPPORTED",
+      "items" : [ {
+        "anonymousId" : "",
+        "label" : null,
+        "evidence" : null,
+        "failed" : true
+      } ],
+      "counts" : {
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0,
+        "UNCERTAIN" : 0
+      },
+      "ratios" : {
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000,
+        "UNCERTAIN" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 1
+    },
+    "failedFields" : "failedCount",
+    "errorCategory" : "业务",
+    "detail" : "failedCount",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A02",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A03",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "业务",
+    "detail" : "证据为空或不在原文",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A03",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A04",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "业务",
+    "detail" : "证据为空或不在原文",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A04",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A05",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 2,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A05",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A06",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : "物流破损",
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A06",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A07",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A07",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A08",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      }, {
+        "anonymousId" : "b02",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 2,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 2,
+      "failedCount" : 0
+    },
+    "failedFields" : "labels",
+    "errorCategory" : "业务",
+    "detail" : "labels",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-A08",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O01",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : true,
+    "scored" : true,
+    "actual" : {
+      "state" : "NEEDS_INPUT",
+      "items" : [ ],
+      "counts" : { },
+      "ratios" : { },
+      "denominator" : 0,
+      "failedCount" : 0
+    },
+    "failedFields" : "",
+    "errorCategory" : "",
+    "detail" : "",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O01",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O02",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "业务",
+    "detail" : "证据为空或不在原文",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O02",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O03",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "业务",
+    "detail" : "证据为空或不在原文",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O03",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O04",
+    "implementation" : "existing",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : true,
+    "actual" : {
+      "state" : "OK",
+      "items" : [ {
+        "anonymousId" : "b01",
+        "label" : "UNCERTAIN",
+        "evidence" : null,
+        "failed" : false
+      } ],
+      "counts" : {
+        "UNCERTAIN" : 1,
+        "LOGISTICS" : 0,
+        "OTHER" : 0,
+        "PREFERENCE" : 0,
+        "QUALITY" : 0,
+        "SIZE_SPEC" : 0
+      },
+      "ratios" : {
+        "UNCERTAIN" : 1.0000,
+        "LOGISTICS" : 0.0000,
+        "OTHER" : 0.0000,
+        "PREFERENCE" : 0.0000,
+        "QUALITY" : 0.0000,
+        "SIZE_SPEC" : 0.0000
+      },
+      "denominator" : 1,
+      "failedCount" : 0
+    },
+    "failedFields" : "evidence",
+    "errorCategory" : "业务",
+    "detail" : "证据为空或不在原文",
+    "countedAsCorrectRejection" : false
+  }, {
+    "id" : "E7-06-O04",
+    "implementation" : "llm",
+    "oldPassed" : "不可重算",
+    "passed" : false,
+    "scored" : false,
+    "detail" : "不可重算",
+    "errorCategory" : "缺环境",
+    "countedAsCorrectRejection" : false
+  } ]
+}

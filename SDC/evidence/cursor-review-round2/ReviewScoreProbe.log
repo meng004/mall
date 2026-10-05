@@ -1,0 +1,5 @@
+WRONG_COUNTS Score[passed=true, scored=true, failedFields=, category=, detail=]
+VALID_SEMANTIC Score[passed=false, scored=true, failedFields=label, category=业务, detail=证据不支持该标签]
+VALID_PRIMARY Score[passed=false, scored=true, failedFields=label, category=业务, detail=主因不唯一]
+CODE REJECT DECISION 不放行
+PROCESS_EXIT=0

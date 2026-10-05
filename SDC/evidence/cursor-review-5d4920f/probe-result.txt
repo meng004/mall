@@ -1,0 +1,3 @@
+pending-normal online=NO_RELEASE helper=INCOMPLETE
+online-timeout tally={总题数=1, 已执行=1, 可评分通过=0, 可评分失败=1, 待人工=0, 传输未完成=0, 未执行=0, 不可重算=0}
+synthetic-secret-value-retained=true

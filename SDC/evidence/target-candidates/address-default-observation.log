@@ -1,0 +1,5 @@
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+E3-07 OBSERVED: target ID 999 absent, update returns 0 after reset of current member defaults
+set default=0 WHERE member_id = 101 AND default_status = 1
+set default=1 WHERE member_id = 101 AND id = 999
+Observation matched; service invocation only, mocked database, no transaction/HTTP/concurrency claim

@@ -1,0 +1,7 @@
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+22:10:21.888 [main] WARN com.macro.mall.service.impl.PmsProductServiceImpl -- 创建产品出错:java.lang.Object.insertList(java.util.List)
+E2-02 OBSERVED: Object parameter accepted, missing insertList contract detected only at runtime
+22:10:21.889 [main] WARN com.macro.mall.service.impl.PmsProductServiceImpl -- 创建产品出错:null
+E2-05 OBSERVED: original=IllegalStateException(synthetic storage failure), propagated=RuntimeException, message=null, cause=null
+E2-06 OBSERVED: currentMember=101, detailOwner=202, current-member dependency not consulted
+Observation checks=3; business principles NOT satisfied; no live database or HTTP authorization tested

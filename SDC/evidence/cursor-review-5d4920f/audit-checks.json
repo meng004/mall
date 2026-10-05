@@ -1,0 +1,190 @@
+{
+  "reviewedCommit": "5d4920fc7a15475fcd30660fc8e022ecd0c69431",
+  "codeCommit": "206f26645bf5224d27af8dffadcdff9014ba4055",
+  "linkCheck": [
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/evidence/review-fix-2/full-offline-mvn.log",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/evidence/review-fix-2/mongo-mvn.log",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E3/outputs/E3-01/evidence/review-fix/coverage.txt",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E3/outputs/E3-03/evidence/review-fix/coverage.txt",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E3/outputs/E3-04/evidence/review-fix/coverage.txt",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E6/outputs/E6-04/",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E6/outputs/E6-05/",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E1/outputs/E1-06/evidence/review-fix-2/product-search.body",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E7/outputs/E7-01/evidence/review-fix-2/说明.md",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E7/outputs/E7-02/evidence/review-fix-2/说明.md",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E7/outputs/E7-04/evidence/review-fix-2/replay.json",
+      "existsFromIntegratedIndex": false
+    },
+    {
+      "link": "../../.worktrees/sdc-integrated/SDC/E7/outputs/E7-06/evidence/review-fix-2/replay.json",
+      "existsFromIntegratedIndex": false
+    }
+  ],
+  "historicalLogs": {
+    "full-offline-mvn.log": {
+      "moduleTotals": [
+        [
+          "78",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "43",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "3",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "3",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "21",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "6",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "3",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "25",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "80",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "summedTestsFailuresErrorsSkipped": [
+        262,
+        0,
+        0,
+        0
+      ]
+    },
+    "mongo-mvn.log": {
+      "moduleTotals": [
+        [
+          "2",
+          "0",
+          "0",
+          "0"
+        ]
+      ],
+      "summedTestsFailuresErrorsSkipped": [
+        2,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "replays": {
+    "04": {
+      "declared": {
+        "总题数": 32,
+        "已执行": 32,
+        "可评分通过": 27,
+        "可评分失败": 5,
+        "待人工": 0,
+        "传输未完成": 0,
+        "未执行": 0,
+        "不可重算": 0
+      },
+      "independentRowCounts": {
+        "pass": 27,
+        "fail": 5
+      }
+    },
+    "05": {
+      "declared": {
+        "总题数": 32,
+        "已执行": 5,
+        "可评分通过": 1,
+        "可评分失败": 3,
+        "待人工": 0,
+        "传输未完成": 1,
+        "未执行": 27,
+        "不可重算": 0
+      },
+      "independentRowCounts": {
+        "fail": 3,
+        "pass": 1,
+        "传输未完成": 1,
+        "未执行": 27
+      }
+    },
+    "06": {
+      "declared": {
+        "总题数": 32,
+        "已执行": 12,
+        "可评分通过": 10,
+        "可评分失败": 1,
+        "待人工": 0,
+        "传输未完成": 1,
+        "未执行": 20,
+        "不可重算": 0
+      },
+      "independentRowCounts": {
+        "pass": 10,
+        "fail": 1,
+        "传输未完成": 1,
+        "未执行": 20
+      }
+    }
+  }
+}

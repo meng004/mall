@@ -1,0 +1,95 @@
+[
+  {
+    "task": "E7-04",
+    "phase": "old",
+    "row": {
+      "id": "E7-04-A02",
+      "kind": "adversarial",
+      "implementation": "llm",
+      "passed": true,
+      "actualState": "NEEDS_INPUT",
+      "elapsedMillis": 0,
+      "modelCalls": 0,
+      "error": "",
+      "text": "",
+      "cost": "无数据",
+      "modelOutput": []
+    }
+  },
+  {
+    "task": "E7-04",
+    "phase": "replay",
+    "row": {
+      "id": "E7-04-A02",
+      "implementation": "llm",
+      "oldPassed": true,
+      "passed": false,
+      "scored": false,
+      "errorCategory": "缺环境",
+      "detail": "不可重算",
+      "countedAsCorrectRejection": false
+    }
+  },
+  {
+    "task": "E7-06",
+    "phase": "old",
+    "row": {
+      "id": "E7-06-N12",
+      "kind": "normal",
+      "implementation": "llm",
+      "passed": false,
+      "actualState": "PARTIAL",
+      "elapsedMillis": 60022,
+      "modelCalls": 1,
+      "error": "IllegalStateException: Cursor model request timed out",
+      "modelOutput": [
+        ""
+      ],
+      "cost": "无数据"
+    }
+  },
+  {
+    "task": "E7-06",
+    "phase": "replay",
+    "row": {
+      "id": "E7-06-N12",
+      "implementation": "llm",
+      "oldPassed": false,
+      "passed": false,
+      "scored": true,
+      "actual": {
+        "state": "PARTIAL",
+        "items": [
+          {
+            "anonymousId": "b01",
+            "label": null,
+            "evidence": null,
+            "failed": true
+          }
+        ],
+        "counts": {
+          "LOGISTICS": 0,
+          "OTHER": 0,
+          "PREFERENCE": 0,
+          "QUALITY": 0,
+          "SIZE_SPEC": 0,
+          "UNCERTAIN": 0
+        },
+        "ratios": {
+          "LOGISTICS": 0.0,
+          "OTHER": 0.0,
+          "PREFERENCE": 0.0,
+          "QUALITY": 0.0,
+          "SIZE_SPEC": 0.0,
+          "UNCERTAIN": 0.0
+        },
+        "denominator": 1,
+        "failedCount": 1
+      },
+      "failedFields": "state",
+      "errorCategory": "业务",
+      "detail": "state",
+      "countedAsCorrectRejection": false
+    }
+  }
+]

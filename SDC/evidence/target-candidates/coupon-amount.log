@@ -1,0 +1,4 @@
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+amount=98.90 minimum=100.00 available=0
+amount=99.90 minimum=100.00 available=1
+amount=100.00 minimum=100.00 available=1

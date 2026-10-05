@@ -1,0 +1,674 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] mall                                                               [pom]
+[INFO] mall-common                                                        [jar]
+[INFO] mall-mbg                                                           [jar]
+[INFO] mall-security                                                      [jar]
+[INFO] mall-admin                                                         [jar]
+[INFO] mall-portal                                                        [jar]
+[INFO] SDC - software design and conventions                              [pom]
+[INFO] SDC E1                                                             [jar]
+[INFO] SDC E2                                                             [jar]
+[INFO] SDC E3                                                             [jar]
+[INFO] SDC E4                                                             [jar]
+[INFO] SDC E5                                                             [jar]
+[INFO] SDC E6                                                             [jar]
+[INFO] SDC E7                                                             [jar]
+[INFO] 
+[INFO] ------------------------< com.macro.mall:mall >-------------------------
+[INFO] Building mall 1.0-SNAPSHOT                                        [1/14]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-common >---------------------
+[INFO] Building mall-common 1.0-SNAPSHOT                                 [2/14]
+[INFO]   from mall-common/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-common ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-common ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-common ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/mall-common/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-common ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] ----------------------< com.macro.mall:mall-mbg >-----------------------
+[INFO] Building mall-mbg 1.0-SNAPSHOT                                    [3/14]
+[INFO]   from mall-mbg/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-mbg ---
+[INFO] Copying 0 resource from src/main/resources to target/classes
+[INFO] Copying 78 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-mbg ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-mbg ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/mall-mbg/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-mbg ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-mbg ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --------------------< com.macro.mall:mall-security >--------------------
+[INFO] Building mall-security 1.0-SNAPSHOT                               [4/14]
+[INFO]   from mall-security/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/mall-security/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/mall-security/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-security ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-security ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/mall-security/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-security ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-security ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-admin >----------------------
+[INFO] Building mall-admin 1.0-SNAPSHOT                                  [5/14]
+[INFO]   from mall-admin/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-admin ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 23 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-admin ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-admin ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-admin ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-admin ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.SDCE402Test
+SNAPSHOT delete
+SNAPSHOT delete | product.update {deleteStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT verify
+SNAPSHOT verify | product.update {verifyStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT verify | verify.insert [productId=7,status=1,detail=驳回原因,vertifyMan=test,createTime=present, productId=8,status=1,detail=驳回原因,vertifyMan=test,createTime=present]
+SNAPSHOT publish
+SNAPSHOT publish | product.update {publishStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT mapper-zero
+SNAPSHOT mapper-zero | product.update {publishStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT mapper-zero | product.update {recommandStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT mapper-zero | product.update {newStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT mapper-zero | product.update {deleteStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT new
+SNAPSHOT new | product.update {newStatus=1} criteria=[id in [7, 8]]
+SNAPSHOT recommend
+SNAPSHOT recommend | product.update {recommandStatus=1} criteria=[id in [7, 8]]
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.79 s -- in com.macro.mall.sdc.SDCE402Test
+[INFO] Running com.macro.mall.sdc.SDCE601Test
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.macro.mall.sdc.SDCE601Test
+[INFO] Running com.macro.mall.sdc.SDCE506Test
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in com.macro.mall.sdc.SDCE506Test
+[INFO] Running com.macro.mall.sdc.SDCE404Test
+SNAPSHOT update-only
+SNAPSHOT update-only | sku.select [product_id = 10]
+SNAPSHOT update-only | sku.update 1,10,U1,11,1
+SNAPSHOT update-only | sku.update 2,10,U2,12,2
+SNAPSHOT empty
+SNAPSHOT empty | sku.delete [product_id = 10]
+SNAPSHOT partial-delete
+SNAPSHOT partial-delete | sku.select [product_id = 10]
+SNAPSHOT partial-delete | sku.delete [id in [2]]
+SNAPSHOT partial-delete | sku.update 3,10,C3,13,3
+SNAPSHOT partial-delete | sku.update 1,10,C1,11,1
+SNAPSHOT null
+SNAPSHOT null | sku.delete [product_id = 10]
+SNAPSHOT insert-only
+SNAPSHOT insert-only | sku.select [product_id = 10]
+SNAPSHOT insert-only | sku.insert [null,10,HAS,4,6, null,10,202610040010002,5,7]
+SNAPSHOT mixed
+SNAPSHOT mixed | sku.select [product_id = 10]
+SNAPSHOT mixed | sku.insert [null,10,202610040010001,5,2]
+SNAPSHOT mixed | sku.delete [id in [1]]
+SNAPSHOT mixed | sku.update 2,10,KEEP-2,8,1
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in com.macro.mall.sdc.SDCE404Test
+[INFO] Running com.macro.mall.sdc.SDCE306Test
+12:14:47.559 [main] INFO org.hibernate.validator.internal.util.Version -- HV000001: Hibernate Validator 8.0.3.Final
+12:14:47.764 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.764 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.766 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 1 ms
+12:14:47.835 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.835 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.835 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.861 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.861 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.861 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.870 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.870 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.870 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.879 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.879 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.879 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.887 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.887 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.887 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.893 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.893 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.893 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.903 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.903 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.903 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+12:14:47.912 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+12:14:47.912 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+12:14:47.913 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 1 ms
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.378 s -- in com.macro.mall.sdc.SDCE306Test
+[INFO] Running com.macro.mall.sdc.SDCE105Test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.macro.mall.sdc.SDCE105Test
+[INFO] Running com.macro.mall.sdc.SDCE606Test
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.macro.mall.sdc.SDCE606Test
+[INFO] Running com.macro.mall.sdc.SDCE501Test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.macro.mall.sdc.SDCE501Test
+[INFO] Running com.macro.mall.sdc.SDCE303Test
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 s -- in com.macro.mall.sdc.SDCE303Test
+[INFO] Running com.macro.mall.sdc.SDCE502Test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.macro.mall.sdc.SDCE502Test
+[INFO] Running com.macro.mall.sdc.SDCE602Test
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.macro.mall.sdc.SDCE602Test
+[INFO] Running com.macro.mall.sdc.SDCE401Test
+SNAPSHOT create-useType-2
+SNAPSHOT create-useType-2 | coupon.insert id=null,count=10,useCount=0,receiveCount=0,publishCount=10,useType=2,name=商品券
+SNAPSHOT create-useType-2 | product.insert [11,8802,1001,手机,SN1, 12,8802,1002,耳机,SN2]
+SNAPSHOT update-useType-1-empty
+SNAPSHOT update-useType-1-empty | coupon.update id=77,count=9,useCount=3,receiveCount=4,publishCount=10,useType=1,name=分类券
+SNAPSHOT update-useType-1-empty | category.delete [coupon_id = 77] relations=[]
+SNAPSHOT update-useType-1-empty | category.insert []
+SNAPSHOT create-useType-1
+SNAPSHOT create-useType-1 | coupon.insert id=null,count=10,useCount=0,receiveCount=0,publishCount=10,useType=1,name=分类券
+SNAPSHOT create-useType-1 | category.insert [21,8802,301,手机,数码, 22,8802,302,配件,数码]
+SNAPSHOT update-useType-2
+SNAPSHOT update-useType-2 | coupon.update id=77,count=9,useCount=3,receiveCount=4,publishCount=10,useType=2,name=商品券
+SNAPSHOT update-useType-2 | product.delete [coupon_id = 77] relations=[11,77,1001,手机,SN1, 12,77,1002,耳机,SN2]
+SNAPSHOT update-useType-2 | product.insert [11,77,1001,手机,SN1, 12,77,1002,耳机,SN2]
+SNAPSHOT update-useType-1
+SNAPSHOT update-useType-1 | coupon.update id=77,count=9,useCount=3,receiveCount=4,publishCount=10,useType=1,name=分类券
+SNAPSHOT update-useType-1 | category.delete [coupon_id = 77] relations=[21,77,301,手机,数码, 22,77,302,配件,数码]
+SNAPSHOT update-useType-1 | category.insert [21,77,301,手机,数码, 22,77,302,配件,数码]
+SNAPSHOT update-useType-2-null
+SNAPSHOT update-useType-2-null | coupon.update id=77,count=9,useCount=3,receiveCount=4,publishCount=10,useType=2,name=商品券
+SNAPSHOT create-useType-2-zero
+SNAPSHOT create-useType-2-zero | coupon.insert id=null,count=10,useCount=0,receiveCount=0,publishCount=10,useType=2,name=商品券
+SNAPSHOT create-useType-2-zero | product.insert [11,8802,1001,手机,SN1]
+SNAPSHOT update-useType-0
+SNAPSHOT update-useType-0 | coupon.update id=77,count=9,useCount=3,receiveCount=4,publishCount=10,useType=0,name=全场券
+SNAPSHOT create-useType-2-empty
+SNAPSHOT create-useType-2-empty | coupon.insert id=null,count=10,useCount=0,receiveCount=0,publishCount=10,useType=2,name=商品券
+SNAPSHOT create-useType-2-empty | product.insert []
+SNAPSHOT create-useType-0
+SNAPSHOT create-useType-0 | coupon.insert id=null,count=10,useCount=0,receiveCount=0,publishCount=10,useType=0,name=全场券
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.macro.mall.sdc.SDCE401Test
+[INFO] Running com.macro.mall.sdc.SDCE304Test
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.macro.mall.sdc.SDCE304Test
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 70, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] ---------------------< com.macro.mall:mall-portal >---------------------
+[INFO] Building mall-portal 1.0-SNAPSHOT                                 [6/14]
+[INFO]   from mall-portal/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ mall-portal ---
+[INFO] Copying 3 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ mall-portal ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ mall-portal ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ mall-portal ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.portal.sdc.SDCE203Test
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+OPERATORS promotion status =
+start_date <=
+end_date >=
+OPERATORS current start_time <=
+end_time >=
+OPERATORS next start_time >
+PROJECT boundary advertise=1|brand=2|fresh=3|hot=4|subject=5|start=7200000|end=14400000|nextStart=21600000|nextEnd=28800000|products=31
+PROJECT current-with-next advertise=1|brand=2|fresh=3|hot=4|subject=5|start=7200000|end=14400000|nextStart=21600000|nextEnd=28800000|products=31
+PROJECT no-promotion advertise=1|brand=2|fresh=3|hot=4|subject=5|start=null|end=null|nextStart=null|nextEnd=null|products=null
+PROJECT current-no-next advertise=1|brand=2|fresh=3|hot=4|subject=5|start=7200000|end=14400000|nextStart=null|nextEnd=null|products=31
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.80 s -- in com.macro.mall.portal.sdc.SDCE203Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE104Test
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.026 s -- in com.macro.mall.portal.sdc.SDCE104Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE102Test
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.macro.mall.portal.sdc.SDCE102Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE204Test
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.macro.mall.portal.sdc.SDCE204Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE103Test
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in com.macro.mall.portal.sdc.SDCE103Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE201Test
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.macro.mall.portal.sdc.SDCE201Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE504Test
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.macro.mall.portal.sdc.SDCE504Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE106Test
+SNAPSHOT all-blocks advertise=1 brand=2 fresh=3 hot=4 subject=5 flashProduct=31 session=22 next=23
+SNAPSHOT no-promotion flashNull=false start=null products=null advertise=1 brand=2 fresh=3 hot=4 subject=5
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in com.macro.mall.portal.sdc.SDCE106Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE207Test
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in com.macro.mall.portal.sdc.SDCE207Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE505Test
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s -- in com.macro.mall.portal.sdc.SDCE505Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE206Test
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.033 s -- in com.macro.mall.portal.sdc.SDCE206Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE101Test
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.macro.mall.portal.sdc.SDCE101Test
+[INFO] Running com.macro.mall.portal.sdc.SDCE503Test
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in com.macro.mall.portal.sdc.SDCE503Test
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 43, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -------------------------< com.macro.mall:sdc >-------------------------
+[INFO] Building SDC - software design and conventions 1.0-SNAPSHOT       [7/14]
+[INFO]   from SDC/pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e1 >------------------------
+[INFO] Building SDC E1 1.0-SNAPSHOT                                      [8/14]
+[INFO]   from SDC/E1/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e1 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E1/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E1/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e1 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e1 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E1/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e1 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e1 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e1.MallFactsTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.049 s -- in com.macro.mall.sdc.e1.MallFactsTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e2 >------------------------
+[INFO] Building SDC E2 1.0-SNAPSHOT                                      [9/14]
+[INFO]   from SDC/E2/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e2 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E2/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E2/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e2 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e2 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E2/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e2 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e2 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e2.LayerRulesTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in com.macro.mall.sdc.e2.LayerRulesTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e3 >------------------------
+[INFO] Building SDC E3 1.0-SNAPSHOT                                     [10/14]
+[INFO]   from SDC/E3/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e3 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E3/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E3/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e3 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e3 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e3 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e3 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e3.SDCE307Test
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.79 s -- in com.macro.mall.sdc.e3.SDCE307Test
+[INFO] Running com.macro.mall.sdc.e3.SDCE301Test
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.macro.mall.sdc.e3.SDCE301Test
+[INFO] Running com.macro.mall.sdc.e3.OrderIntegrationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.069 s -- in com.macro.mall.sdc.e3.OrderIntegrationTest
+[INFO] Running com.macro.mall.sdc.e3.SDCE302Test
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.macro.mall.sdc.e3.SDCE302Test
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e4 >------------------------
+[INFO] Building SDC E4 1.0-SNAPSHOT                                     [11/14]
+[INFO]   from SDC/E4/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e4 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E4/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E4/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e4 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e4 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e4 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e4 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e4.PromotionTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.81 s -- in com.macro.mall.sdc.e4.PromotionTest
+[INFO] Running com.macro.mall.sdc.e4.SDCE407Test
+THRESHOLD_BASELINE min=100.00 amount98.90=0 amount99.90=0 amount100.00=1
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.macro.mall.sdc.e4.SDCE407Test
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e5 >------------------------
+[INFO] Building SDC E5 1.0-SNAPSHOT                                     [12/14]
+[INFO]   from SDC/E5/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e5 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E5/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E5/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e5 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e5 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E5/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e5 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e5 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e5.StockImpactTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in com.macro.mall.sdc.e5.StockImpactTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e6 >------------------------
+[INFO] Building SDC E6 1.0-SNAPSHOT                                     [13/14]
+[INFO]   from SDC/E6/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e6 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E6/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E6/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e6 ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e6 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e6 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e6 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.sdc.e6.StockWarningTest
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+12:15:34.123 [main] WARN com.macro.mall.portal.service.impl.OmsPortalOrderServiceImpl -- sku 7 available 4 is below 5
+12:15:34.129 [main] WARN com.macro.mall.portal.service.impl.OmsPortalOrderServiceImpl -- sku 7 warning unavailable
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.81 s -- in com.macro.mall.sdc.e6.StockWarningTest
+[INFO] Running com.macro.mall.sdc.e6.SDCE603Test
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.macro.mall.sdc.e6.SDCE603Test
+[INFO] Running com.macro.mall.sdc.e6.SDCE605Test
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.macro.mall.sdc.e6.SDCE605Test
+[INFO] Running com.macro.mall.sdc.e6.SDCE604Test
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.macro.mall.sdc.e6.SDCE604Test
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] -----------------------< com.macro.mall:sdc-e7 >------------------------
+[INFO] Building SDC E7 1.0-SNAPSHOT                                     [14/14]
+[INFO]   from SDC/E7/pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ sdc-e7 ---
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E7/src/main/resources
+[INFO] skip non existing resourceDirectory /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E7/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ sdc-e7 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ sdc-e7 ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sdc-e7 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.5:test (default-test) @ sdc-e7 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.macro.mall.portal.llm.CursorCliLlmClientTest
+[ERROR] Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.339 s <<< FAILURE! -- in com.macro.mall.portal.llm.CursorCliLlmClientTest
+[ERROR] com.macro.mall.portal.llm.CursorCliLlmClientTest.timeoutTerminatesProcessAndRemovesWorkspace -- Time elapsed: 2.013 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <java.lang.IllegalStateException> but was: <java.lang.RuntimeException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.macro.mall.portal.llm.CursorCliLlmClientTest.timeoutTerminatesProcessAndRemovesWorkspace(CursorCliLlmClientTest.java:40)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.RuntimeException: Operation not permitted (sysctl failed)
+	at java.base/java.lang.ProcessHandleImpl.getProcessPids0(Native Method)
+	at java.base/java.lang.ProcessHandleImpl.descendants(ProcessHandleImpl.java:466)
+	at java.base/java.lang.Process.descendants(Process.java:808)
+	at com.macro.mall.portal.llm.CursorCliLlmClient.generate(CursorCliLlmClient.java:61)
+	at com.macro.mall.portal.llm.CursorCliLlmClientTest.lambda$timeoutTerminatesProcessAndRemovesWorkspace$1(CursorCliLlmClientTest.java:40)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+[INFO] Running com.macro.mall.sdc.e7.SDCE705Test
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.73 s -- in com.macro.mall.sdc.e7.SDCE705Test
+[INFO] Running com.macro.mall.sdc.e7.SDCE703Test
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.macro.mall.sdc.e7.SDCE703Test
+[INFO] Running com.macro.mall.sdc.e7.SDCE704Test
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.macro.mall.sdc.e7.SDCE704Test
+[INFO] Running com.macro.mall.sdc.e7.SDCE702Test
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in com.macro.mall.sdc.e7.SDCE702Test
+[INFO] Running com.macro.mall.sdc.e7.SDCE701Test
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.macro.mall.sdc.e7.SDCE701Test
+[INFO] Running com.macro.mall.sdc.e7.ProductQueryTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in com.macro.mall.sdc.e7.ProductQueryTest
+[INFO] Running com.macro.mall.sdc.e7.SDCE706Test
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.macro.mall.sdc.e7.SDCE706Test
+[INFO] Running com.macro.mall.sdc.e7.LlmClientTest
+[ERROR] Tests run: 3, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 0.016 s <<< FAILURE! -- in com.macro.mall.sdc.e7.LlmClientTest
+[ERROR] com.macro.mall.sdc.e7.LlmClientTest.sdkSendsModelMessagesAndBearerCredentialsToConfiguredEndpoint -- Time elapsed: 0.014 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:337)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:294)
+	at java.base/sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:89)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:142)
+	at jdk.httpserver/sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:50)
+	at jdk.httpserver/sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at jdk.httpserver/com.sun.net.httpserver.HttpServer.create(HttpServer.java:150)
+	at com.macro.mall.sdc.e7.LlmClientTest.sdkSendsModelMessagesAndBearerCredentialsToConfiguredEndpoint(LlmClientTest.java:16)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[ERROR] com.macro.mall.sdc.e7.LlmClientTest.authenticationFailureAndTimeoutAreNotSuccess -- Time elapsed: 0 s <<< ERROR!
+java.net.SocketException: Operation not permitted
+	at java.base/sun.nio.ch.Net.bind0(Native Method)
+	at java.base/sun.nio.ch.Net.bind(Net.java:567)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.netBind(ServerSocketChannelImpl.java:337)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.bind(ServerSocketChannelImpl.java:294)
+	at java.base/sun.nio.ch.ServerSocketAdaptor.bind(ServerSocketAdaptor.java:89)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl.<init>(ServerImpl.java:142)
+	at jdk.httpserver/sun.net.httpserver.HttpServerImpl.<init>(HttpServerImpl.java:50)
+	at jdk.httpserver/sun.net.httpserver.DefaultHttpServerProvider.createHttpServer(DefaultHttpServerProvider.java:35)
+	at jdk.httpserver/com.sun.net.httpserver.HttpServer.create(HttpServer.java:150)
+	at com.macro.mall.sdc.e7.LlmClientTest.authenticationFailureAndTimeoutAreNotSuccess(LlmClientTest.java:40)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+[INFO] Running com.macro.mall.sdc.e7.QueryEvaluationTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.002 s -- in com.macro.mall.sdc.e7.QueryEvaluationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   CursorCliLlmClientTest.timeoutTerminatesProcessAndRemovesWorkspace:40 Unexpected exception type thrown, expected: <java.lang.IllegalStateException> but was: <java.lang.RuntimeException>
+[ERROR] Errors: 
+[ERROR]   LlmClientTest.authenticationFailureAndTimeoutAreNotSuccess:40 » Socket Operation not permitted
+[ERROR]   LlmClientTest.sdkSendsModelMessagesAndBearerCredentialsToConfiguredEndpoint:16 » Socket Operation not permitted
+[INFO] 
+[ERROR] Tests run: 67, Failures: 1, Errors: 2, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for mall 1.0-SNAPSHOT:
+[INFO] 
+[INFO] mall ............................................... SUCCESS [  0.001 s]
+[INFO] mall-common ........................................ SUCCESS [  0.341 s]
+[INFO] mall-mbg ........................................... SUCCESS [  0.112 s]
+[INFO] mall-security ...................................... SUCCESS [  0.019 s]
+[INFO] mall-admin ......................................... SUCCESS [ 11.702 s]
+[INFO] mall-portal ........................................ SUCCESS [ 11.218 s]
+[INFO] SDC - software design and conventions .............. SUCCESS [  0.000 s]
+[INFO] SDC E1 ............................................. SUCCESS [  0.752 s]
+[INFO] SDC E2 ............................................. SUCCESS [  0.491 s]
+[INFO] SDC E3 ............................................. SUCCESS [ 11.113 s]
+[INFO] SDC E4 ............................................. SUCCESS [ 11.072 s]
+[INFO] SDC E5 ............................................. SUCCESS [  0.453 s]
+[INFO] SDC E6 ............................................. SUCCESS [ 11.105 s]
+[INFO] SDC E7 ............................................. FAILURE [ 13.879 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:12 min
+[INFO] Finished at: 2026-10-04T12:15:48+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.5:test (default-test) on project sdc-e7: There are test failures.
+[ERROR] 
+[ERROR] See /Users/limeng/软件设计与规范AI/.worktrees/sdc-integrated/SDC/E7/target/surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+[ERROR] 
+[ERROR] After correcting the problems, you can resume the build with the command
+[ERROR]   mvn <args> -rf :sdc-e7

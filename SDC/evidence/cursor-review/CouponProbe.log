@@ -1,0 +1,5 @@
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+useType=1, matched=0.90,minPoint=0.50,available=0,expected=1
+useType=2, matched=0.90,minPoint=0.50,available=0,expected=1
+
+PROCESS_EXIT=0

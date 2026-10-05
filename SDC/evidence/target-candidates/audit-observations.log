@@ -1,0 +1,23 @@
+Standard Commons Logging discovery in action with spring-jcl: please remove commons-logging.jar from classpath in order to avoid potential conflicts
+E3-01 FAIL actual={99.90 available=1} expected={available=0}
+E3-02 FAIL actual={persistedModifyTime=1000,quantity=5} expected={persistedModifyTime refreshed}
+21:20:56.720 [main] INFO org.hibernate.validator.internal.util.Version -- HV000001: Hibernate Validator 8.0.3.Final
+21:20:56.937 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+21:20:56.937 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+21:20:56.938 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 1 ms
+E3-03 FAIL actual={category101=0,category202=2} expected={category101=1,category202=1 for accepted mixed deletion}
+21:20:56.987 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+21:20:56.987 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+21:20:56.987 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+E3-04 FAIL actual={oldAttributeCount=1,newParamCount=0} expected={oldAttributeCount=0,newParamCount=1}
+21:20:57.036 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+21:20:57.036 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+21:20:57.036 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+E3-05 FAIL actual={oldProductRelation=true,oldCategoryRelation=true} expected={both false under the proposed relation-cleanup specification}
+21:20:57.065 [main] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+21:20:57.065 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+21:20:57.065 [main] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 0 ms
+E3-06 FAIL actual={validLongThrowsUnexpectedType=true,emptyBodyReachedService=true,httpStatus=200} expected={valid Long is validatable; empty required fields rejected before service}
+SUMMARY: checks=6 specificationFailures=6
+Exception in thread "main" java.lang.AssertionError: Current implementation does not satisfy 6 recorded specifications; see each FAIL above.
+	at CandidateAuditProbe.main(CandidateAuditProbe.java:47)

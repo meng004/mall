@@ -1,0 +1,5 @@
+fabricated=Result[state=OK, values=[Value[attributeId=21, value=红, evidence=蓝色]], unknownIds=[]]
+duplicates=Result[state=OK, values=[Value[attributeId=21, value=蓝, evidence=蓝色], Value[attributeId=21, value=红, evidence=蓝色]], unknownIds=[]]
+comparator=java.lang.IllegalStateException: Duplicate key 21 (attempted merging values 蓝 and 红)
+
+PROCESS_EXIT=0

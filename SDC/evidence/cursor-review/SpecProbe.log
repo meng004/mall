@@ -1,0 +1,4 @@
+ALL_MISSING_SQL=delete from pms_product_attribute WHERE ( id in )
+UPDATE_TRANSACTION_ATTRIBUTE=null
+
+PROCESS_EXIT=0
