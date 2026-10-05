@@ -30,7 +30,7 @@ git worktree remove --force "$WT"
 
 # 结果：pass / fail（测试运行但失败）/ absent（编译失败）/ error（其他原因，如未找到测试）
 outcome() {
-  if [ "$2" = 0 ]; then echo pass
+  if [ "$2" = 0 ] && grep -qE "Tests run: [1-9]" "$1"; then echo pass
   elif grep -qE 'Tests run:.*(Failures|Errors): [1-9]' "$1"; then echo fail
   elif grep -q 'COMPILATION ERROR' "$1"; then echo absent
   else echo error; fi
