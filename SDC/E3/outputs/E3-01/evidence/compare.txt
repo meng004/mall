@@ -6,4 +6,4 @@ org.opentest4j.AssertionFailedError: expected: <0> but was: <1>
 [ERROR]   SDCE301Test.categoryRejectsNinetyNineNinety:64 expected: <0> but was: <1>
 [ERROR]   SDCE301Test.ninetyNineNinetyIsBelowOneHundred:48 expected: <0> but was: <1>
 [ERROR]   SDCE301Test.productRejectsNinetyNineNinety:70 expected: <0> but was: <1>
-改后 8e63467e exit=0  [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+改后 07222e23 exit=0  [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
