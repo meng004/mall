@@ -1,0 +1,41 @@
+{
+  "task": "E7-05",
+  "truthSource": "计划 E7-05 的白名单、G=GB、红色到红，以及“未提及不得按品牌补造”。全角数字和尺寸后缀是本集声明的事先规则。",
+  "labelMethod": "按计划中的书面规则构造并判定",
+  "humanReview": "独立人工核对尚未进行",
+  "reviewer": null,
+  "teachingConstructed": true,
+  "notProductionData": true,
+  "exposure": "两版使用同一 text 和同一 attributes 白名单。白名单不是期望抽取结果。不得把 expected.values 或 unknownIds 送进普通规则或模型。",
+  "normalization": {
+    "color": {
+      "红色": "红",
+      "蓝色": "蓝",
+      "红": "红",
+      "蓝": "蓝"
+    },
+    "colorNote": "红色→红来自计划示例。蓝色→蓝是同一别名模式的对称声明。",
+    "capacity": "先把全角数字和全角大写字母折成半角，再把末尾单独的 G 换成 GB。128G→128GB，256GB 保持 256GB。",
+    "size": {
+      "S号": "S",
+      "S码": "S",
+      "M号": "M",
+      "M码": "M",
+      "L号": "L",
+      "L码": "L",
+      "S": "S",
+      "M": "M",
+      "L": "L"
+    },
+    "undefined": [
+      "MB",
+      "TB",
+      "中文数字",
+      "带空格的单位",
+      "品牌通常规格"
+    ]
+  },
+  "unknownRule": "未提及的白名单属性，以及提及但不能落入允许值的属性，都进入 unknownIds，不得写入 values。至少抽出一个合法值时 state=OK；一个合法值都没有时 state=NEEDS_INPUT，unknownIds 为本次白名单全部 id。",
+  "brandRule": "“牌子一般是”“通常是”不构成这件商品的取值。",
+  "writeRule": "不得保存商品，不得接收持久化字段或白名单外 id。"
+}
