@@ -1,0 +1,17 @@
+示例：E6-03  模块：mall-portal  测试：SDCE603Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 15, Failures: 13, Errors: 0, Skipped: 0
+[ERROR]   SDCE603Test.addNormalizesBlankToEmpty:56 expected: <> but was: <   >
+[ERROR]   SDCE603Test.addStripsIdeographicSpace:68 expected: <001234> but was: <　001234　>
+[ERROR]   SDCE603Test.addStripsSixDigitsAndKeepsLeadingZero:62 expected: <001234> but was: < 001234 >
+[ERROR]   SDCE603Test.invalidAddDoesNotInsert:75 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidAddDoesNotInsert:75 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidAddDoesNotInsert:75 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidAddDoesNotInsert:75 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidUpdateDoesNotWrite:133 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidUpdateDoesNotWrite:133 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidUpdateDoesNotWrite:133 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.invalidUpdateDoesNotWrite:133 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE603Test.updateBlankClearsStoredPostCode:125 expected: <> but was: < 	 >
+[ERROR]   SDCE603Test.updateStripsPaddedPostCodeWithinMemberScope:110 expected: <001234> but was: < 001234 >
+改后 9be5cd61：pass（预期 pass）  [INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

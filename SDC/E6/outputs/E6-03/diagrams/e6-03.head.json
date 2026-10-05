@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-03 改后：add 与 update 共用 normalizePostCode，先规范再写库（exp/e6-03 9be5cd61）",
+    "output": "e6-03.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "9be5cd617bca8ad652f1e84bd4c222d8cccb75fb"
+    }
+  },
+  "components": [
+    {
+      "id": "ctl",
+      "type": "frontend",
+      "label": "UmsMemberReceiveAddressController",
+      "sublabel": "POST add · update/{id}",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        270,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberReceiveAddressController.java",
+          "line": 28,
+          "end_line": 34,
+          "label": "add"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberReceiveAddressController.java",
+          "line": 50,
+          "end_line": 56,
+          "label": "update"
+        }
+      ]
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "UmsMemberReceiveAddressServiceImpl",
+      "sublabel": "add · update 第一行先规范邮编",
+      "tag": "改动",
+      "pos": [
+        430,
+        200
+      ],
+      "size": [
+        290,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 29,
+          "end_line": 34,
+          "label": "add：30 行先 normalize"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 45,
+          "end_line": 65,
+          "label": "update：46 行先校验，54–63 清旧默认"
+        }
+      ]
+    },
+    {
+      "id": "gap",
+      "type": "backend",
+      "label": "normalizePostCode",
+      "sublabel": "null 保留；strip；六位 ASCII 数字",
+      "tag": "新增",
+      "pos": [
+        430,
+        40
+      ],
+      "size": [
+        290,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 23,
+          "label": "六位 ASCII 数字"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 87,
+          "end_line": 97,
+          "label": "私有方法"
+        }
+      ]
+    },
+    {
+      "id": "assert",
+      "type": "backend",
+      "label": "Asserts.fail",
+      "sublabel": "邮政编码须为六位数字",
+      "tag": "新增路径",
+      "pos": [
+        800,
+        40
+      ],
+      "size": [
+        240,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 93,
+          "end_line": 95,
+          "label": "非法即抛出"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/exception/Asserts.java",
+          "line": 10,
+          "end_line": 12,
+          "label": "fail(String)"
+        }
+      ]
+    },
+    {
+      "id": "handler",
+      "type": "backend",
+      "label": "GlobalExceptionHandler",
+      "sublabel": "code 500，HTTP 200",
+      "pos": [
+        1160,
+        40
+      ],
+      "size": [
+        240,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java",
+          "line": 22,
+          "end_line": 29,
+          "label": "28 行 failed(message)，只有 @ResponseBody"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonResult.java",
+          "line": 70,
+          "end_line": 72,
+          "label": "failed(message)"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/api/ResultCode.java",
+          "line": 9,
+          "label": "FAILED 的 code 是 500"
+        }
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "database",
+      "label": "UmsMemberReceiveAddressMapper",
+      "sublabel": "insert · updateByExampleSelective",
+      "pos": [
+        840,
+        200
+      ],
+      "size": [
+        270,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberReceiveAddressMapper.xml",
+          "line": 108,
+          "end_line": 120,
+          "label": "insert 总是写 post_code"
+        },
+        {
+          "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberReceiveAddressMapper.xml",
+          "line": 209,
+          "end_line": 211,
+          "label": "postCode 为 null 时不写"
+        }
+      ]
+    },
+    {
+      "id": "order",
+      "type": "backend",
+      "label": "OmsPortalOrderServiceImpl",
+      "sublabel": "下单时抄邮编进订单",
+      "pos": [
+        430,
+        360
+      ],
+      "size": [
+        290,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 200,
+          "end_line": 203,
+          "label": "getItem 后抄 postCode"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c-write",
+      "from": "ctl",
+      "to": "svc",
+      "label": "add / update",
+      "variant": "emphasis"
+    },
+    {
+      "id": "svc-mapper",
+      "from": "svc",
+      "to": "mapper",
+      "label": "insert/update"
+    },
+    {
+      "id": "svc-gap",
+      "from": "svc",
+      "to": "gap",
+      "label": "先规范",
+      "variant": "emphasis"
+    },
+    {
+      "id": "gap-assert",
+      "from": "gap",
+      "to": "assert",
+      "label": "非法：不写库",
+      "variant": "dashed"
+    },
+    {
+      "id": "assert-handler",
+      "from": "assert",
+      "to": "handler",
+      "label": "ApiException",
+      "variant": "dashed"
+    },
+    {
+      "id": "order-get",
+      "from": "order",
+      "to": "svc",
+      "label": "getItem"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "变化",
+      "items": [
+        "normalizePostCode（87–97）：null 直接返回；strip 后非空且不是 [0-9]{6}（23 行）就失败；纯空白写成空串",
+        "add（30 行）和 update（46 行）先调用它，在写入之前，也在清旧默认（54–63 行）之前",
+        "签名、路径和请求体不变。5 位、7 位、带字母、全角改为拒绝；两端空白改存 strip 后的值",
+        "按源码，未经 HTTP：code = 500、message「邮政编码须为六位数字」、HTTP 200。与「操作失败」同码"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "职责落点与备选",
+      "items": [
+        "私有方法，两处调用。控制器 29、51 行是仅有的调用方，但只转交；放在写库的服务里，避免写两遍和以后绕过",
+        "不用 @Pattern：生成模型会被覆盖；做不了 strip 和空白变空串；失败变成 404，message 是字段名拼上提示",
+        "不用 VALIDATE_FAILED（「参数检验失败」）。IErrorCode 可 404 加这句话；18 处 fail 传字符串",
+        "按 String 保存。parseInt 会丢掉前导零，并接受全角；isDigit 对全角数字也是 true"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "代价",
+      "items": [
+        "不迁移旧数据。课程库地址 5 行、订单 65 行都是 518000；生产数据无法核实",
+        "下单仍原样抄已存邮编（203 行）。后台改订单邮编不经过地址服务",
+        "更新传 null 不覆盖，靠 XML 209–211。服务不能把 null 规范成空串"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "证据",
+      "items": [
+        "15 项全是 Mock，直接 new 实现、Mapper 为替身。没有容器、事务、库和控制器，属于部分验证",
+        "非法值含 12345a（72、129 行）。改前 15 项中 13 项业务断言失败，改后 15/0/0，Skipped=0",
+        "defaultStatus = 1（132 行）时 135 行断言没有任何写入，拒绝早于清旧默认。返回值 1 来自装桩",
+        "未验证：真实 MySQL、拒绝时的 HTTP 响应、回滚后旧默认仍在"
+      ]
+    }
+  ]
+}

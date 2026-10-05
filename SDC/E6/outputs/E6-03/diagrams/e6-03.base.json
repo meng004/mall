@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-03 改前：收货地址的邮编原样写库，没有格式规则（基线 dcaa93b3）",
+    "output": "e6-03.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "ctl",
+      "type": "frontend",
+      "label": "UmsMemberReceiveAddressController",
+      "sublabel": "POST add · update/{id}",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        270,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberReceiveAddressController.java",
+          "line": 28,
+          "end_line": 34,
+          "label": "add"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberReceiveAddressController.java",
+          "line": 50,
+          "end_line": 56,
+          "label": "update"
+        }
+      ]
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "UmsMemberReceiveAddressServiceImpl",
+      "sublabel": "add · update",
+      "pos": [
+        430,
+        200
+      ],
+      "size": [
+        290,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 26,
+          "end_line": 29,
+          "label": "add：直接 insert"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 41,
+          "end_line": 59,
+          "label": "update：直接更新"
+        }
+      ]
+    },
+    {
+      "id": "gap",
+      "type": "backend",
+      "label": "邮编不检查",
+      "sublabel": "原样写入，没有格式规则",
+      "tag": "缺口",
+      "pos": [
+        430,
+        40
+      ],
+      "size": [
+        290,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java",
+          "line": 26,
+          "end_line": 29,
+          "label": "add 没有处理 postCode"
+        }
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "database",
+      "label": "UmsMemberReceiveAddressMapper",
+      "sublabel": "insert · updateByExampleSelective",
+      "pos": [
+        840,
+        200
+      ],
+      "size": [
+        270,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberReceiveAddressMapper.xml",
+          "line": 108,
+          "end_line": 120,
+          "label": "insert 总是写 post_code"
+        },
+        {
+          "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberReceiveAddressMapper.xml",
+          "line": 209,
+          "end_line": 211,
+          "label": "postCode 为 null 时不写"
+        }
+      ]
+    },
+    {
+      "id": "order",
+      "type": "backend",
+      "label": "OmsPortalOrderServiceImpl",
+      "sublabel": "下单时抄邮编进订单",
+      "pos": [
+        430,
+        360
+      ],
+      "size": [
+        290,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 200,
+          "end_line": 203,
+          "label": "getItem 后抄 postCode"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c-write",
+      "from": "ctl",
+      "to": "svc",
+      "label": "add / update",
+      "variant": "emphasis"
+    },
+    {
+      "id": "svc-mapper",
+      "from": "svc",
+      "to": "mapper",
+      "label": "insert/update"
+    },
+    {
+      "id": "svc-gap",
+      "from": "svc",
+      "to": "gap",
+      "label": "不检查",
+      "variant": "dashed"
+    },
+    {
+      "id": "order-get",
+      "from": "order",
+      "to": "svc",
+      "label": "getItem"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "需求与现状",
+      "items": [
+        "需求：六位 ASCII 数字，去掉首尾空白并保留前导零；拒绝位数不对、含字母或全角；null 保留，纯空白写成空串",
+        "基线不检查邮编。add 27–29 行补 memberId 后 insert；update 59 行按会员和地址 id 更新。5 位、7 位、带字母、全角和两端空白都能原样入库",
+        "下单 getItem（200 行）把已存邮编抄进订单（203 行）。课程库地址 5 行、订单 65 行的邮编都是 518000",
+        "SDCE603Test 全是 Mock。改前 15 项中 13 项业务断言失败（空白没去掉、非法值没抛 ApiException），Skipped=0"
+      ]
+    }
+  ]
+}
