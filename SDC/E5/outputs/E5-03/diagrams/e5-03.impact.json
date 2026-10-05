@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E5-03 影响范围：收货地址邮政编码规则（基线 dcaa93b3）",
+    "output": "e5-03.impact.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "clearDefault", "type": "backend", "label": "update：清旧默认分支", "sublabel": "defaultStatus=1 时先改其他地址", "pos": [400, 60], "size": [260, 80],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java", "line": 46, "end_line": 58, "label": "57 行 updateByExampleSelective" }
+      ] },
+    { "id": "ctl", "type": "frontend", "label": "UmsMemberReceiveAddressController", "sublabel": "POST /member/address/add · update/{id}", "pos": [40, 232], "size": [240, 88],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberReceiveAddressController.java", "line": 26, "end_line": 34, "label": "add：count>0 成功" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/UmsMemberReceiveAddressController.java", "line": 48, "end_line": 56, "label": "update：count>0 成功" }
+      ] },
+    { "id": "svc", "type": "backend", "label": "UmsMemberReceiveAddressServiceImpl", "sublabel": "add / update：postCode 原样交给 Mapper", "tag": "唯一落点 · 改", "pos": [400, 224], "size": [260, 104],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java", "line": 26, "end_line": 30, "label": "add：设 memberId → insert" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberReceiveAddressServiceImpl.java", "line": 41, "end_line": 60, "label": "update：59 行选择性更新" }
+      ] },
+    { "id": "mapperXml", "type": "database", "label": "UmsMemberReceiveAddressMapper", "sublabel": "insert 总写；selective 跳过 null", "pos": [800, 232], "size": [250, 88],
+      "sources": [
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberReceiveAddressMapper.xml", "line": 108, "end_line": 120, "label": "insert 总写 post_code" },
+        { "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/UmsMemberReceiveAddressMapper.xml", "line": 209, "end_line": 211, "label": "postCode != null 才写" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/UmsMemberReceiveAddress.java", "line": 20, "label": "模型 postCode 为 String" }
+      ] },
+    { "id": "table", "type": "database", "label": "ums_member_receive_address", "sublabel": "post_code varchar(100)", "pos": [1150, 232], "size": [230, 88],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 2833, "end_line": 2839, "label": "post_code varchar(100)" },
+        { "path": "document/sql/mall.sql", "line": 2850, "end_line": 2854, "label": "样本邮编均为 518000" }
+      ] },
+    { "id": "geh", "type": "security", "label": "GlobalExceptionHandler", "sublabel": "ApiException → failed(message)，code 500", "pos": [40, 440], "size": [240, 80],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java", "line": 22, "end_line": 29, "label": "ApiException 转失败结果" },
+        { "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonResult.java", "line": 70, "end_line": 72, "label": "failed(message) 用 FAILED" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/MallPortalApplication.java", "line": 6, "label": "scanBasePackages = com.macro.mall" }
+      ] },
+    { "id": "orderSvc", "type": "backend", "label": "OmsPortalOrderServiceImpl", "sublabel": "generateOrder 抄已存邮编", "pos": [400, 460], "size": [260, 80],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 200, "end_line": 203, "label": "getItem 后 setReceiverPostCode" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 77, "label": "确认单读地址列表（分析未提及）" }
+      ] },
+    { "id": "orderTable", "type": "database", "label": "oms_order", "sublabel": "receiver_post_code varchar(32)", "pos": [800, 460], "size": [250, 80],
+      "sources": [
+        { "path": "document/sql/mall.sql", "line": 444, "end_line": 475, "label": "receiver_post_code" }
+      ] },
+    { "id": "adminOrder", "type": "external", "label": "mall-admin 改订单收货人", "sublabel": "updateReceiverInfo：分析未提及", "pos": [1150, 460], "size": [230, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/OmsOrderServiceImpl.java", "line": 95, "end_line": 101, "label": "直接写 receiverPostCode" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/OmsOrderController.java", "line": 81, "end_line": 82, "label": "updateReceiverInfo 入口" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "直接受影响：唯一改动点（两个写入入口的交点）", "wraps": ["clearDefault", "svc"] },
+    { "kind": "region", "label": "间接受影响：写入与存储（不改）", "wraps": ["mapperXml", "table"] },
+    { "kind": "region", "label": "间接受影响：失败响应（不改）", "wraps": ["ctl", "geh"] },
+    { "kind": "region", "label": "读方：照抄已存值（不改）", "wraps": ["orderSvc", "orderTable"] },
+    { "kind": "region", "label": "需求外", "wraps": ["adminOrder"] }
+  ],
+  "connections": [
+    { "id": "call", "from": "ctl", "to": "svc", "label": "add / update", "variant": "emphasis" },
+    { "id": "branch", "from": "svc", "to": "clearDefault", "label": "defaultStatus=1" },
+    { "id": "clear", "from": "clearDefault", "to": "mapperXml", "label": "57 行先清旧默认" },
+    { "id": "write", "from": "svc", "to": "mapperXml", "label": "insert · 选择性更新" },
+    { "id": "store", "from": "mapperXml", "to": "table" },
+    { "id": "reject", "from": "svc", "to": "geh", "label": "拟 Asserts.fail", "variant": "dashed" },
+    { "id": "read", "from": "orderSvc", "to": "svc", "label": "getItem（200 行）" },
+    { "id": "copy", "from": "orderSvc", "to": "orderTable", "label": "receiverPostCode" },
+    { "id": "admin-write", "from": "adminOrder", "to": "orderTable", "label": "不经地址规则", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "amber", "title": "拟议变更", "items": [
+      "邮编可空；strip() 后非空值须为六位 ASCII 数字；新增时 null 原样保留，更新时 null 不覆盖，纯空白写成空串；只约束新写入，不迁移旧行",
+      "落点只有 UmsMemberReceiveAddressServiceImpl 的 add（26–30 行）与 update（41–60 行），两处调用同一个私有规范化方法，且在任何 Mapper 写入之前执行"
+    ] },
+    { "dot": "cyan", "title": "影响范围", "items": [
+      "入口：Controller.add（28–34 行）、update（50–56 行）只转交请求体；全仓库 add / update 的调用方只有这两处",
+      "顺序约束：update 在 defaultStatus=1 时先由 57 行清掉当前会员的旧默认地址，再由 59 行写本条；校验必须放在 49 行之前",
+      "写入：XML insert（108–120 行）总写 post_code；updateByExampleSelective 只在 postCode != null 时写（209–211 行），正好对应「未传不覆盖」",
+      "存储：post_code varchar(100)（mall.sql:2839）；模型 postCode 为 String（model:20），XML 第 10 行映射为 VARCHAR",
+      "读方：OmsPortalOrderServiceImpl 200–203 行把地址邮编抄进 oms_order.receiver_post_code（varchar(32)，mall.sql:475）",
+      "拒绝：Asserts.fail → ApiException → GlobalExceptionHandler（22–29 行）→ CommonResult.failed(message)，code 500；控制器的 count>0 分支不再执行"
+    ] },
+    { "dot": "slate", "title": "已排除", "items": [
+      "控制器、生成模型 setter、Mapper XML、表结构：不改，分析已给出理由",
+      "旧数据迁移：不做；样本行 mall.sql:2850–2854 的邮编都是 518000",
+      "分析未提及：mall-admin 的 OmsOrderServiceImpl.updateReceiverInfo（95–101 行）直接改订单收货人邮编，不经地址服务，新规则管不到；确认单（77 行）读地址列表，只读不改"
+    ] },
+    { "dot": "emerald", "title": "锁定现状的测试", "items": [
+      "SDCE503Test 共 3 项，层次都是单元 / 替身：真实服务，Mockito 替换 UmsMemberService 与 Mapper，无 Spring、无数据库",
+      "add 用例：锁 add → insert，insert 收到 001234、memberId=101（59–60 行）",
+      "update 用例：锁 update → updateByExampleSelective（defaultStatus=0，不进清默认分支），收到 001234（76 行）；没有断言 Example 中的会员条件",
+      "结构用例：反射读模型字段类型，读取 mall.sql 与 XML 文本（81–85 行），是静态文本检查，不连数据库"
+    ] }
+  ]
+}
