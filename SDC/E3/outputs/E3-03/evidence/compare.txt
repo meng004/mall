@@ -1,0 +1,9 @@
+测试：mall-admin SDCE303Test
+改前 baseline-dcaa93b3 exit=1  [ERROR] Tests run: 9, Failures: 3, Errors: 1, Skipped: 1
+org.opentest4j.AssertionFailedError: expected: <[1, 1]> but was: <[0, 2]>
+org.opentest4j.AssertionFailedError: expected: <[1, 1]> but was: <[0, 2]>
+org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
+[ERROR]   SDCE303Test.duplicateIdCountedOnceAndMissingIdDoesNotDecrement:131 expected: <[1, 1]> but was: <[0, 2]>
+[ERROR]   SDCE303Test.mixedCategoriesEachLoseOneSpecification:97 expected: <[1, 1]> but was: <[0, 2]>
+[ERROR]   SDCE303Test.sameCategorySpecAndParamDecrementSeparateCounters:114 expected: <1> but was: <0>
+改后 44e8b374 exit=0  [INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 1
