@@ -26,9 +26,9 @@ summary() { grep -E 'Tests run:.*(Fail|Err)' "$1" | grep -v ' in ' | tail -1; }
 {
   echo "测试：$MODULE $TESTS"
   echo "改前 $BASE exit=$BASE_EXIT  $(summary "$WT/../base.log")"
-  grep -E '^\[ERROR\] +[A-Za-z]+Test\.|expected:' "$WT/../base.log" | head -20
+  grep -E '^\[ERROR\] +[A-Za-z0-9]+Test\.|expected:' "$WT/../base.log" | head -20
   echo "改后 $HEAD_SHA exit=$HEAD_EXIT  $(summary "$WT/../head.log")"
-  grep -E '^\[ERROR\] +[A-Za-z]+Test\.|expected:' "$WT/../head.log" | head -20
+  grep -E '^\[ERROR\] +[A-Za-z0-9]+Test\.|expected:' "$WT/../head.log" | head -20
 } | tee "$OUT"
 
 git worktree remove --force "$WT"
