@@ -1,0 +1,4 @@
+示例：E4-06  模块：mall-portal  测试：SDCE406Test
+改前 baseline-dcaa93b3：pass（预期 pass）  [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+改后 98168967：pass（预期 pass）  [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

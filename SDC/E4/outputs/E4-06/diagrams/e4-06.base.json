@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-06 改前：首页秒杀块的取时、查询与组装（基线 dcaa93b3）",
+    "output": "e4-06.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    },
+    "legend": {
+      "entries": {
+        "frontend": { "label": "HTTP 入口" },
+        "backend": { "label": "Java 方法 / 类" },
+        "database": { "label": "数据访问" },
+        "external": { "label": "外部输入" }
+      }
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "HomeController", "sublabel": "GET /home/content", "pos": [40, 280], "size": [170, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/HomeController.java", "line": 28, "end_line": 34, "label": "content()" }] },
+    { "id": "content", "type": "backend", "label": "HomeServiceImpl.content", "sublabel": "拼装首页 6 块内容", "pos": [300, 280], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 40, "end_line": 56, "label": "48 行取秒杀块" }] },
+    { "id": "clock", "type": "external", "label": "new Date()", "sublabel": "系统时钟，方法内隐式读取", "icon": "clock", "pos": [300, 130], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 106, "label": "Date now = new Date()" }] },
+    { "id": "flash", "type": "backend", "label": "getHomeFlashPromotion", "sublabel": "取时 + 4 次查询 + 5 次 set 交织", "tag": "24 行 · 3 层 if", "pos": [590, 252], "size": [250, 120],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 103, "end_line": 126, "label": "整个方法" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 112, "end_line": 122, "label": "set 与查询交替" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 115, "label": "回读结果作下一场参数" }
+      ] },
+    { "id": "flash-dao", "type": "database", "label": "HomeDao.getFlashProductList", "sublabel": "按活动 + 场次取商品", "pos": [580, 20], "size": [270, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 121, "label": "调用处" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 27, "end_line": 28, "label": "homeDao 字段" }
+      ] },
+    { "id": "find-promotion", "type": "backend", "label": "getFlashPromotion", "sublabel": "status = 1，start_date <=，end_date >=", "pos": [1010, 150], "size": [270, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 149, "end_line": 161, "label": "当前活动" }] },
+    { "id": "find-current", "type": "backend", "label": "getFlashPromotionSession", "sublabel": "start_time <=，end_time >=", "pos": [1010, 280], "size": [270, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 164, "end_line": 175, "label": "当前场次" }] },
+    { "id": "find-next", "type": "backend", "label": "getNextFlashPromotionSession", "sublabel": "start_time >，start_time asc", "pos": [1010, 390], "size": [270, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 129, "end_line": 139, "label": "下一场次" }] },
+    { "id": "result", "type": "backend", "label": "HomeFlashPromotion", "sublabel": "本场 / 下场起止 + 商品，5 个字段", "tag": "返回对象", "pos": [600, 520], "size": [230, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/HomeFlashPromotion.java", "line": 14, "end_line": 27, "label": "返回对象" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 112, "end_line": 122, "label": "5 处 set" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "HomeServiceImpl 内：一个长方法 + 3 个分散的私有查询", "wraps": ["flash", "find-promotion", "find-current", "find-next"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "content", "label": "content()", "variant": "emphasis" },
+    { "id": "to-flash", "from": "content", "to": "flash" },
+    { "id": "read-clock", "from": "clock", "to": "flash", "label": "隐式取时", "variant": "dashed" },
+    { "id": "q-promotion", "from": "flash", "to": "find-promotion", "label": "now" },
+    { "id": "q-current", "from": "flash", "to": "find-current", "label": "now" },
+    { "id": "q-next", "from": "flash", "to": "find-next", "label": "回读 startTime" },
+    { "id": "q-products", "from": "flash", "to": "flash-dao", "label": "活动 id + 场次 id" },
+    { "id": "write-result", "from": "flash", "to": "result", "label": "边查边写 5 个字段" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "长方法、职责交织：getHomeFlashPromotion（103–126）在三层嵌套 if 里同时取时、发 4 次查询、写 5 个字段",
+      "隐式时间输入：方法内 new Date()（106 行），调用方和测试都无法指定时刻",
+      "查询依赖输出对象：下一场的查询参数从刚写入的结果回读（115 行），查询顺序与组装顺序绑在一起",
+      "3 个秒杀查询方法散在类里（129 / 149 / 164 行），中间夹着无关的 getHomeAdvertiseList（141）"
+    ] }
+  ]
+}

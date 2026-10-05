@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-06 改后：秒杀查询提取为协作者 FlashPromotionQuery（exp/e4-06 98168967）",
+    "output": "e4-06.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "981689671ff426fe5cdc8062ecb1a2a36fc86024"
+    },
+    "legend": {
+      "entries": {
+        "frontend": { "label": "HTTP 入口" },
+        "backend": { "label": "Java 方法 / 类" },
+        "database": { "label": "数据访问" },
+        "external": { "label": "外部输入" }
+      }
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "HomeController", "sublabel": "GET /home/content", "pos": [40, 280], "size": [170, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/HomeController.java", "line": 28, "end_line": 34, "label": "content()" }] },
+    { "id": "content", "type": "backend", "label": "HomeServiceImpl.content", "sublabel": "拼装首页 6 块内容", "pos": [300, 280], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 40, "end_line": 56, "label": "48 行取秒杀块" }] },
+    { "id": "clock", "type": "external", "label": "new Date()", "sublabel": "系统时钟，仍在入口方法读取", "icon": "clock", "pos": [615, 20], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 104, "label": "load(new Date())" }] },
+    { "id": "flash", "type": "backend", "label": "getHomeFlashPromotion", "sublabel": "构造协作者并传入当前时刻", "tag": "1 行", "pos": [590, 280], "size": [250, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 103, "end_line": 105, "label": "整个方法" }] },
+    { "id": "load", "type": "backend", "label": "FlashPromotionQuery.load", "sublabel": "参数 Date now，只编排 4 次查询", "tag": "14 行 · 2 层 if", "pos": [930, 252], "size": [250, 120],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 131, "end_line": 144, "label": "load(Date now)" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 118, "end_line": 129, "label": "内部类、3 个依赖、构造器" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 137, "label": "下一场参数取自当前场" }
+      ] },
+    { "id": "flash-dao", "type": "database", "label": "HomeDao.getFlashProductList", "sublabel": "按活动 + 场次取商品", "pos": [1350, 20], "size": [270, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 138, "end_line": 139, "label": "调用处" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 121, "label": "内部类的 homeDao 字段" }
+      ] },
+    { "id": "find-promotion", "type": "backend", "label": "findPromotion", "sublabel": "status = 1，start_date <=，end_date >=", "pos": [1350, 150], "size": [270, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 159, "end_line": 171, "label": "当前活动" }] },
+    { "id": "find-current", "type": "backend", "label": "findCurrentSession", "sublabel": "start_time <=，end_time >=", "pos": [1350, 280], "size": [270, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 173, "end_line": 184, "label": "当前场次" }] },
+    { "id": "find-next", "type": "backend", "label": "findNextSession", "sublabel": "start_time >，start_time asc", "pos": [1350, 390], "size": [270, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 186, "end_line": 196, "label": "下一场次" }] },
+    { "id": "assemble", "type": "backend", "label": "assemble", "sublabel": "static，只写字段不查询", "pos": [955, 520], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 146, "end_line": 157, "label": "唯一写回结果的方法" }] },
+    { "id": "result", "type": "backend", "label": "HomeFlashPromotion", "sublabel": "本场 / 下场起止 + 商品，5 个字段", "tag": "返回对象", "pos": [600, 520], "size": [230, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/HomeFlashPromotion.java", "line": 14, "end_line": 27, "label": "返回对象" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java", "line": 150, "end_line": 156, "label": "5 处 set 都在 assemble" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "FlashPromotionQuery：HomeServiceImpl 的 private static final 内部类", "wraps": ["load", "assemble", "find-promotion", "find-current", "find-next"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "content", "label": "content()", "variant": "emphasis" },
+    { "id": "to-flash", "from": "content", "to": "flash" },
+    { "id": "read-clock", "from": "clock", "to": "flash", "label": "仍在此取时", "variant": "dashed" },
+    { "id": "to-load", "from": "flash", "to": "load", "label": "load(now)" },
+    { "id": "q-promotion", "from": "load", "to": "find-promotion", "label": "now" },
+    { "id": "q-current", "from": "load", "to": "find-current", "label": "now" },
+    { "id": "q-next", "from": "load", "to": "find-next", "label": "当前场 startTime" },
+    { "id": "q-products", "from": "load", "to": "flash-dao", "label": "活动 id + 场次 id" },
+    { "id": "to-assemble", "from": "load", "to": "assemble", "label": "当前场 / 下一场 / 商品" },
+    { "id": "write-result", "from": "assemble", "to": "result", "label": "唯一写入点" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "getHomeFlashPromotion（103–105）方法体只剩 1 行：构造 FlashPromotionQuery 并传入 new Date()",
+      "load(Date now)（131–144）只编排 4 次查询，时刻以参数传给两个 find 方法",
+      "assemble（146–157）是唯一写 5 个字段的地方；下一场改用当前场 startTime 作参数，不再回读结果（137）",
+      "3 个查询方法收进内部类 FlashPromotionQuery（118–197），查询条件逐字保留；3 个依赖仍是外部类的 @Autowired 字段，经构造器传入"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "时间仍不可注入：load 是 private static final 内部类的 private 方法，104 行仍是 new Date()；测试仍只能用前后时间窗断言，没有固定时刻的测试",
+      "多一个类，每次请求构造一次；阅读多跳一层（getHomeFlashPromotion → load → assemble）",
+      "活动 / 当前场两层 if 原样留在 load；“取首条，否则 null”仍重复 3 遍，本次未消除",
+      "assemble 不接收活动对象：要展示活动上的字段，还得改 load 的调用和 assemble 签名"
+    ] },
+    { "dot": "cyan", "title": "行为保持证据", "items": [
+      "SDCE406Test 5 项（a0244ef3 新增），compare.sh 在基线 dcaa93b3 与 98168967 上都是 5/0/0",
+      "重构提交 98168967 只改 HomeServiceImpl.java，测试未动；测试经 content() 入口、用 mock 注入外部类字段",
+      "终审实测变异：下一场查询改用当前时刻 → 1 项变红（boundaryOperators_stayInclusiveOnBothEnds）",
+      "未验证：真实 MySQL、HTTP /home/content"
+    ] }
+  ]
+}
