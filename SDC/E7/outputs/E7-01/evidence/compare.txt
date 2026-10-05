@@ -1,0 +1,24 @@
+示例：E7-01  模块：mall-portal  测试：SDCE701Test,SDCE701DatabaseTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[5,38] package com.macro.mall.portal.ai.order does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[6,38] package com.macro.mall.portal.ai.order does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[7,38] package com.macro.mall.portal.ai.order does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[8,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[9,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[10,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[31,101] cannot find symbol
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[47,19] cannot find symbol
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE701Evaluation.java:[51,19] cannot find symbol
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[80,12] cannot find symbol
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[9,38] package com.macro.mall.portal.ai.order does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[10,38] package com.macro.mall.portal.ai.order does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[11,38] package com.macro.mall.portal.ai.order does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[12,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[13,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[14,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[15,59] package com.macro.mall.portal.ai.order.OrderQuestionService does not exist
+[ERROR] /tmp/tmp.qBkQcmY2p2/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE701Test.java:[17,33] cannot find symbol
+改后 25bab286：pass（预期 pass）  [INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
