@@ -174,33 +174,47 @@ public class PmsProductServiceImpl implements PmsProductService {
         PmsSkuStockExample skuStockExample = new PmsSkuStockExample();
         skuStockExample.createCriteria().andProductIdEqualTo(id);
         List<PmsSkuStock> oriStuList = skuStockMapper.selectByExample(skuStockExample);
-        //获取新增sku信息
-        List<PmsSkuStock> insertSkuList = currSkuList.stream().filter(item->item.getId()==null).collect(Collectors.toList());
-        //获取需要更新的sku信息
-        List<PmsSkuStock> updateSkuList = currSkuList.stream().filter(item->item.getId()!=null).collect(Collectors.toList());
-        List<Long> updateSkuIds = updateSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
-        //获取需要删除的sku信息
-        List<PmsSkuStock> removeSkuList = oriStuList.stream().filter(item-> !updateSkuIds.contains(item.getId())).collect(Collectors.toList());
-        handleSkuStockCode(insertSkuList,id);
-        handleSkuStockCode(updateSkuList,id);
+        SkuStockChange change = partitionSkuStock(currSkuList, oriStuList);
+        handleSkuStockCode(change.insertSkuList,id);
+        handleSkuStockCode(change.updateSkuList,id);
         //新增sku
-        if(CollUtil.isNotEmpty(insertSkuList)){
-            relateAndInsertList(skuStockDao, insertSkuList, id);
+        if(CollUtil.isNotEmpty(change.insertSkuList)){
+            relateAndInsertList(skuStockDao, change.insertSkuList, id);
         }
         //删除sku
-        if(CollUtil.isNotEmpty(removeSkuList)){
-            List<Long> removeSkuIds = removeSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
+        if(CollUtil.isNotEmpty(change.removeSkuList)){
+            List<Long> removeSkuIds = change.removeSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
             PmsSkuStockExample removeExample = new PmsSkuStockExample();
             removeExample.createCriteria().andIdIn(removeSkuIds);
             skuStockMapper.deleteByExample(removeExample);
         }
         //修改sku
-        if(CollUtil.isNotEmpty(updateSkuList)){
-            for (PmsSkuStock pmsSkuStock : updateSkuList) {
+        if(CollUtil.isNotEmpty(change.updateSkuList)){
+            for (PmsSkuStock pmsSkuStock : change.updateSkuList) {
                 skuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);
             }
         }
 
+    }
+
+    private static SkuStockChange partitionSkuStock(List<PmsSkuStock> currSkuList, List<PmsSkuStock> oriStuList) {
+        List<PmsSkuStock> insertSkuList = currSkuList.stream().filter(item->item.getId()==null).collect(Collectors.toList());
+        List<PmsSkuStock> updateSkuList = currSkuList.stream().filter(item->item.getId()!=null).collect(Collectors.toList());
+        List<Long> updateSkuIds = updateSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
+        List<PmsSkuStock> removeSkuList = oriStuList.stream().filter(item-> !updateSkuIds.contains(item.getId())).collect(Collectors.toList());
+        return new SkuStockChange(insertSkuList, updateSkuList, removeSkuList);
+    }
+
+    private static final class SkuStockChange {
+        private final List<PmsSkuStock> insertSkuList;
+        private final List<PmsSkuStock> updateSkuList;
+        private final List<PmsSkuStock> removeSkuList;
+
+        private SkuStockChange(List<PmsSkuStock> insertSkuList, List<PmsSkuStock> updateSkuList, List<PmsSkuStock> removeSkuList) {
+            this.insertSkuList = insertSkuList;
+            this.updateSkuList = updateSkuList;
+            this.removeSkuList = removeSkuList;
+        }
     }
 
     @Override
