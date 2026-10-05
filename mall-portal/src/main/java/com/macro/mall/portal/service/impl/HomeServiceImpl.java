@@ -101,41 +101,7 @@ public class HomeServiceImpl implements HomeService {
     }
 
     private HomeFlashPromotion getHomeFlashPromotion() {
-        HomeFlashPromotion homeFlashPromotion = new HomeFlashPromotion();
-        //获取当前秒杀活动
-        Date now = new Date();
-        SmsFlashPromotion flashPromotion = getFlashPromotion(now);
-        if (flashPromotion != null) {
-            //获取当前秒杀场次
-            SmsFlashPromotionSession flashPromotionSession = getFlashPromotionSession(now);
-            if (flashPromotionSession != null) {
-                homeFlashPromotion.setStartTime(flashPromotionSession.getStartTime());
-                homeFlashPromotion.setEndTime(flashPromotionSession.getEndTime());
-                //获取下一个秒杀场次
-                SmsFlashPromotionSession nextSession = getNextFlashPromotionSession(homeFlashPromotion.getStartTime());
-                if(nextSession!=null){
-                    homeFlashPromotion.setNextStartTime(nextSession.getStartTime());
-                    homeFlashPromotion.setNextEndTime(nextSession.getEndTime());
-                }
-                //获取秒杀商品
-                List<FlashPromotionProduct> flashProductList = homeDao.getFlashProductList(flashPromotion.getId(), flashPromotionSession.getId());
-                homeFlashPromotion.setProductList(flashProductList);
-            }
-        }
-        return homeFlashPromotion;
-    }
-
-    //获取下一个场次信息
-    private SmsFlashPromotionSession getNextFlashPromotionSession(Date date) {
-        SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
-        sessionExample.createCriteria()
-                .andStartTimeGreaterThan(date);
-        sessionExample.setOrderByClause("start_time asc");
-        List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
-        if (!CollectionUtils.isEmpty(promotionSessionList)) {
-            return promotionSessionList.get(0);
-        }
-        return null;
+        return new FlashPromotionQuery(flashPromotionMapper, promotionSessionMapper, homeDao).load(new Date());
     }
 
     private List<SmsHomeAdvertise> getHomeAdvertiseList() {
@@ -145,32 +111,88 @@ public class HomeServiceImpl implements HomeService {
         return advertiseMapper.selectByExample(example);
     }
 
-    //根据时间获取秒杀活动
-    private SmsFlashPromotion getFlashPromotion(Date date) {
-        Date currDate = DateUtil.getDate(date);
-        SmsFlashPromotionExample example = new SmsFlashPromotionExample();
-        example.createCriteria()
-                .andStatusEqualTo(1)
-                .andStartDateLessThanOrEqualTo(currDate)
-                .andEndDateGreaterThanOrEqualTo(currDate);
-        List<SmsFlashPromotion> flashPromotionList = flashPromotionMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(flashPromotionList)) {
-            return flashPromotionList.get(0);
-        }
-        return null;
-    }
+    /**
+     * 秒杀查询协作者。时间从 load 传入，字段填充只在 assemble。
+     * 比较运算符与原来的活动、当前场、下一场查询一致。
+     */
+    private static final class FlashPromotionQuery {
+        private final SmsFlashPromotionMapper flashPromotionMapper;
+        private final SmsFlashPromotionSessionMapper promotionSessionMapper;
+        private final HomeDao homeDao;
 
-    //根据时间获取秒杀场次
-    private SmsFlashPromotionSession getFlashPromotionSession(Date date) {
-        Date currTime = DateUtil.getTime(date);
-        SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
-        sessionExample.createCriteria()
-                .andStartTimeLessThanOrEqualTo(currTime)
-                .andEndTimeGreaterThanOrEqualTo(currTime);
-        List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
-        if (!CollectionUtils.isEmpty(promotionSessionList)) {
-            return promotionSessionList.get(0);
+        private FlashPromotionQuery(SmsFlashPromotionMapper flashPromotionMapper,
+                                    SmsFlashPromotionSessionMapper promotionSessionMapper,
+                                    HomeDao homeDao) {
+            this.flashPromotionMapper = flashPromotionMapper;
+            this.promotionSessionMapper = promotionSessionMapper;
+            this.homeDao = homeDao;
         }
-        return null;
+
+        private HomeFlashPromotion load(Date now) {
+            HomeFlashPromotion homeFlashPromotion = new HomeFlashPromotion();
+            SmsFlashPromotion flashPromotion = findPromotion(now);
+            if (flashPromotion != null) {
+                SmsFlashPromotionSession flashPromotionSession = findCurrentSession(now);
+                if (flashPromotionSession != null) {
+                    SmsFlashPromotionSession nextSession = findNextSession(flashPromotionSession.getStartTime());
+                    List<FlashPromotionProduct> products = homeDao.getFlashProductList(
+                            flashPromotion.getId(), flashPromotionSession.getId());
+                    assemble(homeFlashPromotion, flashPromotionSession, nextSession, products);
+                }
+            }
+            return homeFlashPromotion;
+        }
+
+        private static void assemble(HomeFlashPromotion target,
+                                     SmsFlashPromotionSession current,
+                                     SmsFlashPromotionSession next,
+                                     List<FlashPromotionProduct> products) {
+            target.setStartTime(current.getStartTime());
+            target.setEndTime(current.getEndTime());
+            if (next != null) {
+                target.setNextStartTime(next.getStartTime());
+                target.setNextEndTime(next.getEndTime());
+            }
+            target.setProductList(products);
+        }
+
+        private SmsFlashPromotion findPromotion(Date date) {
+            Date currDate = DateUtil.getDate(date);
+            SmsFlashPromotionExample example = new SmsFlashPromotionExample();
+            example.createCriteria()
+                    .andStatusEqualTo(1)
+                    .andStartDateLessThanOrEqualTo(currDate)
+                    .andEndDateGreaterThanOrEqualTo(currDate);
+            List<SmsFlashPromotion> flashPromotionList = flashPromotionMapper.selectByExample(example);
+            if (!CollectionUtils.isEmpty(flashPromotionList)) {
+                return flashPromotionList.get(0);
+            }
+            return null;
+        }
+
+        private SmsFlashPromotionSession findCurrentSession(Date date) {
+            Date currTime = DateUtil.getTime(date);
+            SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
+            sessionExample.createCriteria()
+                    .andStartTimeLessThanOrEqualTo(currTime)
+                    .andEndTimeGreaterThanOrEqualTo(currTime);
+            List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
+            if (!CollectionUtils.isEmpty(promotionSessionList)) {
+                return promotionSessionList.get(0);
+            }
+            return null;
+        }
+
+        private SmsFlashPromotionSession findNextSession(Date date) {
+            SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
+            sessionExample.createCriteria()
+                    .andStartTimeGreaterThan(date);
+            sessionExample.setOrderByClause("start_time asc");
+            List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
+            if (!CollectionUtils.isEmpty(promotionSessionList)) {
+                return promotionSessionList.get(0);
+            }
+            return null;
+        }
     }
 }
