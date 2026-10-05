@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-02 改前：商品状态批量更新（基线 dcaa93b3）",
+    "output": "e4-02.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "PmsProductController", "sublabel": "POST /product/update/*", "pos": [40, 240], "size": [210, 120],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 22, "end_line": 27, "label": "@RequestMapping(\"/product\")" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 79, "end_line": 143, "label": "5 个批量状态接口" }
+      ] },
+    { "id": "publish", "type": "backend", "label": "updatePublishStatus", "sublabel": "设 publishStatus + 自建条件", "tag": "重复 3 行", "pos": [440, 60], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 256, "end_line": 262, "label": "重复段 259–261" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 93, "end_line": 104, "label": "POST /update/publishStatus" }
+      ] },
+    { "id": "recommend", "type": "backend", "label": "updateRecommendStatus", "sublabel": "设 recommandStatus + 自建条件", "tag": "重复 3 行", "pos": [440, 160], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 265, "end_line": 271, "label": "重复段 268–270" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 106, "end_line": 117, "label": "POST /update/recommendStatus" }
+      ] },
+    { "id": "newStatus", "type": "backend", "label": "updateNewStatus", "sublabel": "设 newStatus + 自建条件", "tag": "重复 3 行", "pos": [440, 260], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 274, "end_line": 280, "label": "重复段 277–279" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 119, "end_line": 130, "label": "POST /update/newStatus" }
+      ] },
+    { "id": "delete", "type": "backend", "label": "updateDeleteStatus", "sublabel": "设 deleteStatus + 自建条件", "tag": "重复 3 行", "pos": [440, 360], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 283, "end_line": 289, "label": "重复段 286–288" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 132, "end_line": 143, "label": "POST /update/deleteStatus" }
+      ] },
+    { "id": "verify", "type": "backend", "label": "updateVerifyStatus", "sublabel": "设 verifyStatus + 写审核记录", "tag": "流程不同", "pos": [440, 500], "size": [260, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 234, "end_line": 253, "label": "updateVerifyStatus" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 237, "end_line": 240, "label": "同样的条件与 Mapper 调用" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 79, "end_line": 91, "label": "POST /update/verifyStatus" }
+      ] },
+    { "id": "audit", "type": "database", "label": "PmsProductVertifyRecordDao", "sublabel": "insertList 审核记录", "pos": [440, 660], "size": [260, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/dao/PmsProductVertifyRecordDao.java", "line": 12, "end_line": 17, "label": "insertList" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 251, "label": "调用处" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "PmsProductMapper", "sublabel": "updateByExampleSelective", "pos": [1340, 194], "size": [250, 104],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsProductMapper.java", "line": 25, "label": "updateByExampleSelective" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "重复代码：四个方法各写一份 Example + Mapper 调用", "wraps": ["publish", "recommend", "newStatus", "delete"] }
+  ],
+  "connections": [
+    { "id": "c-publish", "from": "controller", "to": "publish" },
+    { "id": "c-recommend", "from": "controller", "to": "recommend" },
+    { "id": "c-new", "from": "controller", "to": "newStatus" },
+    { "id": "c-delete", "from": "controller", "to": "delete" },
+    { "id": "c-verify", "from": "controller", "to": "verify" },
+    { "id": "publish-mapper", "from": "publish", "to": "mapper", "label": "自建 andIdIn(ids)" },
+    { "id": "recommend-mapper", "from": "recommend", "to": "mapper", "label": "自建 andIdIn(ids)" },
+    { "id": "new-mapper", "from": "newStatus", "to": "mapper", "label": "自建 andIdIn(ids)" },
+    { "id": "delete-mapper", "from": "delete", "to": "mapper", "label": "自建 andIdIn(ids)" },
+    { "id": "verify-mapper", "from": "verify", "to": "mapper", "label": "自建 andIdIn(ids)", "toSide": "bottom" },
+    { "id": "verify-audit", "from": "verify", "to": "audit", "label": "insertList" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "重复代码：四个方法各写一遍 new PmsProductExample → andIdIn(ids) → updateByExampleSelective（259–261、268–270、277–279、286–288），只有被设置的字段不同",
+      "同一条规则散在 4 处：假设“按 ID 集合选择性更新”的条件要改，得同步改 4 处，漏一处四个接口就不一致",
+      "新增一种批量状态（如 PmsProduct 已有的 previewStatus）只能再复制一段",
+      "updateVerifyStatus 也自建同样的条件（237–240），但随后还要写审核记录（242–251），职责不同"
+    ] }
+  ]
+}

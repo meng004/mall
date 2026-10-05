@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-02 改后：提取 updateByIds（exp/e4-02 e48e22a8）",
+    "output": "e4-02.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "e48e22a814004964a9fd53b6452bb27ecc396178"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "PmsProductController", "sublabel": "POST /product/update/*", "pos": [40, 240], "size": [210, 120],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 22, "end_line": 27, "label": "@RequestMapping(\"/product\")" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 79, "end_line": 143, "label": "5 个批量状态接口（未改动）" }
+      ] },
+    { "id": "publish", "type": "backend", "label": "updatePublishStatus", "sublabel": "只设 publishStatus", "pos": [440, 60], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 256, "end_line": 260, "label": "委托 259" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 93, "end_line": 104, "label": "POST /update/publishStatus" }
+      ] },
+    { "id": "recommend", "type": "backend", "label": "updateRecommendStatus", "sublabel": "只设 recommandStatus", "pos": [440, 160], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 263, "end_line": 267, "label": "委托 266" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 106, "end_line": 117, "label": "POST /update/recommendStatus" }
+      ] },
+    { "id": "newStatus", "type": "backend", "label": "updateNewStatus", "sublabel": "只设 newStatus", "pos": [440, 260], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 270, "end_line": 274, "label": "委托 273" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 119, "end_line": 130, "label": "POST /update/newStatus" }
+      ] },
+    { "id": "delete", "type": "backend", "label": "updateDeleteStatus", "sublabel": "只设 deleteStatus", "pos": [440, 360], "size": [260, 72],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 277, "end_line": 281, "label": "委托 280" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 132, "end_line": 143, "label": "POST /update/deleteStatus" }
+      ] },
+    { "id": "byIds", "type": "backend", "label": "updateByIds", "sublabel": "private：建条件 + 选择性更新", "tag": "唯一一处", "pos": [860, 194], "size": [250, 104],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 283, "end_line": 287, "label": "updateByIds(ids, record)" }
+      ] },
+    { "id": "verify", "type": "backend", "label": "updateVerifyStatus", "sublabel": "设 verifyStatus + 写审核记录", "tag": "未改动", "pos": [440, 500], "size": [260, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 234, "end_line": 253, "label": "updateVerifyStatus" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 237, "end_line": 240, "label": "仍自建条件" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 79, "end_line": 91, "label": "POST /update/verifyStatus" }
+      ] },
+    { "id": "audit", "type": "database", "label": "PmsProductVertifyRecordDao", "sublabel": "insertList 审核记录", "pos": [440, 660], "size": [260, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/dao/PmsProductVertifyRecordDao.java", "line": 12, "end_line": 17, "label": "insertList" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 251, "label": "调用处" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "PmsProductMapper", "sublabel": "updateByExampleSelective", "pos": [1340, 194], "size": [250, 104],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsProductMapper.java", "line": 25, "label": "updateByExampleSelective" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "提取方法：四个公开方法只设字段，共用 updateByIds", "wraps": ["publish", "recommend", "newStatus", "delete", "byIds"] }
+  ],
+  "connections": [
+    { "id": "c-publish", "from": "controller", "to": "publish" },
+    { "id": "c-recommend", "from": "controller", "to": "recommend" },
+    { "id": "c-new", "from": "controller", "to": "newStatus" },
+    { "id": "c-delete", "from": "controller", "to": "delete" },
+    { "id": "c-verify", "from": "controller", "to": "verify" },
+    { "id": "publish-byIds", "from": "publish", "to": "byIds", "label": "委托" },
+    { "id": "recommend-byIds", "from": "recommend", "to": "byIds", "label": "委托" },
+    { "id": "new-byIds", "from": "newStatus", "to": "byIds", "label": "委托" },
+    { "id": "delete-byIds", "from": "delete", "to": "byIds", "label": "委托" },
+    { "id": "byIds-mapper", "from": "byIds", "to": "mapper", "label": "andIdIn(ids)", "variant": "emphasis" },
+    { "id": "verify-mapper", "from": "verify", "to": "mapper", "label": "自建 andIdIn(ids)", "toSide": "bottom" },
+    { "id": "verify-audit", "from": "verify", "to": "audit", "label": "insertList" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "提取方法：Example 构造与 Mapper 调用集中到私有 updateByIds（283–287），四个公开方法只剩“新建 record、设一个字段、委托”（256–281）",
+      "若 ID 条件要改：改前 4 处，改后 1 处（源码论证，未做演示）",
+      "新增一种批量状态：仍要新增公开方法（及接口、控制器入口），但不再复制条件与 Mapper 调用",
+      "公开方法签名、PmsProductController、Mapper 均未改动"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "多一层私有方法跳转；updateByIds 接收任意 record，“只设一个字段”靠调用方保证",
+      "updateVerifyStatus 仍自建同样的条件（237–240），这段重复本次有意保留",
+      "只做提取方法、未用模板方法：四个公开方法里“new PmsProduct + set”的形状仍相似"
+    ] },
+    { "dot": "cyan", "title": "行为保持证据", "items": [
+      "SDCE402Test 6 项，改前 dcaa93b3、改后 e48e22a8 都是 6/0/0；重构提交不改测试文件",
+      "断言：Mapper 收到的非空字段只有目标字段、条件为 id in [7, 8]、返回 Mapper 行数（含 0）；审核仍写记录",
+      "变异：updateByIds 多加 andDeleteStatusEqualTo(0) → 5 项变红（经 updateByIds 的测试全部变红）",
+      "局限：Mapper 与审核 DAO 是 mock，未覆盖真实 SQL、HTTP、事务"
+    ] }
+  ]
+}
