@@ -1,0 +1,9 @@
+示例：E3-06  模块：mall-admin  测试：SDCE306Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 9, Failures: 5, Errors: 0, Skipped: 0
+[ERROR]   SDCE306Test.createRejectsEmptyNameBeforeService:88->assertRejected:130 Multiple Failures (2 failures)
+[ERROR]   SDCE306Test.createRejectsMissingCategoryBeforeService:78->assertRejected:130 Multiple Failures (2 failures)
+[ERROR]   SDCE306Test.updateRejectsEmptyNameBeforeService:93->assertRejected:130 Multiple Failures (2 failures)
+[ERROR]   SDCE306Test.updateRejectsMissingCategoryBeforeService:83->assertRejected:130 Multiple Failures (2 failures)
+[ERROR]   SDCE306Test.validCategoryIdDoesNotThrowUnexpectedType:72 Unexpected exception thrown: jakarta.validation.UnexpectedTypeException: HV000030: No validator could be found for constraint 'jakarta.validation.constraints.NotEmpty' validating type 'java.lang.Long'. Check configuration for 'productAttributeCategoryId'
+改后 ddb65fa4：pass（预期 pass）  [INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

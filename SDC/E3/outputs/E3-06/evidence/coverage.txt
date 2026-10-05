@@ -1,0 +1,41 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）。
+命令（主工作区，可联网，未加 -o）：
+mvn -B -pl mall-admin -am -DskipTests=false -Dtest=SDCE306Test -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-admin/target/site/jacoco/jacoco.xml（target 已被 mall-admin/.gitignore 忽略，不提交）。
+
+提交：测试 95fd87775f1e04a031e4675fc2707ff99933e323；修复 ddb65fa4633c5e59516b81298bfd67c50024df51。覆盖率跑在该修复之上的工作区；docs 提交只收录本文件和 AI 记录、对照结果，不改被测代码。
+
+统计对象：修复提交改动的产品方法。
+
+PmsProductAttributeController.create(PmsProductAttributeParam)：源码签名在第 48 行，探针第 49–53 行。
+行覆盖：covered=4 missed=0，4/4=100%。
+分支覆盖：covered=2 missed=0，2/2=100%。
+指令覆盖：covered=13 missed=0，合计 13。
+方法计数：missed=0 covered=1。
+
+PmsProductAttributeController.update(Long, PmsProductAttributeParam)：源码签名在第 60 行，探针第 61–65 行。
+行覆盖：covered=4 missed=0，4/4=100%。
+分支覆盖：covered=2 missed=0，2/2=100%。
+指令覆盖：covered=14 missed=0，合计 14。
+方法计数：missed=0 covered=1。
+
+PmsProductAttributeParam：改动是字段注解（第 18 行），没有探针。Lombok 生成的方法被 JaCoCo 过滤，类计数为空。行、分支都记「不适用」。
+
+本示例不连数据库，Tests run: 9, Skipped: 0。
+
+未覆盖：两个方法都没有未覆盖的行或分支。两处分支都是 `count > 0`：真分支由 `validCreateReachesService`、`validUpdateReachesService` 覆盖，假分支由 `:113-118`、`:121-126` 覆盖。第 52、64 行 `} else {` 没有探针。
+
+修复在注解上，校验由 Spring MVC 在进入方法之前执行，探针统计不到。100% 只说明成功/失败两个分支都跑到了，不证明校验生效。校验效果由注入改动证明：DTO 改回 `@NotEmpty` 后 9 例全红；去掉 `create` 或 `update` 的 `@Validated` 后，各自的 2 例变红。本次在修复提交上复跑，Skipped 都是 0：改回 `@NotEmpty` 且保留 `@Validated` 时，9 例里 8 例是 MockMvc 抛出的 `ServletException`（内层 HV000030），1 例是 `:72` 的断言失败；去掉 `create` 的 `@Validated` 后只有 `createRejectsMissingCategoryBeforeService`、`createRejectsEmptyNameBeforeService` 变红；去掉 `update` 的 `@Validated` 后只有 `updateRejectsMissingCategoryBeforeService`、`updateRejectsEmptyNameBeforeService` 变红。
+
+不统计：同一个类里的 `getList`、`getItem`、`delete`、`getAttrInfo` 行覆盖都是 0%。类合计行 9/19，多出的 1 行是构造器第 29 行，不是本次改动。这些方法没有被修改，不报类平均值。
+
+逐行（只列 JaCoCo 有探针的行；nr mi ci mb cb）。ci 是该行已覆盖指令数，便于和 mi 对照。
+nr	mi	ci	mb	cb	源码
+49	0	5	0	0	        int count = productAttributeService.create(productAttributeParam);
+50	0	2	0	2	        if (count > 0) {
+51	0	4	0	0	            return CommonResult.success(count);
+53	0	2	0	0	            return CommonResult.failed();
+61	0	6	0	0	        int count = productAttributeService.update(id, productAttributeParam);
+62	0	2	0	2	        if (count > 0) {
+63	0	4	0	0	            return CommonResult.success(count);
+65	0	2	0	0	            return CommonResult.failed();
