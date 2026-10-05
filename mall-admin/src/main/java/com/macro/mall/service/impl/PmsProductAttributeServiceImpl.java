@@ -14,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -69,28 +71,42 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
 
     @Override
     public int delete(List<Long> ids) {
-        //获取分类
-        PmsProductAttribute pmsProductAttribute = productAttributeMapper.selectByPrimaryKey(ids.get(0));
-        Integer type = pmsProductAttribute.getType();
-        PmsProductAttributeCategory pmsProductAttributeCategory = productAttributeCategoryMapper.selectByPrimaryKey(pmsProductAttribute.getProductAttributeCategoryId());
-        PmsProductAttributeExample example = new PmsProductAttributeExample();
-        example.createCriteria().andIdIn(ids);
-        int count = productAttributeMapper.deleteByExample(example);
-        //删除完成后修改数量
-        if(type==0){
-            if(pmsProductAttributeCategory.getAttributeCount()>=count){
-                pmsProductAttributeCategory.setAttributeCount(pmsProductAttributeCategory.getAttributeCount()-count);
-            }else{
-                pmsProductAttributeCategory.setAttributeCount(0);
+        LinkedHashMap<Long, PmsProductAttribute> existingById = new LinkedHashMap<>();
+        for (Long id : ids) {
+            if (existingById.containsKey(id)) {
+                continue;
             }
-        }else if(type==1){
-            if(pmsProductAttributeCategory.getParamCount()>=count){
-                pmsProductAttributeCategory.setParamCount(pmsProductAttributeCategory.getParamCount()-count);
-            }else{
-                pmsProductAttributeCategory.setParamCount(0);
+            PmsProductAttribute attribute = productAttributeMapper.selectByPrimaryKey(id);
+            if (attribute != null) {
+                existingById.put(id, attribute);
             }
         }
-        productAttributeCategoryMapper.updateByPrimaryKey(pmsProductAttributeCategory);
+        if (existingById.isEmpty()) {
+            return 0;
+        }
+        PmsProductAttributeExample example = new PmsProductAttributeExample();
+        example.createCriteria().andIdIn(new ArrayList<>(existingById.keySet()));
+        int count = productAttributeMapper.deleteByExample(example);
+        LinkedHashMap<Long, PmsProductAttributeCategory> affectedCategories = new LinkedHashMap<>();
+        for (PmsProductAttribute attribute : existingById.values()) {
+            Long categoryId = attribute.getProductAttributeCategoryId();
+            PmsProductAttributeCategory category = affectedCategories.get(categoryId);
+            if (category == null) {
+                category = productAttributeCategoryMapper.selectByPrimaryKey(categoryId);
+                affectedCategories.put(categoryId, category);
+            }
+            Integer type = attribute.getType();
+            if (type == 0) {
+                int current = category.getAttributeCount();
+                category.setAttributeCount(current >= 1 ? current - 1 : 0);
+            } else if (type == 1) {
+                int current = category.getParamCount();
+                category.setParamCount(current >= 1 ? current - 1 : 0);
+            }
+        }
+        for (PmsProductAttributeCategory category : affectedCategories.values()) {
+            productAttributeCategoryMapper.updateByPrimaryKey(category);
+        }
         return count;
     }
 
