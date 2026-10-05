@@ -1,0 +1,24 @@
+示例：E7-02  模块：mall-portal  测试：SDCE702Test,SDCE702DatabaseTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[9,43] package com.macro.mall.portal.ai.comparison does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[10,43] package com.macro.mall.portal.ai.comparison does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[11,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[12,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[13,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[29,89] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[197,42] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE702Evaluation.java:[250,39] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[80,12] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702DatabaseTest.java:[11,43] package com.macro.mall.portal.ai.comparison does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702DatabaseTest.java:[12,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702DatabaseTest.java:[13,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702DatabaseTest.java:[14,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702DatabaseTest.java:[67,40] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702DatabaseTest.java:[141,63] cannot find symbol
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702Test.java:[15,43] package com.macro.mall.portal.ai.comparison does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702Test.java:[16,43] package com.macro.mall.portal.ai.comparison does not exist
+[ERROR] /tmp/tmp.hCbMIk6nqC/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE702Test.java:[17,68] package com.macro.mall.portal.ai.comparison.ProductComparisonService does not exist
+改后 71e52f27：pass（预期 pass）  [INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
