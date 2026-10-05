@@ -1,0 +1,24 @@
+示例：E7-05  模块：mall-portal  测试：SDCE705Test,CandidateE705EvaluationTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[6,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[7,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[8,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[9,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[10,43] package com.macro.mall.portal.ai.attributes does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[11,43] package com.macro.mall.portal.ai.attributes does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[26,105] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[30,104] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[52,67] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[53,96] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705Evaluation.java:[203,43] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[80,12] cannot find symbol
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705EvaluationTest.java:[4,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705EvaluationTest.java:[5,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705EvaluationTest.java:[6,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE705EvaluationTest.java:[7,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE705Test.java:[4,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+[ERROR] /tmp/tmp.1V6VxgYeZ4/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/SDCE705Test.java:[5,70] package com.macro.mall.portal.ai.attributes.AttributeExtractionService does not exist
+改后 17eb07cd：pass（预期 pass）  [INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
