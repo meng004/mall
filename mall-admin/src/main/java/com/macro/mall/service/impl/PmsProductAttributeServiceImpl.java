@@ -1,6 +1,7 @@
 package com.macro.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.macro.mall.common.exception.Asserts;
 import com.macro.mall.dao.PmsProductAttributeDao;
 import com.macro.mall.dto.PmsProductAttributeParam;
 import com.macro.mall.dto.ProductAttrInfo;
@@ -59,7 +60,46 @@ public class PmsProductAttributeServiceImpl implements PmsProductAttributeServic
         PmsProductAttribute pmsProductAttribute = new PmsProductAttribute();
         pmsProductAttribute.setId(id);
         BeanUtils.copyProperties(productAttributeParam, pmsProductAttribute);
-        return productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+        PmsProductAttribute existing = productAttributeMapper.selectByPrimaryKey(id);
+        if (existing == null) {
+            return productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+        }
+        Long oldCategoryId = existing.getProductAttributeCategoryId();
+        Integer oldType = existing.getType();
+        Long newCategoryId = pmsProductAttribute.getProductAttributeCategoryId() != null
+                ? pmsProductAttribute.getProductAttributeCategoryId() : oldCategoryId;
+        Integer newType = pmsProductAttribute.getType() != null ? pmsProductAttribute.getType() : oldType;
+        boolean sameCategory = oldCategoryId.equals(newCategoryId);
+        boolean sameType = oldType.equals(newType);
+        if (sameCategory && sameType) {
+            return productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+        }
+        PmsProductAttributeCategory destination = productAttributeCategoryMapper.selectByPrimaryKey(newCategoryId);
+        if (destination == null) {
+            Asserts.fail("商品属性分类不存在");
+        }
+        int count = productAttributeMapper.updateByPrimaryKeySelective(pmsProductAttribute);
+        if (count <= 0) {
+            return count;
+        }
+        PmsProductAttributeCategory source = sameCategory
+                ? destination
+                : productAttributeCategoryMapper.selectByPrimaryKey(oldCategoryId);
+        if (oldType == 0) {
+            source.setAttributeCount(Math.max(0, source.getAttributeCount() - 1));
+        } else if (oldType == 1) {
+            source.setParamCount(Math.max(0, source.getParamCount() - 1));
+        }
+        if (newType == 0) {
+            destination.setAttributeCount(destination.getAttributeCount() + 1);
+        } else if (newType == 1) {
+            destination.setParamCount(destination.getParamCount() + 1);
+        }
+        productAttributeCategoryMapper.updateByPrimaryKey(source);
+        if (!sameCategory) {
+            productAttributeCategoryMapper.updateByPrimaryKey(destination);
+        }
+        return count;
     }
 
     @Override

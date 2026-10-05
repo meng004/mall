@@ -28,6 +28,7 @@ public interface PmsProductAttributeService {
     /**
      * 修改商品属性
      */
+    @Transactional
     int update(Long id, PmsProductAttributeParam productAttributeParam);
 
     /**
