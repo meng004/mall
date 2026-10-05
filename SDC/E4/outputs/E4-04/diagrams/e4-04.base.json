@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-04 改前：SKU 差异计算与库存写入（基线 dcaa93b3）",
+    "output": "e4-04.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "PmsProductController", "sublabel": "POST /product/update/{id}", "pos": [40, 300], "size": [200, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 49, "end_line": 59, "label": "update" }] },
+    { "id": "update", "type": "backend", "label": "PmsProductServiceImpl.update", "sublabel": "重写各类关联，SKU 单独处理", "pos": [330, 300], "size": [240, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 120, "end_line": 161, "label": "update" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 143, "label": "调用 handleUpdateSkuStockList" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/PmsProductService.java", "line": 32, "end_line": 33, "label": "接口上的 @Transactional" }
+      ] },
+    { "id": "handle", "type": "backend", "label": "handleUpdateSkuStockList", "sublabel": "查询 → 划分 → 编码 → 写库", "tag": "42 行", "pos": [680, 292], "size": [240, 80],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 163, "end_line": 204, "label": "方法全文" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 167, "end_line": 172, "label": "空列表：按商品整删后返回" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 174, "end_line": 176, "label": "查询原 SKU" }
+      ] },
+    { "id": "partition", "type": "backend", "label": "划分三个列表（内联）", "sublabel": "null id 新增 / 有 id 更新 / 其余删除", "tag": "178–183", "pos": [680, 60], "size": [240, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 177, "end_line": 183, "label": "三个局部列表" }] },
+    { "id": "writes", "type": "backend", "label": "写库三段（内联）", "sublabel": "插入 → 删除 → 更新", "tag": "186–202", "pos": [1050, 300], "size": [240, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 186, "end_line": 189, "label": "插入新增" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 190, "end_line": 196, "label": "按 id 删除" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 197, "end_line": 202, "label": "逐条更新" }
+      ] },
+    { "id": "encode", "type": "backend", "label": "handleSkuStockCode", "sublabel": "空编码：日期 + 商品 id + 列表下标", "pos": [380, 520], "size": [240, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 97, "end_line": 113, "label": "编码规则" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 184, "end_line": 185, "label": "对新增、更新列表各调一次" }
+      ] },
+    { "id": "mapper", "type": "database", "label": "PmsSkuStockMapper", "sublabel": "select / delete / update", "pos": [1050, 520], "size": [240, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsSkuStockMapper.java", "line": 11, "label": "deleteByExample" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsSkuStockMapper.java", "line": 19, "label": "selectByExample" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/mapper/PmsSkuStockMapper.java", "line": 27, "label": "updateByPrimaryKeySelective" }
+      ] },
+    { "id": "dao", "type": "database", "label": "PmsSkuStockDao.insertList", "sublabel": "经 relateAndInsertList 反射调用", "pos": [1390, 300], "size": [240, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/dao/PmsSkuStockDao.java", "line": 16, "label": "insertList" },
+        { "path": "mall-admin/src/main/resources/dao/PmsSkuStockDao.xml", "line": 4, "end_line": 16, "label": "INSERT INTO pms_sku_stock" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 310, "end_line": 325, "label": "relateAndInsertList 反射" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "handleUpdateSkuStockList 163–204：划分与写库同处一个方法", "wraps": ["handle", "partition", "writes"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "update", "label": "update", "variant": "emphasis" },
+    { "id": "to-handle", "from": "update", "to": "handle", "label": "143 行调用" },
+    { "id": "to-partition", "from": "handle", "to": "partition", "label": "内联划分" },
+    { "id": "to-writes", "from": "handle", "to": "writes", "label": "写库" },
+    { "id": "shared-locals", "from": "partition", "to": "writes", "label": "共用局部列表", "variant": "dashed" },
+    { "id": "to-encode", "from": "handle", "to": "encode", "label": "编码" },
+    { "id": "select", "from": "handle", "to": "mapper", "label": "查询原 SKU" },
+    { "id": "insert", "from": "writes", "to": "dao", "label": "插入" },
+    { "id": "delete-update", "from": "writes", "to": "mapper", "label": "删除、更新" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "长方法、职责混杂：算差异（178–183）、补编码（184–185）、写库（186–202）挤在一个 42 行的方法里",
+      "划分结果只是局部变量、不返回：要检查“哪些算删除”，只能替换 Mapper/DAO 后观察写库调用",
+      "删除集由 updateSkuIds 反推（181、183）；改删除规则要在写库方法中间动手，与 deleteByExample（195）共用局部变量"
+    ] }
+  ]
+}
