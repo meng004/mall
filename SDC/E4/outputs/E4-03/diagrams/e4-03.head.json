@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-03 改后：属性值改走类型化私有方法（exp/e4-03 96ed1de7）",
+    "output": "e4-03.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "96ed1de723c273020121eb382042270312ae8b61"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "PmsProductController", "sublabel": "POST /product/create · /update/{id}", "pos": [40, 250], "size": [210, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 29, "end_line": 39, "label": "create 委托服务" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductController.java", "line": 49, "end_line": 59, "label": "update 委托服务" }
+      ] },
+    { "id": "iface", "type": "backend", "label": "PmsProductService", "sublabel": "create/update @Transactional", "tag": "接口 · 事务", "pos": [380, 250], "size": [230, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/PmsProductService.java", "line": 21, "end_line": 22, "label": "create 事务注解" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/PmsProductService.java", "line": 32, "end_line": 33, "label": "update 事务注解" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/config/MyBatisConfig.java", "line": 11, "end_line": 14, "label": "@EnableTransactionManagement" }
+      ] },
+    { "id": "svc", "type": "backend", "label": "PmsProductServiceImpl", "sublabel": "create 88 行 · update 148 行", "pos": [700, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 87, "end_line": 88, "label": "create 改调类型化方法" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 144, "end_line": 148, "label": "update 先删后改调类型化方法" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/dto/PmsProductParam.java", "line": 26, "label": "参数已是 List<PmsProductAttributeValue>" }
+      ] },
+    { "id": "helper", "type": "backend", "label": "relateAndInsertList", "sublabel": "(Object dao, List, Long) 按名反射", "tag": "未改", "pos": [1030, 250], "size": [260, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 333, "label": "Object + 原始 List 签名" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 335, "end_line": 343, "label": "反射 setId/setProductId/insertList" }
+      ] },
+    { "id": "catch", "type": "backend", "icon": "failure", "label": "catch (Exception e)", "sublabel": "new RuntimeException(e.getMessage())", "pos": [1030, 70], "size": [260, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 344, "end_line": 347, "label": "记日志并包装，cause 未传入" }
+      ] },
+    { "id": "others", "type": "database", "label": "其余 6 类关联 DAO", "sublabel": "会员价 阶梯 满减 SKU 专题 优选", "pos": [1420, 250], "size": [250, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 77, "end_line": 86, "label": "create：会员价…SKU" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 89, "end_line": 92, "label": "create：专题、优选" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/dao/PmsMemberPriceDao.java", "line": 16, "label": "会员价 DAO 的 insertList" }
+      ] },
+    { "id": "typed", "type": "backend", "label": "insertProductAttributeValues", "sublabel": "(List<PmsProductAttributeValue>, Long)", "tag": "新增 private", "pos": [1030, 440], "size": [260, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 303, "end_line": 307, "label": "注释写明失败形状 + 有类型签名" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 309, "end_line": 316, "label": "空列表返回、setter 清 id 赋 productId、直接 insertList" }
+      ] },
+    { "id": "typed-catch", "type": "backend", "icon": "failure", "label": "catch (Exception failure)", "sublabel": "非 ITE 先包 ITE，抛 message=null", "tag": "318–322 行", "pos": [1030, 620], "size": [260, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductServiceImpl.java", "line": 317, "end_line": 323, "label": "包成 InvocationTargetException 取 message" }
+      ] },
+    { "id": "dao", "type": "database", "label": "PmsProductAttributeValueDao", "sublabel": "insertList(List<PmsProductAttributeValue>)", "tag": "未改", "pos": [1420, 440], "size": [250, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/dao/PmsProductAttributeValueDao.java", "line": 16, "label": "有类型的批量插入签名" },
+        { "path": "mall-admin/src/main/resources/dao/PmsProductAttributeValueDao.xml", "line": 4, "end_line": 11, "label": "批量 insert SQL" }
+      ] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "relateAndInsertList（未改）：其余 6 类关联", "wraps": ["helper", "catch"] },
+    { "kind": "region", "label": "insertProductAttributeValues：只管属性值", "wraps": ["typed", "typed-catch"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "iface", "label": "create / update", "variant": "emphasis" },
+    { "id": "proxy", "from": "iface", "to": "svc", "label": "事务内委托" },
+    { "id": "to-helper", "from": "svc", "to": "helper", "label": "6 类关联" },
+    { "id": "to-others", "from": "helper", "to": "others", "label": "反射 insertList" },
+    { "id": "to-catch", "from": "helper", "to": "catch", "label": "任一异常", "variant": "dashed" },
+    { "id": "rethrow", "from": "catch", "to": "iface", "label": "抛 RuntimeException（无 cause）", "variant": "dashed", "fromSide": "left", "toSide": "top" },
+    { "id": "to-typed", "from": "svc", "to": "typed", "label": "属性值（88、148 行）", "variant": "emphasis", "fromSide": "bottom", "toSide": "left", "via": [[825, 472]] },
+    { "id": "to-dao", "from": "typed", "to": "dao", "label": "直接 insertList" },
+    { "id": "to-typed-catch", "from": "typed", "to": "typed-catch", "label": "任一异常", "variant": "dashed" },
+    { "id": "typed-rethrow", "from": "typed-catch", "to": "iface", "label": "抛 RuntimeException（message、cause 为 null）", "variant": "dashed", "fromSide": "left", "toSide": "bottom" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "提取方法 + 以直接调用取代反射：属性值的两处调用（88、148 行）改调 insertProductAttributeValues(values, productId)（307 行），setId/setProductId/insertList 都由编译器检查（312–316 行）",
+      "属性值写入规则有了自己的修改点：规则变化只改这 1 个方法，不再碰 7 类共用的反射路径",
+      "relateAndInsertList（333–348 行）一字未改，其余 6 类关联照旧走反射；服务接口、DAO、SQL 都未改"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "重复：空列表判断、清 id、赋 productId 在新方法（309–315 行）和 relateAndInsertList（335–341 行）各写一份，共有的写入约定变了要改两处",
+      "为保住旧失败形状，318–322 行先把非 InvocationTargetException 包成 InvocationTargetException 再取 message（即 null）：类型化路径里留着反射时代的异常外壳，读者要看注释（304 行）才懂",
+      "只迁了 7 类中的 1 类：同一个类里两种写法并存；再类型化一类，要再写一个方法并改 create/update 两个调用点"
+    ] },
+    { "dot": "cyan", "title": "行为保持证据", "items": [
+      "SDCE403Test 5 项：改前 dcaa93b3 与改后 96ed1de7 都是 5/0/0，重构提交不改测试、断言不改（EXPECT_BASE=pass）",
+      "锁定：空列表不调 DAO；create/update 写到 DAO 的行 id=null、productId 为当前商品、attributeId 与 value 保留；DAO 异常对外仍是 RuntimeException，message 与 cause 为 null；会员价仍走原路径",
+      "终审变异：异常改为带 cause → 1 项变红；删掉 setId(null) → 2 项变红",
+      "局限：DAO 与 Mapper 都是 Mockito 替身，未走 HTTP、未连 MySQL，不能证明 SQL 和事务回滚"
+    ] }
+  ]
+}
