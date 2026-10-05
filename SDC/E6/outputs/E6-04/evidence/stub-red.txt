@@ -1,0 +1,83 @@
+基线提交：dcaa93b3150352e5044708d7211b5bed0af4509f
+桩只加签名不实现：在该基线上只给控制器、服务接口与实现、Repository 增加 clearBefore / deleteByMemberIdAndCreateTimeBefore 的签名；控制器方法直接返回 CommonResult.success(0L)，服务实现直接返回 0L，Repository 只声明派生方法（条件由方法名生成），桩的服务不调用它。
+命令：mvn -B -o -pl mall-portal -am -DskipTests=false -Dtest=SDCE604Test,SDCE604MongoTest -Dsurefire.failIfNoSpecifiedTests=false test
+日期：2026-10-08
+测试类：SDCE604Test、SDCE604MongoTest 取自 test 提交 4d105f533a782bd43bf9dac0e769f06c07c82e39，与该提交中的文件逐字节相同。
+工作区：上述命令在该临时 worktree 中执行。基线树里没有 SDC/environment/application-sdc.yml，已从主工作区原样复制（与 compare.sh 相同），否则 Mongo 用例会因找不到课程库配置而中止。
+
+桩 diff（仅上述四个产品文件）：
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java b/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java
+index 25f2a7a2..5d79fd52 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java
+@@ -56,6 +56,13 @@ public class MemberReadHistoryController {
+         return CommonResult.success(null);
+     }
+ 
++    @Operation(summary = "清除截止时刻以前的浏览记录")
++    @RequestMapping(value = "/clearBefore", method = RequestMethod.POST)
++    @ResponseBody
++    public CommonResult<Long> clearBefore(@RequestParam String before) {
++        return CommonResult.success(0L);
++    }
++
+     @Operation(summary = "分页获取浏览记录")
+     @RequestMapping(value = "/list", method = RequestMethod.GET)
+     @ResponseBody
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java b/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java
+index 34a3b668..0627ae95 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java
+@@ -19,4 +19,6 @@ public interface MemberReadHistoryRepository extends MongoRepository<MemberReadH
+      * 根据会员ID删除记录
+      */
+     void deleteAllByMemberId(Long memberId);
++
++    long deleteByMemberIdAndCreateTimeBefore(Long memberId, java.util.Date createTime);
+ }
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/MemberReadHistoryService.java b/mall-portal/src/main/java/com/macro/mall/portal/service/MemberReadHistoryService.java
+index f3fcc814..9765159f 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/MemberReadHistoryService.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/MemberReadHistoryService.java
+@@ -29,4 +29,6 @@ public interface MemberReadHistoryService {
+      * 清空浏览记录
+      */
+     void clear();
++
++    long clearBefore(java.time.Instant cutoff);
+ }
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java
+index 7b02102a..97b63ce6 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java
+@@ -82,4 +82,9 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
+         UmsMember member = memberService.getCurrentMember();
+         memberReadHistoryRepository.deleteAllByMemberId(member.getId());
+     }
++
++    @Override
++    public long clearBefore(java.time.Instant cutoff) {
++        return 0L;
++    }
+ }
+
+失败用例（业务断言；行号取自 surefire 堆栈里测试类的第一帧）：
+- SDCE604MongoTest.isolatedMongoDeletesOnlyEarlierRowsForTheMember 第 72 行
+  expected: <1> actual: <0>
+- SDCE604Test.clearBeforeReturnsDeletedCountForMemberCutoff 第 52 行
+  expected: <1> actual: <0>
+- SDCE604Test.finerThanMillisecondAndIllegalTextDoNotDelete 第 77 行
+  expected: <404> actual: <200>
+- SDCE604Test.sameInstantFromDifferentOffsetsUsesOneMillisecond 第 67 行
+  expected: <1> actual: <0>
+- SDCE604Test.zeroDigitsBeyondMillisecondAreNotRejected 第 87 行
+  expected: <1> actual: <0>
+
+桩下通过的用例：
+- SDCE604Test.oldClearAndListStayMemberScoped
+  它是旧 clear、list 的回归。桩只给新方法加签名，不改旧方法，所以这一项在桩下通过；改前改后都应通过。
+
+Tests run 行：
+[ERROR] Tests run: 5, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.978 s <<< FAILURE! -- in com.macro.mall.sdc.e6.SDCE604Test
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 1.100 s <<< FAILURE! -- in com.macro.mall.sdc.e6.SDCE604MongoTest
+[ERROR] Tests run: 6, Failures: 5, Errors: 0, Skipped: 0

@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-04 改前：浏览记录只能整体清空（基线 dcaa93b3）",
+    "output": "e6-04.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "controller",
+      "type": "frontend",
+      "label": "MemberReadHistoryController",
+      "sublabel": "POST /member/readHistory/clear（无参数）",
+      "tag": "无时间参数",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java",
+          "line": 51,
+          "end_line": 57,
+          "label": "clear()"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "MemberReadHistoryServiceImpl",
+      "sublabel": "clear()：取当前会员，整体删除",
+      "pos": [
+        460,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 80,
+          "end_line": 84,
+          "label": "clear()"
+        }
+      ]
+    },
+    {
+      "id": "member",
+      "type": "security",
+      "label": "UmsMemberService",
+      "sublabel": "getCurrentMember()：会员范围",
+      "pos": [
+        480,
+        400
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 82,
+          "label": "clear 取当前会员"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java",
+          "line": 140,
+          "end_line": 145,
+          "label": "从 SecurityContext 取会员"
+        }
+      ]
+    },
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "MemberReadHistoryRepository",
+      "sublabel": "deleteAllByMemberId → void",
+      "tag": "缺口：无按时间删除",
+      "pos": [
+        920,
+        200
+      ],
+      "size": [
+        300,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java",
+          "line": 12,
+          "end_line": 22,
+          "label": "派生方法清单"
+        }
+      ]
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB：MemberReadHistory",
+      "sublabel": "createTime 由 create() 写入",
+      "pos": [
+        1420,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberReadHistory.java",
+          "line": 17,
+          "end_line": 32,
+          "label": "@Document 与 createTime"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 46,
+          "label": "setCreateTime(new Date())"
+        }
+      ]
+    },
+    {
+      "id": "gap",
+      "type": "external",
+      "label": "新需求路径：按 createTime 删除",
+      "sublabel": "createTime 只用于 list 排序（第 16 行）",
+      "tag": "基线不存在",
+      "pos": [
+        920,
+        30
+      ],
+      "size": [
+        300,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java",
+          "line": 16,
+          "end_line": 21,
+          "label": "排序查询与整体删除"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "call",
+      "from": "controller",
+      "to": "service",
+      "label": "clear()",
+      "variant": "emphasis"
+    },
+    {
+      "id": "who",
+      "from": "service",
+      "to": "member",
+      "label": "当前会员"
+    },
+    {
+      "id": "delete",
+      "from": "service",
+      "to": "repo",
+      "label": "deleteAllByMemberId(id)"
+    },
+    {
+      "id": "io",
+      "from": "repo",
+      "to": "mongo",
+      "label": "按 memberId 全部删除"
+    },
+    {
+      "id": "missing",
+      "from": "gap",
+      "to": "mongo",
+      "label": "新需求路径（基线不存在）",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "top"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "需求与现状",
+      "items": [
+        "新需求：只删 createTime 严格早于截止时刻的记录（Before 即 $lt，等于截止时刻保留）；只限当前会员；返回条数；非法或超毫秒不得删除",
+        "基线清空不收时刻，按当前会员 deleteAllByMemberId 一次删光（控制器 51–57，服务 80–84），返回 void",
+        "Repository 只有 void deleteAllByMemberId（21 行）。createTime 在 create 46 行写入，基线上只被 list 排序用到（16 行）",
+        "新方法在基线上不存在，测试编译失败（EXPECT_BASE=absent）。编译失败只证明接口不存在"
+      ]
+    }
+  ]
+}

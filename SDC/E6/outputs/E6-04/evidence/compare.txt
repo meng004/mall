@@ -1,0 +1,24 @@
+示例：E6-04  模块：mall-portal  测试：SDCE604Test,SDCE604MongoTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604MongoTest.java:[64,40] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604MongoTest.java:[75,37] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[45,24] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[51,36] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[53,27] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[60,24] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[65,45] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[66,44] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[75,49] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[76,49] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[79,55] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[80,36] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[86,47] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[95,36] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604MongoTest.java:[64,40] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604MongoTest.java:[75,37] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[45,24] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[51,36] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[53,27] cannot find symbol
+[ERROR] /tmp/tmp.7EKAgEZI9R/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE604Test.java:[60,24] cannot find symbol
+改后 5174c55f：pass（预期 pass）  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

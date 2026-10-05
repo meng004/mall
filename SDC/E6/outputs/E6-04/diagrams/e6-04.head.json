@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-04 改后：按截止时刻清除浏览记录（exp/e6-04 5174c55f）",
+    "output": "e6-04.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "5174c55f18e0a524255304ebc1cf35c04f287995"
+    }
+  },
+  "components": [
+    {
+      "id": "controller",
+      "type": "frontend",
+      "label": "MemberReadHistoryController",
+      "sublabel": "POST /clearBefore?before=（新增）",
+      "tag": "解析与精度校验",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java",
+          "line": 61,
+          "end_line": 75,
+          "label": "clearBefore"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java",
+          "line": 53,
+          "end_line": 59,
+          "label": "clear() 未改"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java",
+          "line": 77,
+          "end_line": 84,
+          "label": "list() 未改"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "MemberReadHistoryServiceImpl",
+      "sublabel": "clearBefore：复核毫秒 · 取会员 · 转派",
+      "tag": "新增方法",
+      "pos": [
+        460,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 88,
+          "end_line": 95,
+          "label": "clearBefore"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/MemberReadHistoryService.java",
+          "line": 34,
+          "label": "接口新增 clearBefore(Instant)"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 75,
+          "end_line": 86,
+          "label": "list 与 clear 未改"
+        }
+      ]
+    },
+    {
+      "id": "member",
+      "type": "security",
+      "label": "UmsMemberService",
+      "sublabel": "getCurrentMember()：会员范围",
+      "tag": "沿用，未改",
+      "pos": [
+        480,
+        400
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 93,
+          "label": "clearBefore 取当前会员"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java",
+          "line": 140,
+          "end_line": 145,
+          "label": "从 SecurityContext 取会员"
+        }
+      ]
+    },
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "MemberReadHistoryRepository",
+      "sublabel": "deleteByMemberIdAndCreateTimeBefore → long",
+      "tag": "新增 1 个派生方法",
+      "pos": [
+        920,
+        200
+      ],
+      "size": [
+        300,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java",
+          "line": 23,
+          "label": "deleteByMemberIdAndCreateTimeBefore"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberReadHistoryRepository.java",
+          "line": 21,
+          "label": "deleteAllByMemberId 未改"
+        }
+      ]
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB：MemberReadHistory",
+      "sublabel": "createTime 为 Date，无索引",
+      "tag": "模型未改",
+      "pos": [
+        1420,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberReadHistory.java",
+          "line": 17,
+          "end_line": 32,
+          "label": "@Document 与 createTime"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 48,
+          "label": "setCreateTime(new Date())"
+        }
+      ]
+    },
+    {
+      "id": "reject",
+      "type": "backend",
+      "label": "CommonResult.validateFailed",
+      "sublabel": "code 404，不调用服务",
+      "tag": "拒绝 1",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        260,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberReadHistoryController.java",
+          "line": 66,
+          "end_line": 73,
+          "label": "解析失败与超毫秒"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonResult.java",
+          "line": 92,
+          "end_line": 94,
+          "label": "validateFailed(String)"
+        }
+      ]
+    },
+    {
+      "id": "geh",
+      "type": "security",
+      "label": "GlobalExceptionHandler",
+      "sublabel": "ApiException → failed(message)，code 500",
+      "tag": "拒绝 2",
+      "pos": [
+        460,
+        30
+      ],
+      "size": [
+        260,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberReadHistoryServiceImpl.java",
+          "line": 90,
+          "end_line": 92,
+          "label": "Asserts.fail"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java",
+          "line": 22,
+          "end_line": 29,
+          "label": "handle(ApiException)"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonResult.java",
+          "line": 70,
+          "end_line": 72,
+          "label": "failed(String)"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "call",
+      "from": "controller",
+      "to": "service",
+      "label": "clearBefore(Instant)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "reject-ctl",
+      "from": "controller",
+      "to": "reject",
+      "label": "非法 / 超毫秒",
+      "variant": "dashed"
+    },
+    {
+      "id": "who",
+      "from": "service",
+      "to": "member",
+      "label": "当前会员"
+    },
+    {
+      "id": "reject-svc",
+      "from": "service",
+      "to": "geh",
+      "label": "Asserts.fail",
+      "variant": "dashed"
+    },
+    {
+      "id": "delete",
+      "from": "service",
+      "to": "repo",
+      "label": "按会员 + 早于截止删除"
+    },
+    {
+      "id": "io",
+      "from": "repo",
+      "to": "mongo",
+      "label": "createTime $lt 截止"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "变化",
+      "items": [
+        "新增 POST /clearBefore（61–75）：67 行解析带偏移的时刻；解析失败（69）或超毫秒（72）返回 validateFailed，不调用服务；74 行交给服务并返回删除条数",
+        "服务 clearBefore（88–95）：90–92 再拒 null 或亚毫秒，93 行取登录会员，94 行 Date.from 后删除",
+        "Repository 23 行返回 long。方法名 Before 生成 $lt，等于截止时刻的记录保留",
+        "旧 clear（53–59）、list（77–84）和 deleteAllByMemberId（21 行）没改，模型没改"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "接口契约",
+      "items": [
+        "必须带偏移。纯日期、无偏移和无法解析的文本都拒绝。查询串里的 + 要写成 %2B，否则会被解成空格",
+        "拒绝时两种 code，HTTP 都是 200：入口是 404（69、72 行）；直接调服务是 500（91 行，经处理器 28 行）。按源码推断，未经 HTTP 运行",
+        "不带 before 在参数绑定阶段就失败。处理器只接四类异常（23、32、46、60 行），响应不是 CommonResult（推断，未运行）",
+        "createTime 只在 48 行写成 new Date()。缺失或类型不对的文档不满足 $lt，删不到。课程库没有 mall-port；@Indexed（21 行）默认不建索引"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "职责落点与代价",
+      "items": [
+        "解析放在控制器，服务只收 Instant。不选 @DateTimeFormat：转换失败不在上述四类里，超毫秒仍要手写判断",
+        "精度查两层。只在服务查，要 404 加具体原因可自建 IErrorCode，但门户无先例；只在控制器查，直接传入亚毫秒 Instant 时 94 行 Date.from 会悄悄截断",
+        "代价：同一条规则和 1_000_000 写了两份。同一类非法输入，HTTP 得到 404，直接调服务得到 500",
+        "Repository 用 Date，与模型 createTime（31 行）一致，不改文档模型。会员只从登录态取（93 行）"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "证据",
+      "items": [
+        "Mock 5 项直接 new 服务和控制器，Repository 与会员是替身。返回值 1 来自装桩，不经过 Tomcat",
+        "Mongo 1 项连课程 27018 的临时库：只删当前会员早于截止的记录，等于和更晚的留下，再调返回 0。Skipped=0 才算数",
+        "编译失败只证明接口不存在。基线只加签名不实现时，6 项中 5 项业务断言失败、Errors 0、Skipped 0，见 evidence/stub-red.txt",
+        "通过的 1 项是旧 clear、list 回归，桩不动旧方法。未做真实 HTTP，发现不了 %2B 和缺 before"
+      ]
+    }
+  ]
+}
