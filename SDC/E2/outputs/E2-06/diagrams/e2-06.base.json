@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E2-06 改前：订单列表限定会员范围，详情按主键直读（基线 dcaa93b3）",
+    "output": "e2-06.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "ctrl-list",
+      "type": "frontend",
+      "label": "OmsPortalOrderController.list",
+      "sublabel": "GET /order/list",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        230,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 75,
+          "end_line": 82,
+          "label": "list 委托服务"
+        }
+      ]
+    },
+    {
+      "id": "svc-list",
+      "type": "backend",
+      "label": "OmsPortalOrderServiceImpl.list",
+      "sublabel": "分页 + 状态筛选 + create_time desc",
+      "pos": [
+        540,
+        60
+      ],
+      "size": [
+        560,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 353,
+          "end_line": 367,
+          "label": "取会员、组装条件、查订单"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 379,
+          "end_line": 393,
+          "label": "按本页订单 id 查订单项"
+        }
+      ]
+    },
+    {
+      "id": "member",
+      "type": "security",
+      "label": "UmsMemberService.getCurrentMember",
+      "sublabel": "SecurityContext 取登录会员",
+      "pos": [
+        430,
+        300
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java",
+          "line": 140,
+          "end_line": 145,
+          "label": "从认证信息取会员"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 357,
+          "label": "list 调用点（detail 无）"
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "type": "backend",
+      "label": "list 内联的范围条件",
+      "sublabel": "delete_status = 0 AND member_id",
+      "tag": "只在 list",
+      "pos": [
+        690,
+        300
+      ],
+      "size": [
+        260,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 360,
+          "end_line": 362,
+          "label": "criteria 直接写两个条件"
+        }
+      ]
+    },
+    {
+      "id": "order-mapper",
+      "type": "database",
+      "label": "OmsOrderMapper",
+      "sublabel": "selectByExample / selectByPrimaryKey",
+      "pos": [
+        990,
+        300
+      ],
+      "size": [
+        240,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/mapper/OmsOrderMapper.java",
+          "line": 19,
+          "label": "selectByExample"
+        },
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/mapper/OmsOrderMapper.java",
+          "line": 21,
+          "label": "selectByPrimaryKey"
+        }
+      ]
+    },
+    {
+      "id": "item-mapper",
+      "type": "database",
+      "label": "OmsOrderItemMapper",
+      "sublabel": "selectByExample 订单项",
+      "pos": [
+        1270,
+        300
+      ],
+      "size": [
+        240,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/mapper/OmsOrderItemMapper.java",
+          "line": 19,
+          "label": "selectByExample"
+        }
+      ]
+    },
+    {
+      "id": "ctrl-detail",
+      "type": "frontend",
+      "label": "OmsPortalOrderController.detail",
+      "sublabel": "GET /order/detail/{orderId}",
+      "pos": [
+        40,
+        560
+      ],
+      "size": [
+        230,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 84,
+          "end_line": 90,
+          "label": "detail 委托服务"
+        }
+      ]
+    },
+    {
+      "id": "svc-detail",
+      "type": "backend",
+      "label": "OmsPortalOrderServiceImpl.detail",
+      "sublabel": "按主键读订单，再按 orderId 读订单项",
+      "tag": "不取会员 · 不看删除",
+      "pos": [
+        540,
+        560
+      ],
+      "size": [
+        560,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 395,
+          "end_line": 405,
+          "label": "detail 全文"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 397,
+          "label": "selectByPrimaryKey(orderId)"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "mall-mbg 生成的 Mapper",
+      "wraps": [
+        "order-mapper",
+        "item-mapper"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "http-list",
+      "from": "ctrl-list",
+      "to": "svc-list",
+      "label": "list(status, pageNum, pageSize)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "list-member",
+      "from": "svc-list",
+      "to": "member",
+      "label": "getCurrentMember()"
+    },
+    {
+      "id": "list-scope",
+      "from": "svc-list",
+      "to": "scope",
+      "label": "内联写入 criteria"
+    },
+    {
+      "id": "list-orders",
+      "from": "svc-list",
+      "to": "order-mapper",
+      "label": "selectByExample（范围 + 状态）"
+    },
+    {
+      "id": "list-items",
+      "from": "svc-list",
+      "to": "item-mapper",
+      "label": "order_id in 本页订单"
+    },
+    {
+      "id": "http-detail",
+      "from": "ctrl-detail",
+      "to": "svc-detail",
+      "label": "detail(orderId)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "detail-orders",
+      "from": "svc-detail",
+      "to": "order-mapper",
+      "label": "selectByPrimaryKey：无范围条件",
+      "variant": "dashed"
+    },
+    {
+      "id": "detail-items",
+      "from": "svc-detail",
+      "to": "item-mapper",
+      "label": "order_id = orderId",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "设计问题",
+      "items": [
+        "同一服务两条读路径范围不一致：list 在 361–362 行把 delete_status = 0、member_id = 当前会员写进条件；detail 在 397 行只按主键 selectByPrimaryKey(orderId)",
+        "“当前会员 + 未删除”这条规则只有 list 里一份内联写法，没有可复用的入口；detail 不调用 getCurrentMember（396–405 行）",
+        "detail 随后按 orderId 直接查订单项（398–400 行），订单是否属于当前会员不影响这一步",
+        "测试替身中红灯只证实他人订单 22 改前会返回明细：SDCE206Test 第 78、113 行期望的 ApiException 没有抛出（compare.txt）。已删除订单 33 的断言在基线上被前一条失败中断、未执行（改后已覆盖）；证据只到服务层替身"
+      ]
+    }
+  ]
+}
