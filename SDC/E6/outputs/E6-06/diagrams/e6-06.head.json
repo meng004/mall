@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-06 改后：人气推荐按 productId 去重（exp/e6-06 fec9708f）",
+    "locale": "zh-CN",
+    "output": "e6-06.head.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "fec9708f62e10b4eba66d97695f59b3b0b764796"
+    }
+  },
+  "components": [
+    {
+      "id": "admin",
+      "type": "external",
+      "label": "后台管理员",
+      "sublabel": "提交一批商品",
+      "pos": [
+        16,
+        48
+      ],
+      "size": [
+        140,
+        68
+      ]
+    },
+    {
+      "id": "controller",
+      "type": "frontend",
+      "label": "推荐控制器",
+      "sublabel": "POST /create",
+      "pos": [
+        270,
+        40
+      ],
+      "size": [
+        190,
+        84
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeRecommendProductController.java",
+          "line": 29,
+          "end_line": 35,
+          "label": "create"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "服务接口",
+      "sublabel": "@Transactional",
+      "pos": [
+        575,
+        40
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/SmsHomeRecommendProductService.java",
+          "line": 16,
+          "end_line": 17,
+          "label": "create 上的事务"
+        },
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/config/MyBatisConfig.java",
+          "line": 12,
+          "end_line": 12,
+          "label": "开启事务管理"
+        }
+      ]
+    },
+    {
+      "id": "impl",
+      "type": "backend",
+      "label": "create",
+      "sublabel": "putIfAbsent 留首次",
+      "pos": [
+        850,
+        32
+      ],
+      "size": [
+        230,
+        100
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java",
+          "line": 24,
+          "end_line": 37,
+          "label": "改后 create"
+        },
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java",
+          "line": 26,
+          "end_line": 29,
+          "label": "按 productId 留首次"
+        },
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java",
+          "line": 31,
+          "end_line": 36,
+          "label": "插入并累加返回"
+        }
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "backend",
+      "label": "Mapper.insert",
+      "sublabel": "单行 INSERT",
+      "pos": [
+        1200,
+        40
+      ],
+      "size": [
+        170,
+        84
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/SmsHomeRecommendProductMapper.xml",
+          "line": 102,
+          "end_line": 110,
+          "label": "insert 与 selectKey"
+        }
+      ]
+    },
+    {
+      "id": "table",
+      "type": "database",
+      "label": "推荐商品表",
+      "sublabel": "只有主键",
+      "pos": [
+        1190,
+        268
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "document/sql/mall.sql",
+          "line": 2111,
+          "end_line": 2118,
+          "label": "sms_home_recommend_product"
+        }
+      ]
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "前台热门列表",
+      "sublabel": "另一次请求",
+      "pos": [
+        16,
+        264
+      ],
+      "size": [
+        230,
+        80
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/resources/dao/HomeDao.xml",
+          "line": 51,
+          "end_line": 62,
+          "label": "getHotProductList"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java",
+          "line": 52,
+          "end_line": 52,
+          "label": "首页取前 4 条"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java",
+          "line": 91,
+          "end_line": 95,
+          "label": "hotProductList"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "mall-admin",
+      "wraps": [
+        "controller",
+        "service",
+        "impl",
+        "mapper"
+      ],
+      "pad": 18
+    }
+  ],
+  "connections": [
+    {
+      "id": "submit",
+      "from": "admin",
+      "to": "controller",
+      "label": "POST /create"
+    },
+    {
+      "id": "call",
+      "from": "controller",
+      "to": "service",
+      "label": "create(list)"
+    },
+    {
+      "id": "enter",
+      "from": "service",
+      "to": "impl",
+      "label": "进入实现"
+    },
+    {
+      "id": "insert",
+      "from": "impl",
+      "to": "mapper",
+      "label": "insert 留下的",
+      "variant": "emphasis"
+    },
+    {
+      "id": "write",
+      "from": "mapper",
+      "to": "table",
+      "label": "写入",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "read",
+      "from": "portal",
+      "to": "table",
+      "label": "另一次请求",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "去重",
+      "items": [
+        "26 行 LinkedHashMap，28 行 putIfAbsent",
+        "键是 productId，留下第一次出现的记录",
+        "31–35 行才设状态 1、排序 0 并 insert"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "返回值",
+      "items": [
+        "34 行把每次 insert 的结果加进 inserted",
+        "36 行返回这个和，不再返回列表长度",
+        "控制器 31 行仍用 count > 0"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "没改的部分",
+      "items": [
+        "前台读表是 HomeDao.xml 51–62，另一次请求",
+        "后台 list 在 63–76 行，代码不改",
+        "新品、品牌、专题的 create 仍是 22–30 行"
+      ]
+    }
+  ]
+}

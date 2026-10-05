@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-06 改前：人气推荐批次逐条插入（基线 dcaa93b3）",
+    "locale": "zh-CN",
+    "output": "e6-06.base.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "admin",
+      "type": "external",
+      "label": "后台管理员",
+      "sublabel": "提交一批商品",
+      "pos": [
+        16,
+        48
+      ],
+      "size": [
+        140,
+        68
+      ]
+    },
+    {
+      "id": "controller",
+      "type": "frontend",
+      "label": "推荐控制器",
+      "sublabel": "POST /create",
+      "pos": [
+        270,
+        40
+      ],
+      "size": [
+        190,
+        84
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsHomeRecommendProductController.java",
+          "line": 29,
+          "end_line": 35,
+          "label": "create"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "服务接口",
+      "sublabel": "@Transactional",
+      "pos": [
+        575,
+        40
+      ],
+      "size": [
+        180,
+        84
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/SmsHomeRecommendProductService.java",
+          "line": 16,
+          "end_line": 17,
+          "label": "create 上的事务"
+        },
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/config/MyBatisConfig.java",
+          "line": 12,
+          "end_line": 12,
+          "label": "开启事务管理"
+        }
+      ]
+    },
+    {
+      "id": "impl",
+      "type": "backend",
+      "label": "create",
+      "sublabel": "逐条插入，返回 size",
+      "pos": [
+        850,
+        32
+      ],
+      "size": [
+        230,
+        100
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java",
+          "line": 22,
+          "end_line": 30,
+          "label": "基线 create"
+        },
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java",
+          "line": 24,
+          "end_line": 28,
+          "label": "每条都 insert"
+        },
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsHomeRecommendProductServiceImpl.java",
+          "line": 29,
+          "end_line": 29,
+          "label": "返回列表长度"
+        }
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "backend",
+      "label": "Mapper.insert",
+      "sublabel": "单行 INSERT",
+      "pos": [
+        1200,
+        40
+      ],
+      "size": [
+        170,
+        84
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/resources/com/macro/mall/mapper/SmsHomeRecommendProductMapper.xml",
+          "line": 102,
+          "end_line": 110,
+          "label": "insert 与 selectKey"
+        }
+      ]
+    },
+    {
+      "id": "table",
+      "type": "database",
+      "label": "推荐商品表",
+      "sublabel": "只有主键",
+      "pos": [
+        1190,
+        268
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "sources": [
+        {
+          "path": "document/sql/mall.sql",
+          "line": 2111,
+          "end_line": 2118,
+          "label": "sms_home_recommend_product"
+        }
+      ]
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "前台热门列表",
+      "sublabel": "另一次请求",
+      "pos": [
+        16,
+        264
+      ],
+      "size": [
+        230,
+        80
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/resources/dao/HomeDao.xml",
+          "line": 51,
+          "end_line": 62,
+          "label": "getHotProductList"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java",
+          "line": 52,
+          "end_line": 52,
+          "label": "首页取前 4 条"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/HomeServiceImpl.java",
+          "line": 91,
+          "end_line": 95,
+          "label": "hotProductList"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "mall-admin",
+      "wraps": [
+        "controller",
+        "service",
+        "impl",
+        "mapper"
+      ],
+      "pad": 18
+    }
+  ],
+  "connections": [
+    {
+      "id": "submit",
+      "from": "admin",
+      "to": "controller",
+      "label": "POST /create"
+    },
+    {
+      "id": "call",
+      "from": "controller",
+      "to": "service",
+      "label": "create(list)"
+    },
+    {
+      "id": "enter",
+      "from": "service",
+      "to": "impl",
+      "label": "进入实现"
+    },
+    {
+      "id": "insert",
+      "from": "impl",
+      "to": "mapper",
+      "label": "逐条 insert",
+      "variant": "emphasis"
+    },
+    {
+      "id": "write",
+      "from": "mapper",
+      "to": "table",
+      "label": "写入",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "read",
+      "from": "portal",
+      "to": "table",
+      "label": "另一次请求",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "插入",
+      "items": [
+        "24–28 行对列表每一条设状态 1、排序 0 并 insert",
+        "29 行返回列表长度，不看 insert 的结果",
+        "重复的 productId 也会各插一行"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "控制器",
+      "items": [
+        "30 行把整份列表交给服务",
+        "31 行 count > 0 才返回成功，否则失败",
+        "接口 16 行声明 @Transactional"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "读端",
+      "items": [
+        "HomeDao.xml 51–62 读这张表，是另一次请求",
+        "后台 list 在 56–69 行，按条件查出已有行",
+        "GET /home/recommendProductList 查 pms_product"
+      ]
+    }
+  ]
+}

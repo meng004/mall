@@ -1,0 +1,7 @@
+示例：E6-06  模块：mall-admin  测试：SDCE606Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 6, Failures: 3, Errors: 0, Skipped: 0
+[ERROR]   SDCE606Test.duplicateProductIdsKeepTheFirstRecord:48 expected: <2> but was: <3>
+[ERROR]   SDCE606Test.nonAdjacentDuplicateKeepsTheFirstRecord:91 expected: <2> but was: <3>
+[ERROR]   SDCE606Test.returnedCountSumsMapperResults:104 expected: <1> but was: <2>
+改后 fec9708f：pass（预期 pass）  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
