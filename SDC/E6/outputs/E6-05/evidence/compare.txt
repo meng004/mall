@@ -1,0 +1,24 @@
+示例：E6-05  模块：mall-portal  测试：SDCE605Test,SDCE605MongoTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[71,37] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[72,37] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[74,58] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[75,58] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[91,57] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[94,58] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605MongoTest.java:[97,62] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[56,53] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[62,36] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[68,24] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[71,53] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[75,27] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[81,24] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[90,53] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[98,24] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[101,53] method list in class com.macro.mall.portal.service.impl.MemberCollectionServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[105,36] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[110,24] cannot find symbol
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[115,78] method list in class com.macro.mall.portal.controller.MemberProductCollectionController cannot be applied to given types;
+[ERROR] /tmp/tmp.FUHsS5szMt/base/mall-portal/src/test/java/com/macro/mall/sdc/e6/SDCE605Test.java:[123,24] cannot find symbol
+改后 b244265c：pass（预期 pass）  [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

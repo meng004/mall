@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-05 改前：收藏列表只能按会员分页（基线 dcaa93b3）",
+    "output": "e6-05.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "MemberProductCollectionController", "sublabel": "GET /member/productCollection/list", "tag": "无 keyword 参数", "pos": [40, 200], "size": [260, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 49, "end_line": 56, "label": "list：pageNum、pageSize" }] },
+    { "id": "service", "type": "backend", "label": "MemberCollectionServiceImpl", "sublabel": "list(pageNum, pageSize)：按会员分页", "pos": [480, 200], "size": [260, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 67, "end_line": 71, "label": "list" }] },
+    { "id": "member", "type": "security", "label": "UmsMemberService", "sublabel": "getCurrentMember()：会员范围", "pos": [500, 400], "size": [220, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 68, "label": "list 取当前会员" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 140, "end_line": 145, "label": "从 SecurityContext 取会员" }
+      ] },
+    { "id": "repo", "type": "backend", "label": "MemberProductCollectionRepository", "sublabel": "findByMemberId(Long, Pageable)", "tag": "缺口：无名称条件", "pos": [940, 200], "size": [300, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 12, "end_line": 32, "label": "派生方法清单" }] },
+    { "id": "mongo", "type": "database", "label": "MongoDB：MemberProductCollection", "sublabel": "productName 是收藏时的快照，无索引", "pos": [1440, 200], "size": [280, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberProductCollection.java", "line": 17, "end_line": 32, "label": "@Document，productName 无 @Indexed" }] },
+    { "id": "page", "type": "backend", "label": "CommonPage.restPage", "sublabel": "total = getTotalElements()", "pos": [40, 400], "size": [260, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java", "line": 55, "label": "restPage(page)" },
+        { "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonPage.java", "line": 51, "end_line": 59, "label": "restPage" }
+      ] },
+    { "id": "add", "type": "backend", "label": "MemberCollectionServiceImpl.add", "sublabel": "写入收藏与 productName 快照", "pos": [1440, 30], "size": [280, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java", "line": 33, "end_line": 58, "label": "add：sqlEnable 时取商品名" }] },
+    { "id": "gap", "type": "external", "label": "新需求路径：按名称筛选", "sublabel": "Repository 里没有任何 productName 条件", "tag": "基线不存在", "pos": [940, 400], "size": [300, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java", "line": 16, "end_line": 31, "label": "现有四个方法都不含名称" }] }
+  ],
+  "connections": [
+    { "id": "call", "from": "controller", "to": "service", "label": "list(pageNum, pageSize)", "variant": "emphasis" },
+    { "id": "who", "from": "service", "to": "member", "label": "当前会员" },
+    { "id": "find", "from": "service", "to": "repo", "label": "findByMemberId" },
+    { "id": "io", "from": "repo", "to": "mongo", "label": "按 memberId 分页查询" },
+    { "id": "paging", "from": "controller", "to": "page", "label": "restPage(page)" },
+    { "id": "write", "from": "add", "to": "mongo", "label": "save 快照" },
+    { "id": "missing", "from": "gap", "to": "mongo", "label": "新需求路径（基线不存在）", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "需求与现状", "items": [
+      "新需求：收藏列表可按商品名称关键字筛选；按字面子串匹配（. 与 * 等不当正则），区分大小写；null 或 \"\" 视为不筛选；筛选在 Mongo 分页之前完成，总数随筛选变化；仍只限当前会员",
+      "基线 list 只有 pageNum、pageSize 两个参数（控制器 49–56），服务只调用 findByMemberId(会员, 分页)（67–71），Repository 的四个方法都不含名称条件（16–31）",
+      "分页总数来自 Page.getTotalElements()（CommonPage 56 行），所以名称条件必须进入同一次查询，不能取回一页再在 Java 里过滤",
+      "productName 是 add() 写入的快照：sqlEnable 为 true 时取商品表名称（44–53 行），否则保留请求体里的值；模型里只有 memberId、productId 有 @Indexed（21–26），productName 没有（27）",
+      "规格测试用到的三参数 list 与 findByMemberIdAndProductNameRegex 在基线上不存在，测试编译失败，即 EXPECT_BASE=absent（compare.txt）"
+    ] }
+  ]
+}

@@ -1,0 +1,87 @@
+基线提交：dcaa93b3150352e5044708d7211b5bed0af4509f
+桩只加签名不实现：在该基线上只给控制器、服务接口与实现、Repository 增加三参数 list 和 findByMemberIdAndProductNameRegex 的签名。控制器给 list 增加可选参数 keyword 并传给三参数服务方法；三参数方法直接调用原两参数逻辑、忽略关键字；原两参数方法不改；Repository 只声明派生方法，不写筛选条件。
+命令：mvn -B -o -pl mall-portal -am -DskipTests=false -Dtest=SDCE605Test,SDCE605MongoTest -Dsurefire.failIfNoSpecifiedTests=false test
+日期：2026-10-08
+测试类：SDCE605Test、SDCE605MongoTest 取自 test 提交 c370cf9d9c0480ff8f06a44ea1ec668672c048d4，与该提交中的文件逐字节相同。
+工作区：上述命令在该临时 worktree 中执行。基线树里没有 SDC/environment/application-sdc.yml，已从主工作区原样复制，否则 Mongo 用例会因找不到课程库配置而中止。
+
+桩 diff（仅上述四个产品文件）：
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java b/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java
+index eba10872..ee6f85fe 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java
+@@ -50,8 +50,9 @@ public class MemberProductCollectionController {
+     @RequestMapping(value = "/list", method = RequestMethod.GET)
+     @ResponseBody
+     public CommonResult<CommonPage<MemberProductCollection>> list(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+-                                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
+-        Page<MemberProductCollection> page = memberCollectionService.list(pageNum,pageSize);
++                                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
++                                                                  @RequestParam(value = "keyword", required = false) String keyword) {
++        Page<MemberProductCollection> page = memberCollectionService.list(pageNum, pageSize, keyword);
+         return CommonResult.success(CommonPage.restPage(page));
+     }
+ 
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java b/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java
+index d2b9a94a..6059a5bf 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java
+@@ -25,6 +25,8 @@ public interface MemberProductCollectionRepository extends MongoRepository<Membe
+      */
+     Page<MemberProductCollection> findByMemberId(Long memberId, Pageable pageable);
+ 
++    Page<MemberProductCollection> findByMemberIdAndProductNameRegex(Long memberId, String pattern, Pageable pageable);
++
+     /**
+      * 根据会员ID删除记录
+      */
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/MemberCollectionService.java b/mall-portal/src/main/java/com/macro/mall/portal/service/MemberCollectionService.java
+index 443e92db..3d023dc5 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/MemberCollectionService.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/MemberCollectionService.java
+@@ -23,6 +23,8 @@ public interface MemberCollectionService {
+      */
+     Page<MemberProductCollection> list(Integer pageNum, Integer pageSize);
+ 
++    Page<MemberProductCollection> list(Integer pageNum, Integer pageSize, String keyword);
++
+     /**
+      * 查看收藏详情
+      */
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java
+index cf11c2f6..a95594ea 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java
+@@ -70,6 +70,11 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
+         return productCollectionRepository.findByMemberId(member.getId(), pageable);
+     }
+ 
++    @Override
++    public Page<MemberProductCollection> list(Integer pageNum, Integer pageSize, String keyword) {
++        return list(pageNum, pageSize);
++    }
++
+     @Override
+     public MemberProductCollection detail(Long productId) {
+         UmsMember member = memberService.getCurrentMember();
+
+失败用例（业务断言；行号取自 surefire 堆栈里测试类的第一帧）：
+- SDCE605Test.literalDotIsQuotedAndNotAnyCharacter 第 73 行
+  expected: <1> actual: <9>
+- SDCE605Test.filteredFirstPageReturnsMatchThatUnfilteredPageWouldMiss 第 92 行
+  expected: <2> actual: <4>
+- SDCE605Test.otherMemberAndStarStayOutOfTheQuery 第 103 行
+  expected: <1> actual: <9>
+- SDCE605Test.controllerPassesKeywordIntoTheSameList 第 118 行
+  expected: <plain-id> actual: <unfiltered>
+- SDCE605Test.blankKeywordIsMatchedLiterally 第 128 行
+  expected: <space-id> actual: <unfiltered>
+- SDCE605MongoTest.isolatedMongoFiltersLiteralNameBeforePaging 第 76 行
+  expected: <3> actual: <10>
+
+桩下通过的用例：
+- SDCE605Test.emptyKeywordKeepsMemberPaging
+  它是空关键字和两参数旧调用的回归。桩保留原两参数查询、忽略关键字，空关键字本来就走这条查询，所以这一项在桩下通过；改前改后都应通过。
+
+Tests run 行：
+[ERROR] Tests run: 7, Failures: 6, Errors: 0, Skipped: 0

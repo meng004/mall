@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-05 改后：收藏列表按名称字面筛选（exp/e6-05 b244265c）",
+    "output": "e6-05.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "b244265ca341e959b3b3508f44b2d8672dd58764"
+    }
+  },
+  "components": [
+    {
+      "id": "controller",
+      "type": "frontend",
+      "label": "MemberProductCollectionController",
+      "sublabel": "GET …/list?keyword=（新增，可选）",
+      "tag": "keyword 可省略",
+      "pos": [
+        40,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java",
+          "line": 49,
+          "end_line": 57,
+          "label": "list：新增 keyword"
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "type": "backend",
+      "label": "MemberCollectionServiceImpl",
+      "sublabel": "list(…, keyword)：空则不筛选",
+      "tag": "新增分支",
+      "pos": [
+        480,
+        200
+      ],
+      "size": [
+        260,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java",
+          "line": 73,
+          "end_line": 82,
+          "label": "三参数 list"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java",
+          "line": 68,
+          "end_line": 71,
+          "label": "两参数版本委托并传 null"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/MemberCollectionService.java",
+          "line": 26,
+          "label": "接口新增重载"
+        }
+      ]
+    },
+    {
+      "id": "member",
+      "type": "security",
+      "label": "UmsMemberService",
+      "sublabel": "getCurrentMember()：会员范围",
+      "tag": "沿用，未改",
+      "pos": [
+        500,
+        400
+      ],
+      "size": [
+        220,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java",
+          "line": 75,
+          "label": "list 取当前会员"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java",
+          "line": 140,
+          "end_line": 145,
+          "label": "从 SecurityContext 取会员"
+        }
+      ]
+    },
+    {
+      "id": "quote",
+      "type": "external",
+      "label": "Pattern.quote(keyword)",
+      "sublabel": "把用户文本转成正则字面量",
+      "tag": "转义在服务层",
+      "pos": [
+        480,
+        30
+      ],
+      "size": [
+        260,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java",
+          "line": 80,
+          "end_line": 81,
+          "label": "quote 后调用 Regex 查询"
+        }
+      ]
+    },
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "MemberProductCollectionRepository",
+      "sublabel": "新增 findByMemberIdAndProductNameRegex",
+      "tag": "+1 个派生方法",
+      "pos": [
+        940,
+        200
+      ],
+      "size": [
+        300,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java",
+          "line": 28,
+          "label": "findByMemberIdAndProductNameRegex"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java",
+          "line": 26,
+          "label": "findByMemberId 未改"
+        }
+      ]
+    },
+    {
+      "id": "old",
+      "type": "backend",
+      "label": "findByMemberId（原查询）",
+      "sublabel": "无名称条件，行为与基线相同",
+      "tag": "未改",
+      "pos": [
+        940,
+        400
+      ],
+      "size": [
+        300,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java",
+          "line": 77,
+          "end_line": 79,
+          "label": "空关键字走原查询"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/repository/MemberProductCollectionRepository.java",
+          "line": 26,
+          "label": "findByMemberId"
+        }
+      ]
+    },
+    {
+      "id": "mongo",
+      "type": "database",
+      "label": "MongoDB：MemberProductCollection",
+      "sublabel": "productName 快照，无索引；模型未改",
+      "pos": [
+        1440,
+        200
+      ],
+      "size": [
+        280,
+        72
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/MemberProductCollection.java",
+          "line": 17,
+          "end_line": 32,
+          "label": "@Document，productName 无 @Indexed"
+        }
+      ]
+    },
+    {
+      "id": "page",
+      "type": "backend",
+      "label": "CommonPage.restPage",
+      "sublabel": "total = getTotalElements()",
+      "tag": "未改",
+      "pos": [
+        40,
+        400
+      ],
+      "size": [
+        260,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/MemberProductCollectionController.java",
+          "line": 56,
+          "label": "restPage(page)"
+        },
+        {
+          "path": "mall-common/src/main/java/com/macro/mall/common/api/CommonPage.java",
+          "line": 51,
+          "end_line": 59,
+          "label": "restPage"
+        }
+      ]
+    },
+    {
+      "id": "add",
+      "type": "backend",
+      "label": "MemberCollectionServiceImpl.add",
+      "sublabel": "写入收藏与 productName 快照",
+      "tag": "未改",
+      "pos": [
+        1440,
+        30
+      ],
+      "size": [
+        280,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/MemberCollectionServiceImpl.java",
+          "line": 34,
+          "end_line": 60,
+          "label": "add：sqlEnable 时取商品名"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "call",
+      "from": "controller",
+      "to": "service",
+      "label": "list(…, keyword)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "who",
+      "from": "service",
+      "to": "member",
+      "label": "当前会员"
+    },
+    {
+      "id": "nonempty",
+      "from": "service",
+      "to": "quote",
+      "label": "keyword 非空"
+    },
+    {
+      "id": "pattern",
+      "from": "quote",
+      "to": "repo",
+      "label": "字面量模式"
+    },
+    {
+      "id": "empty",
+      "from": "service",
+      "to": "old",
+      "label": "keyword 为 null 或 \"\"",
+      "variant": "dashed"
+    },
+    {
+      "id": "io",
+      "from": "repo",
+      "to": "mongo",
+      "label": "按名称匹配并分页"
+    },
+    {
+      "id": "io-old",
+      "from": "old",
+      "to": "mongo",
+      "label": "按 memberId 分页",
+      "variant": "dashed"
+    },
+    {
+      "id": "paging",
+      "from": "controller",
+      "to": "page",
+      "label": "restPage(page)"
+    },
+    {
+      "id": "write",
+      "from": "add",
+      "to": "mongo",
+      "label": "save 快照"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "变化",
+      "items": [
+        "控制器 list 新增可选参数 keyword（required=false），透传给三参数服务方法（52–55 行）；旧请求不带它也能用",
+        "服务接口新增 list(pageNum, pageSize, keyword)（26 行）；两参数版本保留，委托时传 null（68–71 行）",
+        "服务 73–82：keyword 为 null 或 \"\" 时仍走 findByMemberId（77–79）；否则用 Pattern.quote 转成字面量，调新增的 findByMemberIdAndProductNameRegex(会员, 模式, 分页)（80–81）",
+        "Repository 新增 findByMemberIdAndProductNameRegex（28 行）：会员条件、名称条件、分页与总数在同一次 Mongo 查询里完成",
+        "“空”只认 null 与 \"\"（77 行）：纯空白（如 \" \"）不算空，会按字面空格筛选。E5-05 `影响分析.md` 的回归表写的是空白也不筛选，Issue #24 已改为以本例源码为准"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "职责落点与备选",
+      "items": [
+        "落点：空值分支与正则转义放在服务层，因为会员范围（75 行）与分页参数（76 行）已经在这里确定；Repository 只表达“按会员 + 名称模式分页”",
+        "备选 A：取回一页后在 Java 里过滤。CommonPage 的总数取自 Page.getTotalElements()（56 行），先分页再过滤会让总数与页数都不对，所以不采用",
+        "备选 B：用 @Query 或 MongoTemplate 手写查询，可以不经正则转义；代价是离开派生方法、手写字段名，本次没有实现，也没有比较过性能",
+        "新增的 Repository 方法收的是正则模式，转义责任在调用方；目前只有服务 80 行一个调用方，若有人直接传用户文本，会被当作正则"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "代价",
+      "items": [
+        "productName 没有索引（domain 27 行），只有 memberId、productId 有（21–26 行）；筛选要在该会员的收藏里匹配，成本没有实测",
+        "PageRequest.of 不带排序（76 行），翻页顺序依赖 Mongo 返回顺序；Mongo 测试比较的是排序后的 id，没有断言顺序",
+        "名称是收藏时的快照：sqlEnable 为 true 时从商品表复制（46–51 行），否则是客户端提交的文本；mall-admin 不引用该文档（grep 无结果），商品改名不回写，筛选按旧名称",
+        "区分大小写：模式不带 (?i)（单元测试检查），Mongo 测试里只差大小写的那条不被命中；Mongo 排序规则（collation）没有验证"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "证据",
+      "items": [
+        "SDCE605Test 共 6 项，Repository 与会员服务都是 Mockito 替身，不是数据库验证：空关键字走原查询且旧两参数调用不变、\".\" 被 quote、首页命中、控制器透传、纯空白按字面传给 regex 方法",
+        "otherMemberAndStarStayOutOfTheQuery 里“从未查询 202 号会员”只因替身会员本来就是 101，真正的会员隔离由 Mongo 测试证明",
+        "SDCE605MongoTest 1 项：按 SDC/environment/application-sdc.yml 连课程 Mongo 27018，随机库名 sdc_review_…；关键字命中 3 条、两页 2+1，\".\" 命中 5、\"*\" 命中 1、\"\\E.\" 命中 1，null 与 \"\" 总数 10，其他会员、近似名、只差大小写和无名称的都被排除；连不上时是 abort，不算通过",
+        "compare.txt：改前 absent（三参数 list 编译失败）；改后 Tests run 7，Skipped 0；接口桩下 7 项中 6 项业务断言失败（stub-red.txt）",
+        "本次没有做变异实测，没有运行 HTTP"
+      ]
+    }
+  ]
+}
