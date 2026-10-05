@@ -351,7 +351,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Override
     public CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize) {
-        if(status==-1){
+        return list(status, null, null, pageNum, pageSize);
+    }
+
+    @Override
+    public CommonPage<OmsOrderDetail> list(Integer status, Date createTimeFromInclusive, Date createTimeUntilExclusive,
+                                           Integer pageNum, Integer pageSize) {
+        if(status!=null && status==-1){
             status = null;
         }
         UmsMember member = memberService.getCurrentMember();
@@ -362,6 +368,12 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
                 .andMemberIdEqualTo(member.getId());
         if(status!=null){
             criteria.andStatusEqualTo(status);
+        }
+        if (createTimeFromInclusive != null) {
+            criteria.andCreateTimeGreaterThanOrEqualTo(createTimeFromInclusive);
+        }
+        if (createTimeUntilExclusive != null) {
+            criteria.andCreateTimeLessThan(createTimeUntilExclusive);
         }
         orderExample.setOrderByClause("create_time desc");
         List<OmsOrder> orderList = orderMapper.selectByExample(orderExample);

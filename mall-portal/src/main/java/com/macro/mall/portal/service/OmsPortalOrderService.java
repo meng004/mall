@@ -7,6 +7,7 @@ import com.macro.mall.portal.domain.OmsOrderDetail;
 import com.macro.mall.portal.domain.OrderParam;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,13 @@ public interface OmsPortalOrderService {
      * 分页获取用户订单
      */
     CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize);
+
+    /**
+     * 分页获取当前会员的未删除订单。状态与创建时间左闭右开区间同时进入查询条件；时间为空表示不限制。
+     * 筛选写在分页查询条件里。status 为 -1 时与旧入口一样表示不限状态。
+     */
+    CommonPage<OmsOrderDetail> list(Integer status, Date createTimeFromInclusive, Date createTimeUntilExclusive,
+                                    Integer pageNum, Integer pageSize);
 
     /**
      * 根据订单ID获取订单详情
