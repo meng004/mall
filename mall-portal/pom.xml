@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>dev.langchain4j</groupId>
+            <artifactId>langchain4j-open-ai</artifactId>
+            <version>1.21.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.macro.mall</groupId>
             <artifactId>mall-mbg</artifactId>
         </dependency>
