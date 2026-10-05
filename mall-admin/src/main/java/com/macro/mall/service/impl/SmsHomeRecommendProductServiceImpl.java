@@ -9,7 +9,9 @@ import com.macro.mall.service.SmsHomeRecommendProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 首页人气推荐管理Service实现类
@@ -21,12 +23,17 @@ public class SmsHomeRecommendProductServiceImpl implements SmsHomeRecommendProdu
     private SmsHomeRecommendProductMapper recommendProductMapper;
     @Override
     public int create(List<SmsHomeRecommendProduct> homeRecommendProductList) {
+        Map<Long, SmsHomeRecommendProduct> firstByProductId = new LinkedHashMap<>();
         for (SmsHomeRecommendProduct recommendProduct : homeRecommendProductList) {
+            firstByProductId.putIfAbsent(recommendProduct.getProductId(), recommendProduct);
+        }
+        int inserted = 0;
+        for (SmsHomeRecommendProduct recommendProduct : firstByProductId.values()) {
             recommendProduct.setRecommendStatus(1);
             recommendProduct.setSort(0);
-            recommendProductMapper.insert(recommendProduct);
+            inserted += recommendProductMapper.insert(recommendProduct);
         }
-        return homeRecommendProductList.size();
+        return inserted;
     }
 
     @Override
