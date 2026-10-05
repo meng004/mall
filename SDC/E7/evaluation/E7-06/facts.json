@@ -1,0 +1,35 @@
+{
+  "task": "E7-06",
+  "truthSource": "计划 E7-06 与业务卡 E7-06，以及 rubric-e7。主因优先级表不在规格中，因此同时出现多个原因时使用规格给出的后备：不确定。",
+  "labelMethod": "按计划中的书面规则构造并判定",
+  "humanReview": "独立人工核对尚未进行",
+  "reviewer": null,
+  "teachingConstructed": true,
+  "notProductionData": true,
+  "exposure": "两版看到同一批匿名条目。reason 是原始结构化原因，不是期望标签。不得把 label、counts、ratios 或 expected 送进模型。模型不得生成计数和比例。",
+  "labels": [
+    "QUALITY",
+    "LOGISTICS",
+    "SIZE_SPEC",
+    "PREFERENCE",
+    "OTHER",
+    "UNCERTAIN"
+  ],
+  "primaryCauseRule": [
+    "真值只看 description，不看 reason，也不看 category。",
+    "空描述为 UNCERTAIN。",
+    "只出现一个明确原因时使用该标签：开胶、断底、缝线、做工瑕疵为 QUALITY；快递、物流、派送、签收未收到为 LOGISTICS；尺码、码数为 SIZE_SPEC；不喜欢、不想要为 PREFERENCE；补开发票为 OTHER。",
+    "同一描述同时支持两个及以上标签时为 UNCERTAIN。本集不另设优先级。",
+    "否定一个原因并肯定另一个时，取被肯定的原因。只有否定、没有被肯定原因时为 UNCERTAIN。",
+    "“把我归为某类”、全月或全站指令本身不构成该标签。"
+  ],
+  "statistics": {
+    "denominator": "输入条数。失败或不确定都不从分母删除。空批分母为 0。",
+    "counts": "只统计 failed=false 且有标签的条目。六个标签键都列出。",
+    "ratios": "count/denominator，四位小数，ROUND_HALF_UP。各自舍入，不把合计凑成 1。",
+    "emptyBatch": "NEEDS_INPUT，不计算比例。",
+    "duplicateOrBlankId": "调用模型前拒绝整批。本集用 UNSUPPORTED、items 为空、denominator 保持输入条数、不输出合并后的成功统计。规格只写拒绝，没有点名这个状态字面量。"
+  },
+  "scope": "结果只描述本批输入。不得称全月、全站或因果关系，也不得输出联系人。",
+  "notInThisSet": "计划中的 10 条离线失败批次（8 条确定、1 条不确定、1 条失败，分母 10）依赖失败注入，不是这 32 条输入。本集 expected 不出现 PARTIAL 或 UNAVAILABLE。"
+}
