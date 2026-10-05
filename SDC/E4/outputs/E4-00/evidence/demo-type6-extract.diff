@@ -1,0 +1,32 @@
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
+@@ -44,6 +44,8 @@
+                 applyLadder(cartPromotionItemList, itemList, promotionProduct);
+             } else if (promotionType == 4) {
+                 applyFull(cartPromotionItemList, itemList, promotionProduct, promotionProductList);
++            } else if (promotionType == 6) {
++                applyFixedReduce(cartPromotionItemList, itemList, promotionProduct);
+             } else {
+                 handleNoReduce(cartPromotionItemList, itemList, promotionProduct);
+             }
+@@ -105,6 +107,20 @@
+             cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
+             cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
+             cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
++            out.add(cartPromotionItem);
++        }
++    }
++
++    private void applyFixedReduce(List<CartPromotionItem> out, List<OmsCartItem> itemList, PromotionProduct promotionProduct) {
++        for (OmsCartItem item : itemList) {
++            CartPromotionItem cartPromotionItem = new CartPromotionItem();
++            BeanUtils.copyProperties(item, cartPromotionItem);
++            cartPromotionItem.setPromotionMessage("立减优惠");
++            PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
++            cartPromotionItem.setReduceAmount(new BigDecimal("5.00"));
++            cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
++            cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
++            cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
+             out.add(cartPromotionItem);
+         }
+     }

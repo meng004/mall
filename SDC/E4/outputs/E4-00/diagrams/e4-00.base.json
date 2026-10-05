@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-00 改前：购物车促销计算（基线 dcaa93b3）",
+    "output": "e4-00.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "OmsCartItemController", "sublabel": "GET /cart/list/promotion", "pos": [40, 250], "size": [180, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsCartItemController.java", "line": 49, "end_line": 53, "label": "listPromotion" }] },
+    { "id": "cart-service", "type": "backend", "label": "OmsCartItemServiceImpl", "sublabel": "listPromotion", "pos": [350, 250], "size": [180, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsCartItemServiceImpl.java", "line": 82, "end_line": 89, "label": "调用 calcCartPromotion" }] },
+    { "id": "calc", "type": "backend", "label": "calcCartPromotion", "sublabel": "分组 + 按类型选算法", "tag": "约 80 行", "pos": [680, 230], "size": [200, 104],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 29, "end_line": 110, "label": "if/else 链 41–107" }] },
+    { "id": "dao", "type": "database", "label": "PortalProductDao", "sublabel": "促销商品信息", "pos": [680, 70], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 115, "end_line": 121, "label": "getPromotionProductList" }] },
+    { "id": "single", "type": "backend", "label": "单品促销分支", "sublabel": "改写单价为原价", "pos": [980, 40], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 41, "end_line": 57 }] },
+    { "id": "ladder", "type": "backend", "label": "打折（阶梯）分支", "sublabel": "满 N 件打折", "pos": [980, 170], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 58, "end_line": 80 }] },
+    { "id": "full", "type": "backend", "label": "满减分支", "sublabel": "按原价占比分摊", "pos": [980, 300], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 81, "end_line": 103 }] },
+    { "id": "none", "type": "backend", "label": "else 无优惠", "sublabel": "其余类型", "pos": [980, 430], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 104, "end_line": 107 }] },
+    { "id": "no-reduce", "type": "backend", "label": "handleNoReduce", "sublabel": "无优惠结果", "pos": [1290, 300], "size": [180, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 159, "end_line": 173 }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "OmsPromotionServiceImpl：同一个方法里选择并执行四种算法", "wraps": ["calc", "single", "ladder", "full", "none"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "cart-service", "label": "listPromotion", "variant": "emphasis" },
+    { "id": "to-calc", "from": "cart-service", "to": "calc", "label": "calcCartPromotion" },
+    { "id": "load", "from": "calc", "to": "dao", "label": "查询促销" },
+    { "id": "pick-single", "from": "calc", "to": "single", "label": "type==1" },
+    { "id": "pick-ladder", "from": "calc", "to": "ladder", "label": "type==3" },
+    { "id": "pick-full", "from": "calc", "to": "full", "label": "type==4" },
+    { "id": "pick-none", "from": "calc", "to": "none", "label": "else" },
+    { "id": "ladder-miss", "from": "ladder", "to": "no-reduce", "label": "未命中", "variant": "dashed" },
+    { "id": "full-miss", "from": "full", "to": "no-reduce", "label": "未命中", "variant": "dashed" },
+    { "id": "none-reduce", "from": "none", "to": "no-reduce" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "设计问题", "items": [
+      "选哪种算法与四种算法本身写在同一个方法（41–107 行）",
+      "新增促销类型：在这条 if/else 链里再加一个分支（改 1 处，但要读懂整条链）",
+      "阶梯、满减未命中时各自回落 handleNoReduce，回落规则散在两处"
+    ] }
+  ]
+}

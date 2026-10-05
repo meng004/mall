@@ -1,0 +1,22 @@
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
+@@ -101,6 +101,19 @@
+                 }else{
+                     handleNoReduce(cartPromotionItemList,itemList,promotionProduct);
+                 }
++            } else if (promotionType == 6) {
++                //立减（演示）
++                for (OmsCartItem item : itemList) {
++                    CartPromotionItem cartPromotionItem = new CartPromotionItem();
++                    BeanUtils.copyProperties(item, cartPromotionItem);
++                    cartPromotionItem.setPromotionMessage("立减优惠");
++                    PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
++                    cartPromotionItem.setReduceAmount(new BigDecimal("5.00"));
++                    cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
++                    cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
++                    cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
++                    cartPromotionItemList.add(cartPromotionItem);
++                }
+             } else {
+                 //无优惠
+                 handleNoReduce(cartPromotionItemList, itemList,promotionProduct);

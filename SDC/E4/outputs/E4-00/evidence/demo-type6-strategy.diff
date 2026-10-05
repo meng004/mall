@@ -1,0 +1,41 @@
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
+index 0e7aa35b..83a7c2d7 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java
+@@ -54,7 +54,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
+     }
+ 
+     private List<PromotionApplier> appliers() {
+-        return Arrays.asList(new SingleApplier(), new LadderApplier(), new FullApplier(), new NoneApplier());
++        return Arrays.asList(new SingleApplier(), new LadderApplier(), new FullApplier(), new FixedReduceApplier(), new NoneApplier());
+     }
+ 
+     private interface PromotionApplier {
+@@ -142,6 +142,27 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
+         }
+     }
+ 
++    private class FixedReduceApplier implements PromotionApplier {
++        public boolean supports(Integer promotionType) {
++            return promotionType == 6;
++        }
++
++        public void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
++                          PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
++            for (OmsCartItem item : itemList) {
++                CartPromotionItem cartPromotionItem = new CartPromotionItem();
++                BeanUtils.copyProperties(item, cartPromotionItem);
++                cartPromotionItem.setPromotionMessage("立减优惠");
++                PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
++                cartPromotionItem.setReduceAmount(new BigDecimal("5.00"));
++                cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
++                cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
++                cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
++                out.add(cartPromotionItem);
++            }
++        }
++    }
++
+     private class NoneApplier implements PromotionApplier {
+         public boolean supports(Integer promotionType) {
+             return true;

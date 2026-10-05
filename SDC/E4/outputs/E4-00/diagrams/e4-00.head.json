@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-00 改后：促销算法拆成策略（exp/e4-00 33d8eaf1）",
+    "output": "e4-00.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "33d8eaf1e9fc9244d184fc8d6b19e055c80c7707"
+    }
+  },
+  "components": [
+    { "id": "controller", "type": "frontend", "label": "OmsCartItemController", "sublabel": "GET /cart/list/promotion", "pos": [40, 250], "size": [180, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsCartItemController.java", "line": 49, "end_line": 53, "label": "listPromotion" }] },
+    { "id": "cart-service", "type": "backend", "label": "OmsCartItemServiceImpl", "sublabel": "listPromotion", "pos": [350, 250], "size": [180, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsCartItemServiceImpl.java", "line": 82, "end_line": 89, "label": "调用 calcCartPromotion" }] },
+    { "id": "calc", "type": "backend", "label": "calcCartPromotion", "sublabel": "只分组和调度", "tag": "15 行", "pos": [680, 250], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 29, "end_line": 43 }] },
+    { "id": "dao", "type": "database", "label": "PortalProductDao", "sublabel": "促销商品信息", "pos": [680, 70], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 159, "end_line": 165, "label": "getPromotionProductList" }] },
+    { "id": "dispatch", "type": "backend", "label": "applyPromotion", "sublabel": "取第一个 supports 的策略", "pos": [960, 230], "size": [200, 104],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 45, "end_line": 54, "label": "调度" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 56, "end_line": 58, "label": "appliers() 登记顺序" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 60, "end_line": 65, "label": "PromotionApplier 接口" }
+      ] },
+    { "id": "single", "type": "backend", "label": "SingleApplier", "sublabel": "改写单价为原价", "pos": [1260, 40], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 67, "end_line": 88 }] },
+    { "id": "ladder", "type": "backend", "label": "LadderApplier", "sublabel": "满 N 件打折", "pos": [1260, 170], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 90, "end_line": 115 }] },
+    { "id": "full", "type": "backend", "label": "FullApplier", "sublabel": "按原价占比分摊", "pos": [1260, 300], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 117, "end_line": 143 }] },
+    { "id": "none", "type": "backend", "label": "NoneApplier", "sublabel": "supports 恒为真", "tag": "必须最后登记", "pos": [1260, 430], "size": [210, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 145, "end_line": 154 }] },
+    { "id": "no-reduce", "type": "backend", "label": "handleNoReduce", "sublabel": "无优惠结果", "pos": [1570, 300], "size": [180, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 203, "end_line": 217 }] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "PromotionApplier 策略：私有内部类，一种算法一个类", "wraps": ["single", "ladder", "full", "none"] }
+  ],
+  "connections": [
+    { "id": "http", "from": "controller", "to": "cart-service", "label": "listPromotion", "variant": "emphasis" },
+    { "id": "to-calc", "from": "cart-service", "to": "calc", "label": "calcCartPromotion" },
+    { "id": "load", "from": "calc", "to": "dao", "label": "查询促销" },
+    { "id": "to-dispatch", "from": "calc", "to": "dispatch", "label": "每个商品" },
+    { "id": "pick-single", "from": "dispatch", "to": "single", "label": "supports(1)" },
+    { "id": "pick-ladder", "from": "dispatch", "to": "ladder", "label": "supports(3)" },
+    { "id": "pick-full", "from": "dispatch", "to": "full", "label": "supports(4)" },
+    { "id": "pick-none", "from": "dispatch", "to": "none", "label": "兜底" },
+    { "id": "ladder-miss", "from": "ladder", "to": "no-reduce", "label": "未命中", "variant": "dashed" },
+    { "id": "full-miss", "from": "full", "to": "no-reduce", "label": "未命中", "variant": "dashed" },
+    { "id": "none-reduce", "from": "none", "to": "no-reduce" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "calcCartPromotion 只剩分组与调度，不再随促销类型改动",
+      "改一种算法只动对应的一个策略类",
+      "新增促销类型：新增一个策略类 + 在 appliers() 的 NoneApplier 之前登记（改 2 处）"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "登记顺序成为隐含约束：NoneApplier 放前面会吞掉所有类型",
+      "库存、积分、成长值赋值在三个策略里仍重复，本次未消除",
+      "策略是私有内部类，对外接口不变，测试仍经 calcCartPromotion"
+    ] },
+    { "dot": "cyan", "title": "行为保持证据", "items": [
+      "SDCE400Test 8 项，改前改后都通过，断言不改",
+      "变异：删单品 setPrice → 2 项变红；满减只处理首项 → 1 项变红"
+    ] }
+  ]
+}
