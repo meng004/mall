@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E4-01 改后：提取 writeUseTypeRelations（exp/e4-01 76a99555）",
+    "output": "e4-01.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "76a99555e112ee496f524f94f4f06ed4fd3a4fae"
+    }
+  },
+  "components": [
+    { "id": "ctl-add", "type": "frontend", "label": "SmsCouponController.add", "sublabel": "POST /coupon/create", "pos": [40, 80], "size": [200, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsCouponController.java", "line": 26, "end_line": 35, "label": "add → couponService.create" }] },
+    { "id": "create", "type": "backend", "label": "create", "sublabel": "初始化计数后插入券", "pos": [360, 80], "size": [200, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 38, "end_line": 46 }] },
+    { "id": "coupon-mapper", "type": "database", "label": "SmsCouponMapper", "sublabel": "insert / updateByPrimaryKey", "pos": [360, 240], "size": [200, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 43, "label": "create: insert" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 74, "label": "update: updateByPrimaryKey" }
+      ] },
+    { "id": "write", "type": "backend", "label": "writeUseTypeRelations", "sublabel": "useType==2 / ==1：回填 → [删除] → 插入", "tag": "共享", "pos": [700, 220], "size": [260, 104],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 79, "end_line": 101, "label": "提取的私有方法" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 87, "end_line": 89, "label": "商品分支 if (replaceExisting)" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 96, "end_line": 98, "label": "分类分支 if (replaceExisting)" }
+      ] },
+    { "id": "rel-dao", "type": "database", "label": "关联 DAO insertList", "sublabel": "商品关联 / 分类关联", "pos": [1060, 240], "size": [220, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 31, "end_line": 34, "label": "两个 DAO 字段" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 90, "label": "商品 insertList" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 99, "label": "分类 insertList" }
+      ] },
+    { "id": "ctl-update", "type": "frontend", "label": "SmsCouponController.update", "sublabel": "POST /coupon/update/{id}", "pos": [40, 400], "size": [200, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/SmsCouponController.java", "line": 48, "end_line": 57, "label": "update → couponService.update" }] },
+    { "id": "update", "type": "backend", "label": "update", "sublabel": "setId(id) 后更新券", "pos": [360, 400], "size": [200, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 71, "end_line": 77 }] },
+    { "id": "delete", "type": "backend", "label": "deleteProductRelation 等", "sublabel": "Mapper.deleteByExample(coupon_id)", "pos": [1060, 400], "size": [220, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 59, "end_line": 69, "label": "两个私有删除方法（未改）" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 88, "label": "商品分支删除" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/SmsCouponServiceImpl.java", "line": 97, "label": "分类分支删除" }
+      ] }
+  ],
+  "connections": [
+    { "id": "http-add", "from": "ctl-add", "to": "create", "label": "create", "variant": "emphasis" },
+    { "id": "create-insert", "from": "create", "to": "coupon-mapper", "label": "insert" },
+    { "id": "create-to-write", "from": "create", "to": "write", "label": "false, null" },
+    { "id": "http-update", "from": "ctl-update", "to": "update", "label": "update", "variant": "emphasis" },
+    { "id": "update-mapper", "from": "update", "to": "coupon-mapper", "label": "updateByPrimaryKey" },
+    { "id": "update-to-write", "from": "update", "to": "write", "label": "true, id" },
+    { "id": "write-insert", "from": "write", "to": "rel-dao", "label": "insertList" },
+    { "id": "write-delete", "from": "write", "to": "delete", "label": "仅 replaceExisting", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "create 44 行、update 75 行各只剩一行调用；回填与插入集中到 writeUseTypeRelations（82–101），商品分支仍在分类分支之前",
+      "“更新才删”变成 replaceExisting 条件，位置仍在回填之后、插入之前（87–89、96–98）",
+      "新增 useType=3：只改 writeUseTypeRelations 1 处，两个调用点不动（源码论证，未演示）"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "布尔参数把创建、更新的差异放进同一方法，读者要回到 44、75 行调用点才知道 true/false 的含义",
+      "couponId 参数冗余：更新时等于 couponParam.getId()（73 行 setId(id)），创建时传 null 且不会用到",
+      "方法内仍是两个独立 if，分支数没减少；比较后未采用策略模式"
+    ] },
+    { "dot": "cyan", "title": "行为保持证据", "items": [
+      "SDCE401Test 10 项：改前 dcaa93b3、改后 76a99555 都是 10/0/0；refactor 提交只改 SmsCouponServiceImpl，不改测试",
+      "变异（终审实测）：把删除移到回填之前 → 2 项变红",
+      "局限：Mapper/DAO 为 mock；真实 MySQL 回填、事务、useType 为 null 未覆盖"
+    ] }
+  ]
+}
