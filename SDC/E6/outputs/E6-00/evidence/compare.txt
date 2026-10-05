@@ -1,0 +1,7 @@
+示例：E6-00  模块：mall-portal  测试：StockWarningTest
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 4, Failures: 3, Errors: 0, Skipped: 0
+[ERROR]   StockWarningTest.orderWarnsAfterLockingAndKeepsResult:148 expected: <1> but was: <0>
+[ERROR]   StockWarningTest.paymentWarnsOnlyBelowThresholdAndKeepsReturnValue:60 expected: <1> but was: <0>
+[ERROR]   StockWarningTest.warningReadFailureDoesNotChangeSuccessfulPaymentResult:99 expected: <1> but was: <0>
+改后 4a5f25b9：pass（预期 pass）  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

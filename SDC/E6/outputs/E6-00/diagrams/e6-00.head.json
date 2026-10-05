@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-00 改后：私有方法 warnSku 在两个库存变更点之后只读预警（exp/e6-00 4a5f25b9）",
+    "output": "e6-00.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "4a5f25b9d01ec5582da8ef95065f1dd4c37e136d"
+    }
+  },
+  "components": [
+    {
+      "id": "ctl",
+      "type": "frontend",
+      "label": "OmsPortalOrderController",
+      "sublabel": "generateOrder · paySuccess",
+      "pos": [
+        40,
+        155
+      ],
+      "size": [
+        210,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 41,
+          "end_line": 46,
+          "label": "generateOrder"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 49,
+          "end_line": 54,
+          "label": "paySuccess"
+        }
+      ]
+    },
+    {
+      "id": "gen",
+      "type": "backend",
+      "label": "generateOrder",
+      "sublabel": "OmsPortalOrderServiceImpl",
+      "pos": [
+        350,
+        40
+      ],
+      "size": [
+        200,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 168,
+          "end_line": 172,
+          "label": "lockStock 后逐 SKU 预警"
+        }
+      ]
+    },
+    {
+      "id": "pay",
+      "type": "backend",
+      "label": "paySuccess",
+      "sublabel": "OmsPortalOrderServiceImpl",
+      "pos": [
+        350,
+        270
+      ],
+      "size": [
+        200,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 269,
+          "end_line": 275,
+          "label": "扣库存后预警、仍 return count"
+        }
+      ]
+    },
+    {
+      "id": "lock",
+      "type": "backend",
+      "label": "lockStock",
+      "sublabel": "lockStock 加下单数量",
+      "pos": [
+        680,
+        40
+      ],
+      "size": [
+        200,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 744,
+          "end_line": 750,
+          "label": "读 SKU、改 lockStock"
+        }
+      ]
+    },
+    {
+      "id": "mapper",
+      "type": "database",
+      "label": "PmsSkuStockMapper",
+      "sublabel": "lowStock 只有管理端写入",
+      "pos": [
+        980,
+        40
+      ],
+      "size": [
+        210,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsSkuStock.java",
+          "line": 21,
+          "label": "lowStock 字段"
+        },
+        {
+          "path": "mall-admin/src/main/resources/dao/PmsSkuStockDao.xml",
+          "line": 5,
+          "end_line": 11,
+          "label": "管理端写 low_stock"
+        }
+      ]
+    },
+    {
+      "id": "warn",
+      "type": "backend",
+      "label": "warnSku",
+      "sublabel": "私有方法，只读，不改结果",
+      "tag": "新增",
+      "pos": [
+        680,
+        155
+      ],
+      "size": [
+        200,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 785,
+          "end_line": 793,
+          "label": "读失败只记日志"
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 794,
+          "end_line": 802,
+          "label": "严格小于才告警"
+        }
+      ]
+    },
+    {
+      "id": "dao",
+      "type": "database",
+      "label": "PortalOrderDao",
+      "sublabel": "updateSkuStock",
+      "pos": [
+        680,
+        380
+      ],
+      "size": [
+        200,
+        64
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/resources/dao/PortalOrderDao.xml",
+          "line": 50,
+          "end_line": 68,
+          "label": "stock 与 lock_stock 同减"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c-gen",
+      "from": "ctl",
+      "to": "gen",
+      "label": "下单",
+      "fromSide": "top",
+      "toSide": "left"
+    },
+    {
+      "id": "c-pay",
+      "from": "ctl",
+      "to": "pay",
+      "label": "付款回调",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "gen-lock",
+      "from": "gen",
+      "to": "lock",
+      "label": "lockStock"
+    },
+    {
+      "id": "lock-mapper",
+      "from": "lock",
+      "to": "mapper",
+      "label": "读 / 写 SKU"
+    },
+    {
+      "id": "pay-dao",
+      "from": "pay",
+      "to": "dao",
+      "label": "updateSkuStock",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "gen-gap",
+      "from": "gen",
+      "to": "warn",
+      "label": "锁库存后：逐 SKU",
+      "fromSide": "bottom",
+      "toSide": "left"
+    },
+    {
+      "id": "pay-gap",
+      "from": "pay",
+      "to": "warn",
+      "label": "扣库存后：逐 SKU",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "warn-mapper",
+      "from": "warn",
+      "to": "mapper",
+      "label": "selectByPrimaryKey（只读）",
+      "variant": "emphasis",
+      "fromSide": "right",
+      "toSide": "bottom"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "变化",
+      "items": [
+        "warnSku（785–802）严格小于才 WARN；空值返回（794–797）",
+        "调用在 170–172 与 271–273；接口与 SQL 不变"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "职责落点与备选",
+      "items": [
+        "私有方法，已有 Mapper，不加 Bean",
+        "A 定时扫描（OrderTimeOutCancelTask:24，14 行 //@Component 已注释）不是交易后即时；B 改 PortalOrderDao.xml 50–68 会动扣库存语句"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "代价",
+      "items": [
+        "各多一次主键查询，在事务内（OmsPortalOrderService 26、32 行）；只捕获 DataAccessException（789）",
+        "同减 stock 与 lock_stock，可售不变；低于阈值各记一条"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "证据",
+      "items": [
+        "4 项 Mock。37–80 返回 3；82–105 记 unavailable 仍返回 3。锁定后才告警，扣库存异常不吞",
+        "改前第 60、99、148 行失败（expected 1 but 0），改后通过；MySQL 与并发未验证"
+      ]
+    }
+  ]
+}

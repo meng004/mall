@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-00 改前：下单锁库存与付款扣库存之后都没有预警（基线 dcaa93b3）",
+    "output": "e6-00.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "ctl", "type": "frontend", "label": "OmsPortalOrderController", "sublabel": "generateOrder · paySuccess", "pos": [40, 155], "size": [210, 64],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java", "line": 41, "end_line": 46, "label": "generateOrder" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java", "line": 49, "end_line": 54, "label": "paySuccess" }
+      ] },
+    { "id": "gen", "type": "backend", "label": "generateOrder", "sublabel": "OmsPortalOrderServiceImpl", "pos": [350, 40], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 164, "end_line": 165, "label": "锁库存后继续算金额" }] },
+    { "id": "pay", "type": "backend", "label": "paySuccess", "sublabel": "OmsPortalOrderServiceImpl", "pos": [350, 270], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 253, "end_line": 265, "label": "扣库存后直接返回 count" }] },
+    { "id": "lock", "type": "backend", "label": "lockStock", "sublabel": "lockStock 加下单数量", "pos": [680, 40], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 734, "end_line": 740, "label": "读 SKU、改 lockStock" }] },
+    { "id": "mapper", "type": "database", "label": "PmsSkuStockMapper", "sublabel": "lowStock 只有管理端写入", "pos": [980, 40], "size": [210, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsSkuStock.java", "line": 21, "label": "lowStock 字段" },
+        { "path": "mall-admin/src/main/resources/dao/PmsSkuStockDao.xml", "line": 5, "end_line": 11, "label": "管理端写 low_stock" }
+      ] },
+    { "id": "gap", "type": "backend", "label": "没有预警检查", "sublabel": "需求在基线不成立", "tag": "缺口", "pos": [680, 155], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 263, "end_line": 264, "label": "updateSkuStock 后 return" }] },
+    { "id": "dao", "type": "database", "label": "PortalOrderDao", "sublabel": "updateSkuStock", "pos": [680, 380], "size": [200, 64],
+      "sources": [{ "path": "mall-portal/src/main/resources/dao/PortalOrderDao.xml", "line": 50, "end_line": 68, "label": "stock 与 lock_stock 同减" }] }
+  ],
+  "connections": [
+    { "id": "c-gen", "from": "ctl", "to": "gen", "label": "下单", "fromSide": "top", "toSide": "left" },
+    { "id": "c-pay", "from": "ctl", "to": "pay", "label": "付款回调", "variant": "emphasis", "fromSide": "bottom", "toSide": "left" },
+    { "id": "gen-lock", "from": "gen", "to": "lock", "label": "lockStock" },
+    { "id": "lock-mapper", "from": "lock", "to": "mapper", "label": "读 / 写 SKU" },
+    { "id": "pay-dao", "from": "pay", "to": "dao", "label": "updateSkuStock", "fromSide": "bottom", "toSide": "left" },
+    { "id": "gen-gap", "from": "gen", "to": "gap", "label": "锁库存后：无检查", "variant": "dashed", "fromSide": "bottom", "toSide": "left" },
+    { "id": "pay-gap", "from": "pay", "to": "gap", "label": "扣库存后：无检查", "variant": "dashed", "fromSide": "right", "toSide": "bottom" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "需求与现状", "items": [
+      "需求：交易使 SKU 可售库存（stock − lockStock）低于 lowStock 时记预警，且不影响下单与支付结果",
+      "lowStock 字段已存在，管理端会写入它；基线的 mall-portal 没有任何地方读它",
+      "paySuccess 在 updateSkuStock 之后直接 return count；下单在 lockStock 之后继续算金额",
+      "基线跑 StockWarningTest：3 项业务断言失败（expected 1 but 0，第 60、99、148 行）"
+    ] }
+  ]
+}
