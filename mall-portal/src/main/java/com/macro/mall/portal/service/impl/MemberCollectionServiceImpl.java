@@ -41,15 +41,15 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
         productCollection.setMemberIcon(member.getIcon());
         MemberProductCollection findCollection = productCollectionRepository.findByMemberIdAndProductId(productCollection.getMemberId(), productCollection.getProductId());
         if (findCollection == null) {
-            if (sqlEnable) {
-                PmsProduct product = productMapper.selectByPrimaryKey(productCollection.getProductId());
-                if (product == null || product.getDeleteStatus() == 1) {
-                    return 0;
-                }
-                productCollection.setProductName(product.getName());
-                productCollection.setProductSubTitle(product.getSubTitle());
-                productCollection.setProductPrice(product.getPrice() + "");
-                productCollection.setProductPic(product.getPic());
+            ProductSnapshotLookup.Read read = ProductSnapshotLookup.read(sqlEnable, productCollection.getProductId(), productMapper);
+            if (read.source() == ProductSnapshotLookup.Source.MISSING) {
+                return 0;
+            }
+            if (read.source() == ProductSnapshotLookup.Source.PRODUCT) {
+                productCollection.setProductName(read.snapshot().name());
+                productCollection.setProductSubTitle(read.snapshot().subTitle());
+                productCollection.setProductPrice(read.snapshot().price());
+                productCollection.setProductPic(read.snapshot().pic());
             }
             productCollectionRepository.save(productCollection);
             count = 1;
@@ -80,5 +80,37 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
     public void clear() {
         UmsMember member = memberService.getCurrentMember();
         productCollectionRepository.deleteAllByMemberId(member.getId());
+    }
+}
+
+final class ProductSnapshotLookup {
+    private ProductSnapshotLookup() {
+    }
+
+    enum Source { REQUEST, MISSING, PRODUCT }
+
+    record Snapshot(String name, String subTitle, String price, String pic) {
+    }
+
+    record Read(Source source, Snapshot snapshot) {
+    }
+
+    static Read read(Boolean sqlEnable, Long productId, PmsProductMapper productMapper) {
+        if (!sqlEnable) {
+            return new Read(Source.REQUEST, null);
+        }
+        PmsProduct product = productMapper.selectByPrimaryKey(productId);
+        if (product == null || product.getDeleteStatus() == 1) {
+            return new Read(Source.MISSING, null);
+        }
+        return new Read(Source.PRODUCT, new Snapshot(
+                product.getName(),
+                product.getSubTitle(),
+                priceText(product),
+                product.getPic()));
+    }
+
+    static String priceText(PmsProduct product) {
+        return product.getPrice() + "";
     }
 }

@@ -1,7 +1,6 @@
 package com.macro.mall.portal.service.impl;
 
 import com.macro.mall.mapper.PmsProductMapper;
-import com.macro.mall.model.PmsProduct;
 import com.macro.mall.model.UmsMember;
 import com.macro.mall.portal.domain.MemberReadHistory;
 import com.macro.mall.portal.repository.MemberReadHistoryRepository;
@@ -44,15 +43,15 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
         memberReadHistory.setMemberIcon(member.getIcon());
         memberReadHistory.setId(null);
         memberReadHistory.setCreateTime(new Date());
-        if (sqlEnable) {
-            PmsProduct product = productMapper.selectByPrimaryKey(memberReadHistory.getProductId());
-            if (product == null || product.getDeleteStatus() == 1) {
-                return 0;
-            }
-            memberReadHistory.setProductName(product.getName());
-            memberReadHistory.setProductSubTitle(product.getSubTitle());
-            memberReadHistory.setProductPrice(product.getPrice() + "");
-            memberReadHistory.setProductPic(product.getPic());
+        ProductSnapshotLookup.Read read = ProductSnapshotLookup.read(sqlEnable, memberReadHistory.getProductId(), productMapper);
+        if (read.source() == ProductSnapshotLookup.Source.MISSING) {
+            return 0;
+        }
+        if (read.source() == ProductSnapshotLookup.Source.PRODUCT) {
+            memberReadHistory.setProductName(read.snapshot().name());
+            memberReadHistory.setProductSubTitle(read.snapshot().subTitle());
+            memberReadHistory.setProductPrice(read.snapshot().price());
+            memberReadHistory.setProductPic(read.snapshot().pic());
         }
         memberReadHistoryRepository.save(memberReadHistory);
         return 1;
