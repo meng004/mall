@@ -1,0 +1,70 @@
+基线提交：dcaa93b3150352e5044708d7211b5bed0af4509f
+桩只加签名不实现：在该基线上只给 PmsBrandService、PmsBrandServiceImpl 增加五参数 listBrand，给 PmsBrandController.getList 增加 factoryStatus 参数；新方法直接委托旧四参数 listBrand，忽略 factoryStatus，不做筛选，也不做校验。
+命令：mvn -B -pl mall-admin -am -DskipTests=false -Dtest=SDCE602Test,SDCE602DatabaseTest -Dsurefire.failIfNoSpecifiedTests=false test
+日期：2026-10-08
+测试类：SDCE602Test、SDCE602DatabaseTest 取自 test 提交 378761c0d8c724558dc15adc861061f95a35a2e2，与该提交中的文件逐字节相同。
+工作区：上述命令在该临时 worktree 中执行。基线树里没有未入库的 SDC/environment/application-sdc.yml，已从主工作区原样复制（与 compare.sh 相同），否则数据库测试会因找不到账号而中止。
+
+桩 diff（仅上述三个产品文件）：
+diff --git a/mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java b/mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java
+index 0a17a3e6..a0645035 100644
+--- a/mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java
++++ b/mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java
+@@ -79,8 +79,9 @@ public class PmsBrandController {
+     public CommonResult<CommonPage<PmsBrand>> getList(@RequestParam(value = "keyword", required = false) String keyword,
+                                                       @RequestParam(value = "showStatus",required = false) Integer showStatus,
+                                                       @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+-                                                      @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
+-        List<PmsBrand> brandList = brandService.listBrand(keyword,showStatus,pageNum, pageSize);
++                                                      @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
++                                                      @RequestParam(value = "factoryStatus", required = false) Integer factoryStatus) {
++        List<PmsBrand> brandList = brandService.listBrand(keyword, showStatus, pageNum, pageSize, factoryStatus);
+         return CommonResult.success(CommonPage.restPage(brandList));
+     }
+ 
+diff --git a/mall-admin/src/main/java/com/macro/mall/service/PmsBrandService.java b/mall-admin/src/main/java/com/macro/mall/service/PmsBrandService.java
+index 2bfc3a63..f592ff48 100644
+--- a/mall-admin/src/main/java/com/macro/mall/service/PmsBrandService.java
++++ b/mall-admin/src/main/java/com/macro/mall/service/PmsBrandService.java
+@@ -42,6 +42,8 @@ public interface PmsBrandService {
+      */
+     List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize);
+ 
++    List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize, Integer factoryStatus);
++
+     /**
+      * 获取品牌详情
+      */
+diff --git a/mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java b/mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java
+index c426bf3e..622d7190 100644
+--- a/mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java
++++ b/mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java
+@@ -88,6 +88,11 @@ public class PmsBrandServiceImpl implements PmsBrandService {
+         return brandMapper.selectByExample(pmsBrandExample);
+     }
+ 
++    @Override
++    public List<PmsBrand> listBrand(String keyword, Integer showStatus, int pageNum, int pageSize, Integer factoryStatus) {
++        return listBrand(keyword, showStatus, pageNum, pageSize);
++    }
++
+     @Override
+     public PmsBrand getBrand(Long id) {
+         return brandMapper.selectByPrimaryKey(id);
+
+失败用例（业务断言；行号取自 surefire 堆栈里测试类的第一帧）：
+- SDCE602DatabaseTest.insertedBrandsPageAfterFactoryFilterAndOldApiStaysCompatible 第 80 行
+  expected: <3> actual: <4>
+- SDCE602Test.controllerPassesFactoryStatusIntoTheQuery 第 102 行
+  expected: <true> actual: <false>
+- SDCE602Test.factoryStatusOneIsAndedBeforePaging 第 41 行
+  expected: <true> actual: <false>
+- SDCE602Test.factoryStatusTwoIsRejectedWithoutQuery 第 87 行
+  expected: <com.macro.mall.common.exception.ApiException> actual: <nothing was thrown>
+- SDCE602Test.factoryStatusZeroIsFiltered 第 55 行
+  expected: <true> actual: <false>
+
+Tests run 行：
+[ERROR] Tests run: 6, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.909 s <<< FAILURE! -- in com.macro.mall.sdc.SDCE602Test
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 2.340 s <<< FAILURE! -- in com.macro.mall.sdc.SDCE602DatabaseTest
+[ERROR] Tests run: 7, Failures: 5, Errors: 0, Skipped: 0

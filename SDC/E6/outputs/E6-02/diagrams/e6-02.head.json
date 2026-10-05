@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-02 改后：五参数 listBrand 加厂家状态条件，旧签名委托（exp/e6-02 5f6c393d）",
+    "output": "e6-02.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "5f6c393d52056cd3276623d17d311b0db44261e3"
+    }
+  },
+  "components": [
+    { "id": "ctl", "type": "frontend", "label": "PmsBrandController", "sublabel": "GET /brand/list 新增可选参数", "tag": "改动", "pos": [40, 200], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java", "line": 79, "end_line": 86, "label": "getList 末尾加 factoryStatus" }] },
+    { "id": "old4", "type": "backend", "label": "listBrand（四参数）", "sublabel": "旧签名，传 null 委托", "tag": "保留", "pos": [40, 40], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 78, "end_line": 81, "label": "委托五参数版本" }] },
+    { "id": "svc", "type": "backend", "label": "listBrand（五参数）", "sublabel": "PmsBrandServiceImpl", "tag": "新增", "pos": [380, 200], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 83, "end_line": 102, "label": "校验、分页、拼条件" }] },
+    { "id": "validate", "type": "backend", "label": "Asserts.fail", "sublabel": "非空且不是 0/1", "tag": "新增路径", "pos": [720, 40], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 85, "end_line": 87, "label": "VALIDATE_FAILED，先于 startPage" }] },
+    { "id": "handler", "type": "backend", "label": "GlobalExceptionHandler", "sublabel": "code 404，HTTP 200", "pos": [1090, 40], "size": [240, 64],
+      "sources": [
+        { "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java", "line": 22, "end_line": 29, "label": "25–26 行 failed(errorCode)，无 ResponseStatus" },
+        { "path": "mall-common/src/main/java/com/macro/mall/common/api/ResultCode.java", "line": 10, "label": "404，参数检验失败" }
+      ] },
+    { "id": "pg", "type": "backend", "label": "PageHelper.startPage", "sublabel": "对随后的查询分页", "pos": [380, 360], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 88, "label": "先于 selectByExample" }] },
+    { "id": "crit", "type": "backend", "label": "PmsBrandExample 条件", "sublabel": "加 factory_status =（非空时）", "tag": "改动", "pos": [720, 200], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 91, "end_line": 100, "label": "三个可选条件" }] },
+    { "id": "mapper", "type": "database", "label": "PmsBrandMapper", "sublabel": "selectByExample", "pos": [1090, 200], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 101, "label": "selectByExample" }] },
+    { "id": "gen", "type": "backend", "label": "andFactoryStatusEqualTo", "sublabel": "生成方法，现在被调用", "pos": [720, 360], "size": [230, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsBrandExample.java", "line": 377, "end_line": 380, "label": "factory_status =" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 98, "end_line": 100, "label": "非空才调用" }
+      ] }
+  ],
+  "connections": [
+    { "id": "c-list", "from": "ctl", "to": "svc", "label": "factoryStatus", "variant": "emphasis" },
+    { "id": "old-svc", "from": "old4", "to": "svc", "label": "传 null", "variant": "dashed", "fromSide": "right", "toSide": "top" },
+    { "id": "svc-validate", "from": "svc", "to": "validate", "label": "非法值：不查库", "variant": "dashed", "fromSide": "right", "toSide": "left" },
+    { "id": "validate-handler", "from": "validate", "to": "handler", "label": "ApiException", "variant": "dashed" },
+    { "id": "svc-pg", "from": "svc", "to": "pg", "label": "校验后 startPage" },
+    { "id": "svc-crit", "from": "svc", "to": "crit", "label": "拼条件" },
+    { "id": "crit-mapper", "from": "crit", "to": "mapper", "label": "selectByExample" },
+    { "id": "crit-gen", "from": "crit", "to": "gen", "label": "factoryStatus 非空" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "新增五参数 listBrand（接口 48 行）。非 0/1 的非空值在 85–87 行拒绝，位于 startPage（88 行）之前，不查库",
+      "错误契约（源码，未经 HTTP）：code = 404、message「参数检验失败」、data 为 null；无 @ResponseStatus，HTTP 仍是 200",
+      "0 或 1 在同一 Criteria 上加条件（98–100 行）后 selectByExample（101 行），分页按过滤后的行计数",
+      "不带此参数的请求和旧四参数（78–81 行传 null）与改前相同。带了则会变：改前忽略，改后 0/1 筛选，其他整数拒绝"
+    ] },
+    { "dot": "violet", "title": "职责落点与备选", "items": [
+      "采用重载加委托，不改原签名（Issue #22）。查询对象已有先例，只为一个字段要新增 DTO，本次不选",
+      "校验在服务内、startPage 之前，直接调服务也生效。@FlagValidator 只保护 HTTP，失败不返回 CommonResult",
+      "用已生成的 andFactoryStatusEqualTo（377 行）。查出一页再过滤，restPage（37–46 行）的 total 仍是过滤前的数"
+    ] },
+    { "dot": "amber", "title": "代价", "items": [
+      "两个 Integer 传错位置仍能编译。控制器测试用 showStatus = 1、pageNum = 2、factoryStatus = 0",
+      "message 只能是「参数检验失败」。要写「厂家状态不正确」就得改 mall-common。非整数不进服务（未运行）",
+      "NULL 行在传 0 或 1 时不出现，两者 total 之和可能更小。课程库 12 行里没有 NULL"
+    ] },
+    { "dot": "cyan", "title": "证据", "items": [
+      "Mock 6 项不跑 SQL。非法值 2 在 startPage 前被拒绝（测试 91 行）。控制器测试直接调用，不经 Spring MVC",
+      "数据库 1 项连 13306：筛选总数 3、两页 2+1，旧接口总数 4（80–90 行）。Skipped = 0 才算数",
+      "桩只加签名：7 项中 5 项断言失败，数据库第 80 行 expected 3、actual 4。absent 只证明接口不存在"
+    ] }
+  ]
+}

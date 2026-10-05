@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-02 改前：品牌列表只能按关键字和显示状态筛选（基线 dcaa93b3）",
+    "output": "e6-02.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "ctl", "type": "frontend", "label": "PmsBrandController", "sublabel": "GET /brand/list 四个参数", "pos": [40, 200], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsBrandController.java", "line": 79, "end_line": 85, "label": "getList" }] },
+    { "id": "svc", "type": "backend", "label": "listBrand（四参数）", "sublabel": "PmsBrandServiceImpl", "pos": [380, 200], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 77, "end_line": 89, "label": "keyword、showStatus、分页" }] },
+    { "id": "pg", "type": "backend", "label": "PageHelper.startPage", "sublabel": "对随后的查询分页", "pos": [380, 360], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 78, "label": "先于 selectByExample" }] },
+    { "id": "crit", "type": "backend", "label": "PmsBrandExample 条件", "sublabel": "name LIKE、show_status =", "pos": [720, 200], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 81, "end_line": 87, "label": "只有两个条件" }] },
+    { "id": "mapper", "type": "database", "label": "PmsBrandMapper", "sublabel": "selectByExample", "pos": [1090, 200], "size": [220, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsBrandServiceImpl.java", "line": 88, "label": "selectByExample" }] },
+    { "id": "gen", "type": "backend", "label": "andFactoryStatusEqualTo", "sublabel": "已生成，没人调用", "tag": "缺口", "pos": [720, 360], "size": [230, 64],
+      "sources": [
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsBrandExample.java", "line": 377, "end_line": 380, "label": "factory_status =" },
+        { "path": "mall-mbg/src/main/java/com/macro/mall/model/PmsBrand.java", "line": 17, "label": "factoryStatus 字段" }
+      ] }
+  ],
+  "connections": [
+    { "id": "c-list", "from": "ctl", "to": "svc", "label": "listBrand", "variant": "emphasis" },
+    { "id": "svc-pg", "from": "svc", "to": "pg", "label": "startPage" },
+    { "id": "svc-crit", "from": "svc", "to": "crit", "label": "拼条件" },
+    { "id": "crit-mapper", "from": "crit", "to": "mapper", "label": "selectByExample" },
+    { "id": "crit-gen", "from": "crit", "to": "gen", "label": "未调用", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "需求与现状", "items": [
+      "需求：品牌列表可选按 factoryStatus（0 或 1）筛选，缺省不加条件，非法值按项目的校验失败处理，且不查库；条件须在分页之前生效",
+      "基线 listBrand 只拼 name LIKE 与 show_status 两个条件（82–87 行）；控制器只有四个请求参数",
+      "factory_status 的条件方法 andFactoryStatusEqualTo 与字段早已生成，但没有任何调用",
+      "compare 改前是 absent：五参数 listBrand 与五参数 getList 在基线上不存在，编译失败只证明接口不存在，不是业务断言失败"
+    ] }
+  ]
+}

@@ -1,0 +1,18 @@
+示例：E6-02  模块：mall-admin  测试：SDCE602Test,SDCE602DatabaseTest
+改前 baseline-dcaa93b3：absent（预期 absent）  
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602DatabaseTest.java:[78,56] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602DatabaseTest.java:[79,57] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[38,24] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[53,24] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[76,24] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[87,84] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[100,19] no suitable method found for getList(java.lang.String,int,int,int,int)
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602DatabaseTest.java:[78,56] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602DatabaseTest.java:[79,57] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[38,24] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[53,24] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[76,24] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[87,84] method listBrand in class com.macro.mall.service.impl.PmsBrandServiceImpl cannot be applied to given types;
+[ERROR] /tmp/tmp.ywUFKNhVzw/base/mall-admin/src/test/java/com/macro/mall/sdc/SDCE602Test.java:[100,19] no suitable method found for getList(java.lang.String,int,int,int,int)
+改后 5f6c393d：pass（预期 pass）  [INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
