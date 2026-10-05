@@ -37,76 +37,120 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
             Long productId = entry.getKey();
             PromotionProduct promotionProduct = getPromotionProductById(productId, promotionProductList);
             List<OmsCartItem> itemList = entry.getValue();
-            Integer promotionType = promotionProduct.getPromotionType();
-            if (promotionType == 1) {
-                //单品促销
-                for (OmsCartItem item : itemList) {
-                    CartPromotionItem cartPromotionItem = new CartPromotionItem();
-                    BeanUtils.copyProperties(item,cartPromotionItem);
-                    cartPromotionItem.setPromotionMessage("单品促销");
-                    //商品原价-促销价
-                    PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
-                    BigDecimal originalPrice = skuStock.getPrice();
-                    //单品促销使用原价
-                    cartPromotionItem.setPrice(originalPrice);
-                    cartPromotionItem.setReduceAmount(originalPrice.subtract(skuStock.getPromotionPrice()));
-                    cartPromotionItem.setRealStock(skuStock.getStock()-skuStock.getLockStock());
-                    cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
-                    cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
-                    cartPromotionItemList.add(cartPromotionItem);
-                }
-            } else if (promotionType == 3) {
-                //打折优惠
-                int count = getCartItemCount(itemList);
-                PmsProductLadder ladder = getProductLadder(count, promotionProduct.getProductLadderList());
-                if(ladder!=null){
-                    for (OmsCartItem item : itemList) {
-                        CartPromotionItem cartPromotionItem = new CartPromotionItem();
-                        BeanUtils.copyProperties(item,cartPromotionItem);
-                        String message = getLadderPromotionMessage(ladder);
-                        cartPromotionItem.setPromotionMessage(message);
-                        //商品原价-折扣*商品原价
-                        PmsSkuStock skuStock = getOriginalPrice(promotionProduct,item.getProductSkuId());
-                        BigDecimal originalPrice = skuStock.getPrice();
-                        BigDecimal reduceAmount = originalPrice.subtract(ladder.getDiscount().multiply(originalPrice));
-                        cartPromotionItem.setReduceAmount(reduceAmount);
-                        cartPromotionItem.setRealStock(skuStock.getStock()-skuStock.getLockStock());
-                        cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
-                        cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
-                        cartPromotionItemList.add(cartPromotionItem);
-                    }
-                }else{
-                    handleNoReduce(cartPromotionItemList,itemList,promotionProduct);
-                }
-            } else if (promotionType == 4) {
-                //满减
-                BigDecimal totalAmount= getCartItemAmount(itemList,promotionProductList);
-                PmsProductFullReduction fullReduction = getProductFullReduction(totalAmount,promotionProduct.getProductFullReductionList());
-                if(fullReduction!=null){
-                    for (OmsCartItem item : itemList) {
-                        CartPromotionItem cartPromotionItem = new CartPromotionItem();
-                        BeanUtils.copyProperties(item,cartPromotionItem);
-                        String message = getFullReductionPromotionMessage(fullReduction);
-                        cartPromotionItem.setPromotionMessage(message);
-                        //(商品原价/总价)*满减金额
-                        PmsSkuStock skuStock= getOriginalPrice(promotionProduct, item.getProductSkuId());
-                        BigDecimal originalPrice = skuStock.getPrice();
-                        BigDecimal reduceAmount = originalPrice.divide(totalAmount,RoundingMode.HALF_EVEN).multiply(fullReduction.getReducePrice());
-                        cartPromotionItem.setReduceAmount(reduceAmount);
-                        cartPromotionItem.setRealStock(skuStock.getStock()-skuStock.getLockStock());
-                        cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
-                        cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
-                        cartPromotionItemList.add(cartPromotionItem);
-                    }
-                }else{
-                    handleNoReduce(cartPromotionItemList,itemList,promotionProduct);
-                }
-            } else {
-                //无优惠
-                handleNoReduce(cartPromotionItemList, itemList,promotionProduct);
-            }
+            applyPromotion(cartPromotionItemList, itemList, promotionProduct, promotionProductList);
         }
         return cartPromotionItemList;
+    }
+
+    private void applyPromotion(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                                PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
+        Integer promotionType = promotionProduct.getPromotionType();
+        for (PromotionApplier applier : appliers()) {
+            if (applier.supports(promotionType)) {
+                applier.apply(out, itemList, promotionProduct, promotionProductList);
+                return;
+            }
+        }
+    }
+
+    private List<PromotionApplier> appliers() {
+        return Arrays.asList(new SingleApplier(), new LadderApplier(), new FullApplier(), new NoneApplier());
+    }
+
+    private interface PromotionApplier {
+        boolean supports(Integer promotionType);
+
+        void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                   PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList);
+    }
+
+    private class SingleApplier implements PromotionApplier {
+        public boolean supports(Integer promotionType) {
+            return promotionType == 1;
+        }
+
+        public void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                          PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
+            for (OmsCartItem item : itemList) {
+                CartPromotionItem cartPromotionItem = new CartPromotionItem();
+                BeanUtils.copyProperties(item, cartPromotionItem);
+                cartPromotionItem.setPromotionMessage("单品促销");
+                PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
+                BigDecimal originalPrice = skuStock.getPrice();
+                cartPromotionItem.setPrice(originalPrice);
+                cartPromotionItem.setReduceAmount(originalPrice.subtract(skuStock.getPromotionPrice()));
+                cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
+                cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
+                cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
+                out.add(cartPromotionItem);
+            }
+        }
+    }
+
+    private class LadderApplier implements PromotionApplier {
+        public boolean supports(Integer promotionType) {
+            return promotionType == 3;
+        }
+
+        public void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                          PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
+            PmsProductLadder ladder = getProductLadder(getCartItemCount(itemList), promotionProduct.getProductLadderList());
+            if (ladder == null) {
+                handleNoReduce(out, itemList, promotionProduct);
+                return;
+            }
+            for (OmsCartItem item : itemList) {
+                CartPromotionItem cartPromotionItem = new CartPromotionItem();
+                BeanUtils.copyProperties(item, cartPromotionItem);
+                cartPromotionItem.setPromotionMessage(getLadderPromotionMessage(ladder));
+                PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
+                BigDecimal originalPrice = skuStock.getPrice();
+                cartPromotionItem.setReduceAmount(originalPrice.subtract(ladder.getDiscount().multiply(originalPrice)));
+                cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
+                cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
+                cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
+                out.add(cartPromotionItem);
+            }
+        }
+    }
+
+    private class FullApplier implements PromotionApplier {
+        public boolean supports(Integer promotionType) {
+            return promotionType == 4;
+        }
+
+        public void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                          PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
+            BigDecimal totalAmount = getCartItemAmount(itemList, promotionProductList);
+            PmsProductFullReduction fullReduction = getProductFullReduction(totalAmount, promotionProduct.getProductFullReductionList());
+            if (fullReduction == null) {
+                handleNoReduce(out, itemList, promotionProduct);
+                return;
+            }
+            for (OmsCartItem item : itemList) {
+                CartPromotionItem cartPromotionItem = new CartPromotionItem();
+                BeanUtils.copyProperties(item, cartPromotionItem);
+                cartPromotionItem.setPromotionMessage(getFullReductionPromotionMessage(fullReduction));
+                PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
+                BigDecimal originalPrice = skuStock.getPrice();
+                cartPromotionItem.setReduceAmount(originalPrice.divide(totalAmount, RoundingMode.HALF_EVEN).multiply(fullReduction.getReducePrice()));
+                cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
+                cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
+                cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
+                out.add(cartPromotionItem);
+            }
+        }
+    }
+
+    private class NoneApplier implements PromotionApplier {
+        public boolean supports(Integer promotionType) {
+            return true;
+        }
+
+        public void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                          PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
+            handleNoReduce(out, itemList, promotionProduct);
+        }
     }
 
     /**
