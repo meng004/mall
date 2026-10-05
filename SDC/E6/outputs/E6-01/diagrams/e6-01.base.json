@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-01 改前：分类删除直接按主键删，不看子分类和商品（基线 dcaa93b3）",
+    "output": "e6-01.base.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    { "id": "ctl", "type": "frontend", "label": "PmsProductCategoryController", "sublabel": "POST /delete/{id}", "pos": [40, 200], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductCategoryController.java", "line": 74, "end_line": 83, "label": "count>0 成功，否则 failed()" }] },
+    { "id": "svc", "type": "backend", "label": "PmsProductCategoryServiceImpl", "sublabel": "delete(id)", "pos": [400, 200], "size": [240, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 105, "end_line": 107, "label": "只调 deleteByPrimaryKey" }] },
+    { "id": "catmapper", "type": "database", "label": "PmsProductCategoryMapper", "sublabel": "deleteByPrimaryKey", "pos": [800, 40], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 106, "label": "唯一的 Mapper 调用" }] },
+    { "id": "prodmapper", "type": "database", "label": "PmsProductMapper", "sublabel": "delete 里没有用到", "pos": [800, 360], "size": [230, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 29, "end_line": 30, "label": "已注入" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 78, "end_line": 80, "label": "只在 update 里用" }
+      ] },
+    { "id": "gap", "type": "backend", "label": "没有拒绝路径", "sublabel": "有子分类或商品也会删", "tag": "缺口", "pos": [800, 200], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 105, "end_line": 107, "label": "无任何检查" }] }
+  ],
+  "connections": [
+    { "id": "c-delete", "from": "ctl", "to": "svc", "label": "delete(id)", "variant": "emphasis" },
+    { "id": "svc-cat", "from": "svc", "to": "catmapper", "label": "deleteByPrimaryKey", "fromSide": "top", "toSide": "left" },
+    { "id": "svc-prod", "from": "svc", "to": "prodmapper", "label": "基线不查询", "variant": "dashed", "fromSide": "bottom", "toSide": "left" },
+    { "id": "svc-gap", "from": "svc", "to": "gap", "label": "无子分类、无商品检查", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "rose", "title": "需求与现状", "items": [
+      "需求：分类仍有直接子分类，或有任意商品引用（含逻辑删除商品）时拒绝删除并说明原因；分类不存在返回 0；其余照旧",
+      "基线 delete 只有一行：直接 deleteByPrimaryKey（106 行），子分类与商品都不看",
+      "PmsProductMapper 已注入，但只在 update 里同步商品的分类名，delete 没有用",
+      "基线跑 SDCE601Test：6 项里 5 项失败，都是业务断言（没抛 ApiException、expected 0 but 1，或商品条件为空）"
+    ] }
+  ]
+}

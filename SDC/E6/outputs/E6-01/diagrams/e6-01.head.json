@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "E6-01 改后：服务层 delete 先查存在、子分类、商品引用（exp/e6-01 a43e887a）",
+    "output": "e6-01.head.html",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "a43e887a6de8a45c36f3ea98f829e287270a382f"
+    }
+  },
+  "components": [
+    { "id": "ctl", "type": "frontend", "label": "PmsProductCategoryController", "sublabel": "POST /delete/{id}", "pos": [40, 200], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/controller/PmsProductCategoryController.java", "line": 74, "end_line": 83, "label": "count>0 成功，否则 failed()" }] },
+    { "id": "svc", "type": "backend", "label": "PmsProductCategoryServiceImpl", "sublabel": "delete(id)：三步检查", "tag": "改动", "pos": [400, 200], "size": [240, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 106, "end_line": 121, "label": "存在、子分类、商品、再删除" }] },
+    { "id": "catmapper", "type": "database", "label": "PmsProductCategoryMapper", "sublabel": "查存在、数子分类、删除", "pos": [800, 40], "size": [230, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 107, "end_line": 109, "label": "selectByPrimaryKey" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 110, "end_line": 112, "label": "count parent_id = id" },
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 120, "label": "deleteByPrimaryKey" }
+      ] },
+    { "id": "prodmapper", "type": "database", "label": "PmsProductMapper", "sublabel": "数商品引用，不加 delete_status", "pos": [800, 360], "size": [230, 64],
+      "sources": [{ "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 115, "end_line": 117, "label": "count product_category_id = id" }] },
+    { "id": "asserts", "type": "backend", "label": "Asserts.fail", "sublabel": "抛 ApiException，不删除", "tag": "新增路径", "pos": [800, 200], "size": [230, 64],
+      "sources": [
+        { "path": "mall-admin/src/main/java/com/macro/mall/service/impl/PmsProductCategoryServiceImpl.java", "line": 112, "end_line": 119, "label": "两处拒绝" },
+        { "path": "mall-common/src/main/java/com/macro/mall/common/exception/Asserts.java", "line": 10, "end_line": 12, "label": "fail(String)" }
+      ] },
+    { "id": "handler", "type": "backend", "label": "GlobalExceptionHandler", "sublabel": "转成 CommonResult.failed(消息)", "pos": [1150, 200], "size": [240, 64],
+      "sources": [{ "path": "mall-common/src/main/java/com/macro/mall/common/exception/GlobalExceptionHandler.java", "line": 22, "end_line": 29, "label": "28 行 failed(message)" }] }
+  ],
+  "connections": [
+    { "id": "c-delete", "from": "ctl", "to": "svc", "label": "delete(id)", "variant": "emphasis" },
+    { "id": "svc-cat", "from": "svc", "to": "catmapper", "label": "存在 · 子分类 · 删除", "fromSide": "top", "toSide": "left" },
+    { "id": "svc-prod", "from": "svc", "to": "prodmapper", "label": "商品引用数", "fromSide": "bottom", "toSide": "left" },
+    { "id": "svc-gap", "from": "svc", "to": "asserts", "label": "子分类或商品 > 0", "variant": "emphasis" },
+    { "id": "asserts-handler", "from": "asserts", "to": "handler", "label": "ApiException", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "变化", "items": [
+      "delete 从一行变成顺序检查：不存在返回 0（107–109）；有直接子分类拒绝（110–114）；有商品引用拒绝（115–119）；否则 deleteByPrimaryKey（120）",
+      "商品条件只有 product_category_id = id，没有 delete_status，逻辑删除的商品也算引用（116）",
+      "拒绝抛 ApiException（113、118），经 GlobalExceptionHandler 28 行变成 HTTP 200、code = 500、message 为原因",
+      "服务签名与控制器（74–83）不变。不存在仍走控制器 failed()，code 也是 500，只能靠 message 区分"
+    ] },
+    { "dot": "violet", "title": "职责落点与备选", "items": [
+      "落在服务 delete（106–121）。控制器 77 行是目前唯一调用方；服务已注入 productMapper（30–31），不新增依赖",
+      "备选放控制器：现在能拦住 HTTP，但要再注入两个 Mapper；以后直接调服务就会绕过",
+      "备选外键 ON DELETE RESTRICT：要改表。parent_id 用 0 表示一级（156 行）。约束错误不走 CommonResult.failed(message)",
+      "备选一条 DELETE … NOT EXISTS：能缩小并发窗口，但不存在和被拒绝都只返回 0，说不出原因，还要手写 XML"
+    ] },
+    { "dot": "amber", "title": "代价与旧调用方", "items": [
+      "有子分类或商品的分类，以前能删成功，现在被拒绝：HTTP 200、code = 500、message 是原因。空分类仍返回 1，不存在仍返回 0",
+      "三条查询和删除分开。delete 没有 @Transactional（接口 35 行），中间可插入子分类或商品；不锁行也挡不住。本次不处理",
+      "不检查筛选属性关联，也不级联删除"
+    ] },
+    { "dot": "cyan", "title": "证据", "items": [
+      "SDCE601Test 共 6 项，都是 Mock：new 真实服务，Mockito 替换两个 Mapper，不连库、不经控制器。拒绝时 never deleteByPrimaryKey（101 行）",
+      "改前 5 项业务断言失败，改后 6 项通过、Skipped=0（compare.txt）",
+      "真实删除行数未验证。含逻辑删除只证明条件没有 delete_status（103 行），替身里没有逻辑删除商品。HTTP 响应只是源码推断"
+    ] }
+  ]
+}

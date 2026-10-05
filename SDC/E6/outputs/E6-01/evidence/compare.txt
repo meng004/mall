@@ -1,0 +1,9 @@
+示例：E6-01  模块：mall-admin  测试：SDCE601Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 6, Failures: 5, Errors: 0, Skipped: 0
+[ERROR]   SDCE601Test.activeProductReferenceRejectsWithoutDelete:55->rejectProductReference:100 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE601Test.directChildRejectsWithoutDelete:47 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE601Test.logicallyDeletedProductReferenceRejectsWithoutDelete:61->rejectProductReference:100 Expected com.macro.mall.common.exception.ApiException to be thrown, but nothing was thrown.
+[ERROR]   SDCE601Test.missingCategoryReturnsZeroWithoutDelete:34 expected: <0> but was: <1>
+[ERROR]   SDCE601Test.productsOfAnotherCategoryDoNotBlockDelete:92 expected: <[product_category_id = 101]> but was: <[]>
+改后 a43e887a：pass（预期 pass）  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+结论：符合
