@@ -1,0 +1,160 @@
+{
+  "task": "E7-01",
+  "truthSource": "《Cursor候选靶点产出计划》E7课前材料与独立验收、E7-01；《教师候选靶点库》E7-01；《课程考核方案》rubric-e7。未读取实现、提示词、测试或数据库。",
+  "labelMethod": "按计划中的书面规则构造并判定",
+  "humanReview": "独立人工核对尚未进行",
+  "reviewer": null,
+  "teachingConstructed": true,
+  "notProductionData": true,
+  "exposure": "订单表、会员范围和参考时钟只供 Java 查询与核对。送模型的只有 acceptance 里 input.llm 的 text；status、日期、页码保持为空。不得把 expected、整表订单、地址或电话写入模型提示。",
+  "clock": {
+    "zoneId": "Asia/Shanghai",
+    "zoneDeclaredAs": "教学夹具声明的 ZoneId，不是从源码读出的项目时区",
+    "instant": "2026-03-02T09:00:00+08:00",
+    "localDate": "2026-03-02",
+    "localWeekday": "MONDAY"
+  },
+  "timeRules": {
+    "LAST_WEEK": "参考时刻所在本地周一的 00:00 为右开端，上周一 00:00 为左闭端。本夹具为 [2026-02-23T00:00:00+08:00, 2026-03-02T00:00:00+08:00)。",
+    "TODAY": "[2026-03-02T00:00:00+08:00, 2026-03-03T00:00:00+08:00)",
+    "YESTERDAY": "[2026-03-01T00:00:00+08:00, 2026-03-02T00:00:00+08:00)",
+    "ANY": "不附加创建时间条件",
+    "RANGE": "fromDate 当天 00:00 左闭；throughDate 含当日，untilExclusive 为 throughDate 的次日 00:00。只接受文本中的明确 ISO 日期，不由模型计算时区偏移。",
+    "supportedPeriods": [
+      "ANY",
+      "TODAY",
+      "YESTERDAY",
+      "LAST_WEEK",
+      "RANGE"
+    ]
+  },
+  "memberScope": {
+    "currentMemberId": 900001,
+    "otherMemberId": 900002,
+    "requestCarriesMemberId": false,
+    "note": "教学构造会员编号，不是生产会员，不含姓名、电话、地址、Cookie 或 Token。"
+  },
+  "orderStatus": {
+    "source": "订单状态字段说明",
+    "codes": {
+      "0": "待付款",
+      "1": "待发货",
+      "2": "已发货",
+      "3": "已完成",
+      "4": "已关闭",
+      "5": "无效订单"
+    }
+  },
+  "queryRules": [
+    "只返回 currentMemberId 且 deleted=false 的订单。",
+    "正常题的状态语义是“待发货”，即已付款且未寄出。含糊的“没发货”必须追问，不得扩大到未付款，也不得擅自收成待发货。",
+    "创建时间倒序；筛选在分页前完成；total 是筛选后的总数，不是当前页条数。",
+    "物流公司或单号为空表示未记录，不得编造到达时间、当前位置或未发货原因。",
+    "不接受取消、改状态、SQL、按订单号查询、金额条件和导出。这些都不是本题查询。"
+  ],
+  "orders": [
+    {
+      "id": 71001,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-02-24T10:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71002,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-02-28T15:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": "教学物流",
+      "logisticsCode": "T-NO-001"
+    },
+    {
+      "id": 71003,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-02-23T00:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71004,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-03-02T00:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71005,
+      "memberId": 900001,
+      "statusName": "未付款",
+      "createdAt": "2026-02-25T12:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71006,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-02-26T12:00:00+08:00",
+      "deleted": true,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71007,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-03-02T08:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": "教学物流",
+      "logisticsCode": "T-NO-002"
+    },
+    {
+      "id": 71008,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-03-01T20:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71009,
+      "memberId": 900001,
+      "statusName": "待发货",
+      "createdAt": "2026-01-15T10:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 71010,
+      "memberId": 900001,
+      "statusName": "未付款",
+      "createdAt": "2026-03-02T07:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": null,
+      "logisticsCode": null
+    },
+    {
+      "id": 72001,
+      "memberId": 900002,
+      "statusName": "待发货",
+      "createdAt": "2026-02-24T11:00:00+08:00",
+      "deleted": false,
+      "logisticsCompany": "教学物流",
+      "logisticsCode": "T-NO-OTHER"
+    }
+  ],
+  "unresolved": [
+    "夹具里的“未付款”不是状态说明中的“待付款”，题目文字不能唯一对应到 0，这些订单不写状态整数。",
+    "Result.message 的文案未规定，expected.message 为 null，不作字面精确匹配。"
+  ]
+}
