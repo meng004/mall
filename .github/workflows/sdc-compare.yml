@@ -1,0 +1,33 @@
+# 示例分支（exp/e<实验>-<编号>）推送时重跑改前/改后对照；结论不符合预期则失败。
+name: 示例改前/改后对照
+on:
+  push:
+    branches: ['exp/e*-*']
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+      - name: 启动课程 MySQL（13306，导入 mall.sql）
+        run: |
+          C="docker compose -f SDC/environment/compose.yml"
+          $C up -d mysql
+          for i in $(seq 60); do
+            $C exec -T mysql sh -c 'mysql -umall -p"$MYSQL_PASSWORD" -e "select 1 from mall.pms_product limit 1"' >/dev/null 2>&1 && exit 0
+            sleep 5
+          done
+          $C logs mysql | tail -30; exit 1
+      - name: 改前/改后对照
+        env:
+          MVN_OFFLINE: ''
+        run: |
+          ID=$(echo "${GITHUB_REF_NAME#exp/}" | tr a-z A-Z)
+          SDC/compare.sh "$ID" | tee -a "$GITHUB_STEP_SUMMARY"
