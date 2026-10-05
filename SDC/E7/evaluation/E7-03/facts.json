@@ -1,0 +1,94 @@
+{
+  "task": "E7-03",
+  "truthSource": "计划 E7-03 与业务卡 E7-03，以及 rubric-e7。未读取退货实现。示例 JSON 的 reasonId=7 是协议示例，不是本验收的原因编号。",
+  "labelMethod": "按计划中的书面规则构造并判定",
+  "humanReview": "独立人工核对尚未进行",
+  "reviewer": null,
+  "teachingConstructed": true,
+  "notProductionData": true,
+  "exposure": "模型可见商品线索、允许原因的 id 和名称、最大数量、问题文本。serviceContext 的订单号、订单项和附件 ID 只给 Java。不得把 reasonId、quantity 的表单值、附件 ID、expected、姓名、电话、地址或金额发给模型。",
+  "reasons": [
+    {
+      "id": 17,
+      "name": "质量"
+    },
+    {
+      "id": 18,
+      "name": "尺码不符"
+    },
+    {
+      "id": 19,
+      "name": "物流破损"
+    }
+  ],
+  "reasonJudgement": {
+    "17": "质量：开胶、开线、质量问题、质量不好。计划示例“鞋底开胶”归质量。",
+    "18": "尺码不符：尺码、大小不合适、码数不对。",
+    "19": "物流破损：运输、物流、快递造成的破损或淋雨。",
+    "note": "这是按原因名称作的语义归属，供核对 expected。它不是逐条答案表，也不替代普通表单里已经选好的 reasonId。"
+  },
+  "quantityRules": [
+    "文本明确的 1 或 2 且不超过 maxQuantity=2 时采用该数量。",
+    "“两双都退”“两双…都退”“两双…全部退货”为 2。",
+    "超过 2、与“两双”矛盾的 3、或只给出越界数量时，quantity 为 null，不得夹到 2，也不得采用 99。"
+  ],
+  "proofRule": "本集由夹具声明 proofRequired。附件是否已上传只看来自 serviceContext.uploadedProofIds，不看文本里的“照片已经上传”。要求凭证且附件集合为空时，missingFields 含 proof，但原因和数量仍可成立，state 仍为 OK。规格把这种情况写成“提示”，把无法确定商品或数量写成“追问”。",
+  "missingFieldNames": {
+    "proof": "需要凭证但可信附件为空",
+    "quantity": "数量矛盾、缺失或越界",
+    "item": "无法确定是哪一件商品",
+    "note": "缺项名字是本集对契约字段的称呼，规格没有单列枚举。"
+  },
+  "fixtures": {
+    "A": {
+      "orderId": 73001,
+      "itemId": 73011,
+      "maxQuantity": 2,
+      "allowedReasonIds": [
+        17,
+        18,
+        19
+      ],
+      "proofRequired": true,
+      "uploadedProofIds": []
+    },
+    "B": {
+      "orderId": 73001,
+      "itemId": 73011,
+      "maxQuantity": 2,
+      "allowedReasonIds": [
+        17,
+        18,
+        19
+      ],
+      "proofRequired": false,
+      "uploadedProofIds": []
+    },
+    "C": {
+      "orderId": 73001,
+      "itemId": 73011,
+      "maxQuantity": 2,
+      "allowedReasonIds": [
+        17,
+        18,
+        19
+      ],
+      "proofRequired": true,
+      "uploadedProofIds": [
+        "P-TEACH-1"
+      ]
+    },
+    "unselectedCandidate": {
+      "orderId": 73002,
+      "itemId": 73012,
+      "productClue": "帆布鞋",
+      "note": "仅在无法确定商品时存在，不得被猜选。"
+    }
+  },
+  "boundaries": [
+    "只返回建议，不保存、不审批、不计算退款金额。",
+    "原因必须属于 17、18、19。",
+    "description 可以改写，本集不把润色文本当精确匹配，expected.description 为 null。",
+    "evidence 的值必须是问题文本的连续片段。"
+  ]
+}

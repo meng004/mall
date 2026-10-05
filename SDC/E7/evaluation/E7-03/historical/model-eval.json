@@ -1,0 +1,41 @@
+{
+  "evaluatedAt" : "2026-10-04T03:42:37.605337Z",
+  "harnessNote" : "验收文件把模型输入放在 input.llm 或 input.text，普通输入放在 input.form。本次只改评测器入参组装：expected、kind 和标准答案不进入模型。这不是盲测调参，也没有改产品提示词。",
+  "humanReview" : "独立人工核对尚未进行",
+  "courseOfflineTests" : "课程离线测试已通过，与模型放行分开",
+  "model" : "grok-4.7-high-fast",
+  "cost" : "无数据",
+  "usage" : "供应商未返回",
+  "isolatedDatabase" : true,
+  "databaseNote" : "订单号和附件只留在 Java 上下文。模型提示由产品自行带上允许原因、最大数量和是否需要凭证，不带 expected。退货写入器未被题目数据调用；若产品调用则记缺库。",
+  "stopped" : true,
+  "modelCalls" : 1,
+  "elapsedMillis" : 60045,
+  "codeVerdict" : "INCOMPLETE",
+  "decision" : "阻塞",
+  "results" : [ {
+    "id" : "E7-03-N01",
+    "kind" : "normal",
+    "implementation" : "existing",
+    "passed" : false,
+    "actualState" : "NEEDS_INPUT",
+    "elapsedMillis" : 0,
+    "modelCalls" : 0,
+    "error" : "",
+    "text" : "买了两双，一双鞋底开胶，只退这一双",
+    "modelOutput" : [ ],
+    "cost" : "无数据"
+  }, {
+    "id" : "E7-03-N01",
+    "kind" : "normal",
+    "implementation" : "llm",
+    "passed" : false,
+    "actualState" : "UNAVAILABLE",
+    "elapsedMillis" : 60039,
+    "modelCalls" : 1,
+    "error" : "IllegalStateException: Cursor model request timed out",
+    "text" : "买了两双，一双鞋底开胶，只退这一双",
+    "modelOutput" : [ "" ],
+    "cost" : "无数据"
+  } ]
+}
