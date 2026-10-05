@@ -85,7 +85,7 @@ public class PmsProductServiceImpl implements PmsProductService {
         //添加sku库存信息
         relateAndInsertList(skuStockDao, productParam.getSkuStockList(), productId);
         //添加商品参数,添加自定义商品规格
-        relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), productId);
+        insertProductAttributeValues(productParam.getProductAttributeValueList(), productId);
         //关联专题
         relateAndInsertList(subjectProductRelationDao, productParam.getSubjectProductRelationList(), productId);
         //关联优选
@@ -145,7 +145,7 @@ public class PmsProductServiceImpl implements PmsProductService {
         PmsProductAttributeValueExample productAttributeValueExample = new PmsProductAttributeValueExample();
         productAttributeValueExample.createCriteria().andProductIdEqualTo(id);
         productAttributeValueMapper.deleteByExample(productAttributeValueExample);
-        relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), id);
+        insertProductAttributeValues(productParam.getProductAttributeValueList(), id);
         //关联专题
         CmsSubjectProductRelationExample subjectProductRelationExample = new CmsSubjectProductRelationExample();
         subjectProductRelationExample.createCriteria().andProductIdEqualTo(id);
@@ -298,6 +298,29 @@ public class PmsProductServiceImpl implements PmsProductService {
             productExample.or().andDeleteStatusEqualTo(0).andProductSnLike("%" + keyword + "%");
         }
         return productMapper.selectByExample(productExample);
+    }
+
+    /**
+     * 商品属性值直接调用类型化 DAO。空列表不插入。
+     * 外部失败保持反射路径的 RuntimeException：message 与 cause 仍为空，不把 DAO 异常补成 cause。
+     */
+    private void insertProductAttributeValues(List<PmsProductAttributeValue> values, Long productId) {
+        try {
+            if (CollectionUtils.isEmpty(values)) {
+                return;
+            }
+            for (PmsProductAttributeValue value : values) {
+                value.setId(null);
+                value.setProductId(productId);
+            }
+            productAttributeValueDao.insertList(values);
+        } catch (Exception failure) {
+            Exception published = failure instanceof java.lang.reflect.InvocationTargetException
+                    ? failure
+                    : new java.lang.reflect.InvocationTargetException(failure);
+            LOGGER.warn("创建产品出错:{}", published.getMessage());
+            throw new RuntimeException(published.getMessage());
+        }
     }
 
     /**
