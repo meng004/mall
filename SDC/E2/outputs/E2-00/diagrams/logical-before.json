@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "取消订单逻辑视图（改前）",
+    "locale": "zh-CN",
+    "output": "SDC/E2/outputs/E2-00/diagrams/logical-before.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "receiver",
+      "type": "backend",
+      "label": "取消消息接收者",
+      "sublabel": "mall.order.cancel",
+      "pos": [32, 36],
+      "size": [176, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderReceiver.java", "line": 15, "end_line": 25 }]
+    },
+    {
+      "id": "controller",
+      "type": "backend",
+      "label": "订单控制器",
+      "sublabel": "两个取消入口",
+      "pos": [32, 188],
+      "size": [176, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java", "line": 56, "end_line": 70 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java", "line": 92, "end_line": 98 }
+      ]
+    },
+    {
+      "id": "timeoutTask",
+      "type": "backend",
+      "label": "超时定时任务",
+      "sublabel": "@Component 已注释",
+      "pos": [32, 340],
+      "size": [176, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/component/OrderTimeOutCancelTask.java", "line": 14, "end_line": 28 }]
+    },
+    {
+      "id": "singleCancel",
+      "type": "backend",
+      "label": "cancelOrder",
+      "sublabel": "先查后改，再补偿",
+      "pos": [360, 36],
+      "size": [200, 76],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 297, "end_line": 325 }]
+    },
+    {
+      "id": "batchCancel",
+      "type": "backend",
+      "label": "cancelTimeOutOrder",
+      "sublabel": "批量改状态再补偿",
+      "pos": [360, 340],
+      "size": [210, 76],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 267, "end_line": 294 }]
+    },
+    {
+      "id": "orderAccess",
+      "type": "database",
+      "label": "订单 Mapper/Dao",
+      "sublabel": "状态与锁定库存",
+      "pos": [740, 36],
+      "size": [196, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/resources/dao/PortalOrderDao.xml", "line": 29, "end_line": 48 },
+        { "path": "mall-portal/src/main/resources/dao/PortalOrderDao.xml", "line": 69, "end_line": 90 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 299, "end_line": 315 }
+      ]
+    },
+    {
+      "id": "memberService",
+      "type": "backend",
+      "label": "会员服务",
+      "sublabel": "按主键改积分",
+      "pos": [740, 188],
+      "size": [176, 72],
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/UmsMemberServiceImpl.java", "line": 148, "end_line": 153 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 319, "end_line": 322 }
+      ]
+    },
+    {
+      "id": "couponHistory",
+      "type": "database",
+      "label": "优惠券记录",
+      "sublabel": "第一条相反状态",
+      "pos": [740, 340],
+      "size": [196, 72],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 503, "end_line": 516 }]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "mall-portal 进程",
+      "wraps": ["receiver", "controller", "timeoutTask", "singleCancel", "batchCancel", "orderAccess", "memberService", "couponHistory"]
+    }
+  ],
+  "connections": [
+    { "id": "receiver-to-single", "from": "receiver", "to": "singleCancel", "label": "到期后 cancelOrder" },
+    { "id": "user-to-single", "from": "controller", "to": "singleCancel", "label": "/cancelUserOrder", "fromSide": "top", "toSide": "bottom" },
+    { "id": "user-to-batch", "from": "controller", "to": "batchCancel", "label": "/cancelTimeOutOrder", "fromSide": "bottom", "toSide": "top" },
+    { "id": "task-to-batch", "from": "timeoutTask", "to": "batchCancel", "label": "未注册，不运行", "variant": "dashed" },
+    { "id": "single-to-order", "from": "singleCancel", "to": "orderAccess", "label": "按主键改状态并释放库存" },
+    { "id": "single-to-member", "from": "singleCancel", "to": "memberService", "label": "返还积分", "fromSide": "bottom", "toSide": "top" },
+    { "id": "single-to-coupon", "from": "singleCancel", "to": "couponHistory", "label": "退券", "fromSide": "right", "toSide": "left" },
+    { "id": "batch-to-order", "from": "batchCancel", "to": "orderAccess", "label": "批量改状态并释放库存", "fromSide": "right", "toSide": "left" },
+    { "id": "batch-to-member", "from": "batchCancel", "to": "memberService", "label": "返还积分", "fromSide": "top", "toSide": "bottom" },
+    { "id": "batch-to-coupon", "from": "batchCancel", "to": "couponHistory", "label": "退券" }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "两份补偿",
+      "items": [
+        "cancelOrder 先按 status=0 且未删除查出，再按主键把 status 写成 4",
+        "cancelTimeOutOrder 先把超时单全部写成 4，再逐单释放库存、退券、返积分"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "定时任务",
+      "items": ["OrderTimeOutCancelTask 的 @Component 被注释，当前不会注册"]
+    }
+  ]
+}

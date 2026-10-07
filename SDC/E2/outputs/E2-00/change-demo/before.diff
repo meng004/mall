@@ -1,0 +1,43 @@
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java
+index 794afbca..ebb2f85c 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java
+@@ -65,6 +65,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
+     private OmsOrderItemMapper orderItemMapper;
+     @Autowired
+     private CancelOrderSender cancelOrderSender;
++    @Autowired
++    private OmsOrderOperateHistoryMapper orderOperateHistoryMapper;
+ 
+     @Override
+     public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
+@@ -289,6 +291,14 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
+                 UmsMember member = memberService.getById(timeOutOrder.getMemberId());
+                 memberService.updateIntegration(timeOutOrder.getMemberId(), member.getIntegration() + timeOutOrder.getUseIntegration());
+             }
++
++            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
++            history.setOrderId(timeOutOrder.getId());
++            history.setCreateTime(new Date());
++            history.setOperateMan("系统");
++            history.setOrderStatus(4);
++            history.setNote("订单关闭:取消订单");
++            orderOperateHistoryMapper.insertSelective(history);
+         }
+         return timeOutOrders.size();
+     }
+@@ -321,6 +331,14 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
+                 UmsMember member = memberService.getById(cancelOrder.getMemberId());
+                 memberService.updateIntegration(cancelOrder.getMemberId(), member.getIntegration() + cancelOrder.getUseIntegration());
+             }
++
++            OmsOrderOperateHistory history = new OmsOrderOperateHistory();
++            history.setOrderId(cancelOrder.getId());
++            history.setCreateTime(new Date());
++            history.setOperateMan("系统");
++            history.setOrderStatus(4);
++            history.setNote("订单关闭:取消订单");
++            orderOperateHistoryMapper.insertSelective(history);
+         }
+     }
+ 

@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "取消订单进程视图（改后）",
+    "locale": "zh-CN",
+    "output": "SDC/E2/outputs/E2-00/diagrams/process-after.html",
+    "viewBox": [
+      1080,
+      660
+    ],
+    "column_fit": "spread",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "47f4f735b26f75deb6e149e069cfe720869f46c6"
+    }
+  },
+  "participants": [
+    {
+      "id": "client",
+      "type": "external",
+      "label": "调用方",
+      "sublabel": "HTTP"
+    },
+    {
+      "id": "controller",
+      "type": "backend",
+      "label": "订单控制器",
+      "sublabel": "/order",
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 40,
+          "end_line": 70
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 92,
+          "end_line": 98
+        }
+      ]
+    },
+    {
+      "id": "mq",
+      "type": "messagebus",
+      "label": "RabbitMQ",
+      "sublabel": "TTL 后死信",
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/config/RabbitMqConfig.java",
+          "line": 51,
+          "end_line": 53
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/QueueEnum.java",
+          "line": 14,
+          "end_line": 18
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderSender.java",
+          "line": 25,
+          "end_line": 25
+        }
+      ]
+    },
+    {
+      "id": "receiver",
+      "type": "backend",
+      "label": "取消接收者",
+      "sublabel": "mall.order.cancel",
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderReceiver.java",
+          "line": 21,
+          "end_line": 25
+        }
+      ]
+    },
+    {
+      "id": "timeoutTask",
+      "type": "backend",
+      "label": "定时任务",
+      "sublabel": "未注册",
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/component/OrderTimeOutCancelTask.java",
+          "line": 14,
+          "end_line": 28
+        }
+      ]
+    },
+    {
+      "id": "orderService",
+      "type": "backend",
+      "label": "订单服务",
+      "sublabel": "一行委托",
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 247,
+          "end_line": 247
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 269,
+          "end_line": 277
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 280,
+          "end_line": 286
+        }
+      ]
+    },
+    {
+      "id": "cancellation",
+      "type": "backend",
+      "label": "OrderCancellation",
+      "sublabel": "同一个 cancelIf",
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java",
+          "line": 54,
+          "end_line": 56
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java",
+          "line": 62,
+          "end_line": 75
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java",
+          "line": 77,
+          "end_line": 102
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 350,
+      "label": "单笔取消"
+    },
+    {
+      "from": 365,
+      "to": 490,
+      "label": "超时批量"
+    }
+  ],
+  "messages": [
+    {
+      "id": "user-cancel",
+      "from": "client",
+      "to": "controller",
+      "y": 168,
+      "label": "POST /cancelUserOrder",
+      "variant": "emphasis"
+    },
+    {
+      "id": "delay-to-ttl",
+      "from": "controller",
+      "to": "mq",
+      "y": 196,
+      "label": "发延迟消息进 TTL",
+      "variant": "dashed",
+      "note": "/cancelOrder 与 generateOrder"
+    },
+    {
+      "id": "user-to-service",
+      "from": "controller",
+      "to": "orderService",
+      "y": 224,
+      "label": "cancelOrder"
+    },
+    {
+      "id": "user-to-module",
+      "from": "orderService",
+      "to": "cancellation",
+      "y": 252,
+      "label": "cancel",
+      "variant": "emphasis"
+    },
+    {
+      "id": "dead-letter",
+      "from": "mq",
+      "to": "receiver",
+      "y": 280,
+      "label": "死信 mall.order.cancel",
+      "variant": "dashed"
+    },
+    {
+      "id": "receiver-to-service",
+      "from": "receiver",
+      "to": "orderService",
+      "y": 308,
+      "label": "cancelOrder"
+    },
+    {
+      "id": "receiver-to-module",
+      "from": "orderService",
+      "to": "cancellation",
+      "y": 336,
+      "label": "cancel",
+      "variant": "emphasis"
+    },
+    {
+      "id": "timeout-http",
+      "from": "client",
+      "to": "controller",
+      "y": 372,
+      "label": "POST /cancelTimeOutOrder",
+      "variant": "emphasis"
+    },
+    {
+      "id": "timeout-to-service",
+      "from": "controller",
+      "to": "orderService",
+      "y": 400,
+      "label": "cancelTimeOutOrder"
+    },
+    {
+      "id": "timeout-to-module",
+      "from": "orderService",
+      "to": "cancellation",
+      "y": 428,
+      "label": "cancelOverdue",
+      "variant": "emphasis",
+      "note": "逐笔 cancelIf，不看删除"
+    },
+    {
+      "id": "task-to-service",
+      "from": "timeoutTask",
+      "to": "orderService",
+      "y": 456,
+      "label": "定时扫描，Bean 未注册",
+      "variant": "dashed"
+    }
+  ],
+  "activations": [
+    {
+      "participant": "controller",
+      "from": 168,
+      "to": 420,
+      "type": "backend"
+    },
+    {
+      "participant": "orderService",
+      "from": 224,
+      "to": 450,
+      "type": "backend"
+    },
+    {
+      "participant": "cancellation",
+      "from": 252,
+      "to": 450,
+      "type": "backend"
+    },
+    {
+      "participant": "receiver",
+      "from": 280,
+      "to": 350,
+      "type": "backend"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "汇入同一个 cancel",
+      "items": [
+        "用户取消和死信仍调用服务的 cancelOrder，服务再调用 cancel",
+        "超时 HTTP 调用 cancelTimeOutOrder，模块内部逐笔 cancelIf",
+        "入口类没有改"
+      ]
+    }
+  ]
+}

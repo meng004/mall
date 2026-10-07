@@ -1,0 +1,25 @@
+变异检查都在 refactor 提交 47f4f735b26f75deb6e149e069cfe720869f46c6 的临时 worktree 上改 OrderCancellation.java，测完 git checkout -- 该文件。主工作区没有切分支。①在该新提交上又复跑了一次，仍是 8 个测试 4 个失败、跳过 0。
+
+命令（四处相同）：
+
+    mvn -B -o -pl mall-portal -am -DskipTests=false -Dtest=SDCE200Test,SDCE200CancellationTest -Dsurefire.failIfNoSpecifiedTests=false test
+
+① 删掉积分返还。
+
+红。8 个测试 4 个失败、跳过 0。SDCE200Test：pendingOrderCancelClosesAndCompensates、cancelTimeOutOrderCancelsOnlyOverduePending（期望 140 实际 100）。SDCE200CancellationTest：overdueSkipsOrderWhoseConditionalUpdateMisses、singleAndBatchEmitSameCompensation。
+
+② 条件更新改成按主键无条件 updateByPrimaryKeySelective，并继续做补偿。
+
+红。SDCE200Test 2 失败、跳过 0：paidOrderStaysUntouched 期望 1 实际 4；deletedOrderStaysUntouched 期望 0 实际 4。SDCE200CancellationTest 3 错误、跳过 0：missedConditionalUpdateDoesNotCompensate、overdueSkipsOrderWhoseConditionalUpdateMisses、overdueConditionalUpdateIgnoresDeleteStatus 都在 getCouponId() 处 NPE。合计 Tests run: 8, Failures: 2, Errors: 3, Skipped: 0。
+
+③ 批量路径（requireNotDeleted 为 false）漏掉释放库存，单笔路径仍释放。
+
+红。SDCE200Test 1 失败：cancelTimeOutOrderCancelsOnlyOverduePending 期望 lock_stock 7 实际 10。单笔 cancelOrder 没有失败。SDCE200CancellationTest 2 失败：overdueSkipsOrderWhoseConditionalUpdateMisses、singleAndBatchEmitSameCompensation。合计 Failures: 3, Skipped: 0。
+
+④ 批量路径改回要求未删除（cancelOverdue 改为 cancelIf(id, true)）。
+
+红。SDCE200Test：cancelTimeOutOrderCancelsOnlyOverduePending 期望 2 实际 1。SDCE200CancellationTest：overdueConditionalUpdateIgnoresDeleteStatus 期望 false 实际 true。合计 Tests run: 8, Failures: 2, Skipped: 0。
+
+四处之后产品代码都已回到该提交。
+
+库清理：数据库测试在未提交事务里把既有行 oms_order_setting id=1 的 normal_order_overtime 改成 5000000，结束时按测试前读到的原值写回。清完测试行后先 `set session information_schema_stats_expiry=0`，再把 ums_member、pms_sku_stock、sms_coupon_history、oms_order、oms_order_item 的自增设为 max(id)+1，并断言计数器等于该值。不把计数器记成测试前的原值再恢复。

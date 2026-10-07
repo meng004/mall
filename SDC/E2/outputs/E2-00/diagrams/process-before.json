@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "取消订单进程视图（改前）",
+    "locale": "zh-CN",
+    "output": "SDC/E2/outputs/E2-00/diagrams/process-before.html",
+    "viewBox": [1080, 640],
+    "column_fit": "spread",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "participants": [
+    { "id": "client", "type": "external", "label": "调用方", "sublabel": "HTTP" },
+    {
+      "id": "controller",
+      "type": "backend",
+      "label": "订单控制器",
+      "sublabel": "/order",
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java", "line": 40, "end_line": 70 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java", "line": 92, "end_line": 98 }
+      ]
+    },
+    {
+      "id": "mq",
+      "type": "messagebus",
+      "label": "RabbitMQ",
+      "sublabel": "TTL 后死信",
+      "sources": [
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/config/RabbitMqConfig.java", "line": 51, "end_line": 53 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/domain/QueueEnum.java", "line": 14, "end_line": 18 },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderSender.java", "line": 25, "end_line": 25 }
+      ]
+    },
+    {
+      "id": "receiver",
+      "type": "backend",
+      "label": "取消接收者",
+      "sublabel": "mall.order.cancel",
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/component/CancelOrderReceiver.java", "line": 21, "end_line": 25 }]
+    },
+    {
+      "id": "timeoutTask",
+      "type": "backend",
+      "label": "定时任务",
+      "sublabel": "未注册",
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/component/OrderTimeOutCancelTask.java", "line": 14, "end_line": 28 }]
+    },
+    {
+      "id": "singleCancel",
+      "type": "backend",
+      "label": "cancelOrder",
+      "sublabel": "补偿 A",
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 297, "end_line": 325 }]
+    },
+    {
+      "id": "batchCancel",
+      "type": "backend",
+      "label": "超时批量",
+      "sublabel": "补偿 B",
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 267, "end_line": 294 }]
+    }
+  ],
+  "segments": [
+    { "from": 160, "to": 300, "label": "单笔取消" },
+    { "from": 320, "to": 470, "label": "超时批量" }
+  ],
+  "messages": [
+    { "id": "user-cancel", "from": "client", "to": "controller", "y": 180, "label": "POST /cancelUserOrder", "variant": "emphasis" },
+    { "id": "delay-to-ttl", "from": "controller", "to": "mq", "y": 200, "label": "发延迟消息进 TTL", "variant": "dashed", "note": "/cancelOrder 与 generateOrder" },
+    { "id": "user-to-single", "from": "controller", "to": "singleCancel", "y": 230, "label": "cancelOrder" },
+    { "id": "dead-letter", "from": "mq", "to": "receiver", "y": 260, "label": "死信 mall.order.cancel", "variant": "dashed" },
+    { "id": "receiver-to-single", "from": "receiver", "to": "singleCancel", "y": 275, "label": "cancelOrder" },
+    { "id": "timeout-http", "from": "client", "to": "controller", "y": 350, "label": "POST /cancelTimeOutOrder", "variant": "emphasis" },
+    { "id": "timeout-to-batch", "from": "controller", "to": "batchCancel", "y": 390, "label": "cancelTimeOutOrder" },
+    { "id": "task-to-batch", "from": "timeoutTask", "to": "batchCancel", "y": 440, "label": "定时扫描，Bean 未注册", "variant": "dashed" }
+  ],
+  "activations": [
+    { "participant": "controller", "from": 180, "to": 410, "type": "backend" },
+    { "participant": "singleCancel", "from": 220, "to": 320, "type": "backend" },
+    { "participant": "receiver", "from": 260, "to": 320, "type": "backend" },
+    { "participant": "batchCancel", "from": 390, "to": 460, "type": "backend" }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "两路补偿",
+      "items": [
+        "用户取消和死信都进入 cancelOrder",
+        "超时 HTTP 进入另一份 cancelTimeOutOrder",
+        "POST /cancelOrder 与 generateOrder 把消息发进 TTL 队列"
+      ]
+    }
+  ]
+}

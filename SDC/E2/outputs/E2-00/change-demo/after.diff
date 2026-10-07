@@ -1,0 +1,103 @@
+diff --git a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java
+index 0ba1ae50..0a3b89b8 100644
+--- a/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java
++++ b/mall-portal/src/main/java/com/macro/mall/portal/service/impl/OrderCancellation.java
+@@ -2,9 +2,11 @@ package com.macro.mall.portal.service.impl;
+ 
+ import com.macro.mall.mapper.OmsOrderItemMapper;
+ import com.macro.mall.mapper.OmsOrderMapper;
++import com.macro.mall.mapper.OmsOrderOperateHistoryMapper;
+ import com.macro.mall.mapper.OmsOrderSettingMapper;
+ import com.macro.mall.mapper.SmsCouponHistoryMapper;
+ import com.macro.mall.model.OmsOrder;
++import com.macro.mall.model.OmsOrderOperateHistory;
+ import com.macro.mall.model.OmsOrderExample;
+ import com.macro.mall.model.OmsOrderItem;
+ import com.macro.mall.model.OmsOrderItemExample;
+@@ -33,19 +35,22 @@ public class OrderCancellation {
+     private final OmsOrderSettingMapper orderSettingMapper;
+     private final SmsCouponHistoryMapper couponHistoryMapper;
+     private final UmsMemberService memberService;
++    private final OmsOrderOperateHistoryMapper orderOperateHistoryMapper;
+ 
+     public OrderCancellation(OmsOrderMapper orderMapper,
+                              OmsOrderItemMapper orderItemMapper,
+                              PortalOrderDao portalOrderDao,
+                              OmsOrderSettingMapper orderSettingMapper,
+                              SmsCouponHistoryMapper couponHistoryMapper,
+-                             UmsMemberService memberService) {
++                             UmsMemberService memberService,
++                             OmsOrderOperateHistoryMapper orderOperateHistoryMapper) {
+         this.orderMapper = orderMapper;
+         this.orderItemMapper = orderItemMapper;
+         this.portalOrderDao = portalOrderDao;
+         this.orderSettingMapper = orderSettingMapper;
+         this.couponHistoryMapper = couponHistoryMapper;
+         this.memberService = memberService;
++        this.orderOperateHistoryMapper = orderOperateHistoryMapper;
+     }
+ 
+     /**
+@@ -98,6 +103,13 @@ public class OrderCancellation {
+             UmsMember member = memberService.getById(cancelOrder.getMemberId());
+             memberService.updateIntegration(cancelOrder.getMemberId(), member.getIntegration() + cancelOrder.getUseIntegration());
+         }
++        OmsOrderOperateHistory history = new OmsOrderOperateHistory();
++        history.setOrderId(cancelOrder.getId());
++        history.setCreateTime(new Date());
++        history.setOperateMan("系统");
++        history.setOrderStatus(4);
++        history.setNote("订单关闭:取消订单");
++        orderOperateHistoryMapper.insertSelective(history);
+         return true;
+     }
+ 
+diff --git a/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200CancellationTest.java b/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200CancellationTest.java
+index 5dec7eb0..f3c1cc9a 100644
+--- a/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200CancellationTest.java
++++ b/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200CancellationTest.java
+@@ -2,6 +2,7 @@ package com.macro.mall.sdc.e2;
+ 
+ import com.macro.mall.mapper.OmsOrderItemMapper;
+ import com.macro.mall.mapper.OmsOrderMapper;
++import com.macro.mall.mapper.OmsOrderOperateHistoryMapper;
+ import com.macro.mall.mapper.OmsOrderSettingMapper;
+ import com.macro.mall.mapper.SmsCouponHistoryMapper;
+ import com.macro.mall.model.OmsOrder;
+@@ -166,7 +167,7 @@ class SDCE200CancellationTest {
+                                                   SmsCouponHistoryMapper couponHistoryMapper,
+                                                   UmsMemberService memberService) {
+         return new OrderCancellation(orderMapper, orderItemMapper, portalOrderDao, orderSettingMapper,
+-                couponHistoryMapper, memberService);
++                couponHistoryMapper, memberService, mock(OmsOrderOperateHistoryMapper.class));
+     }
+ 
+     private static OmsOrderDetail decoy(long orderId) {
+diff --git a/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200Test.java b/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200Test.java
+index 4a24dfe3..30ddff1d 100644
+--- a/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200Test.java
++++ b/mall-portal/src/test/java/com/macro/mall/sdc/e2/SDCE200Test.java
+@@ -2,6 +2,7 @@ package com.macro.mall.sdc.e2;
+ 
+ import com.macro.mall.mapper.OmsOrderItemMapper;
+ import com.macro.mall.mapper.OmsOrderMapper;
++import com.macro.mall.mapper.OmsOrderOperateHistoryMapper;
+ import com.macro.mall.mapper.OmsOrderSettingMapper;
+ import com.macro.mall.mapper.SmsCouponHistoryMapper;
+ import com.macro.mall.mapper.UmsMemberMapper;
+@@ -256,6 +257,7 @@ class SDCE200Test {
+         deps.put(OmsOrderSettingMapper.class, orderSettingMapper);
+         deps.put(SmsCouponHistoryMapper.class, couponHistoryMapper);
+         deps.put(UmsMemberService.class, members);
++        deps.put(OmsOrderOperateHistoryMapper.class, sqlSession.getMapper(OmsOrderOperateHistoryMapper.class));
+         for (Field field : OmsPortalOrderServiceImpl.class.getDeclaredFields()) {
+             if (!"com.macro.mall.portal.service.impl.OrderCancellation".equals(field.getType().getName())) {
+                 continue;
+@@ -437,6 +439,7 @@ class SDCE200Test {
+             configuration.addMapper(OmsOrderSettingMapper.class);
+             configuration.addMapper(SmsCouponHistoryMapper.class);
+             configuration.addMapper(UmsMemberMapper.class);
++        configuration.addMapper(OmsOrderOperateHistoryMapper.class);
+             try (InputStream xml = SDCE200Test.class.getClassLoader().getResourceAsStream("dao/PortalOrderDao.xml")) {
+                 if (xml == null) {
+                     throw new IllegalStateException("classpath 上没有 dao/PortalOrderDao.xml");
