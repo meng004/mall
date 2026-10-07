@@ -1,55 +1,33 @@
 # SDC — software design and conventions
 
-SDC 是 mall 内的 Java 教学项目，按 E1–E7 组织。产品修复保留在原业务模块，实验代码和 JUnit 测试在这里；不需要 Python。
+SDC 指 software design and conventions。学生从[学生操作手册](学生操作手册.md)进入：在基线上做首次构建，每次实验从脚手架开个人分支，用 `SDC/compare.sh` 做改前／改后对照。
 
-**学生只看[学生操作手册](学生操作手册.md)**：一个仓库、先跑一个测试、每次一页说明加≤2分钟录屏。无需先安装两个前端、swarm、Docker或模型CLI；真实运行环境由教师课前准备，故障时可以先完成可评分的离线内容并标明未完成项。
+当前结构：
+
+- 基线标签 `baseline-dcaa93b3`（与分支 `sdc-teaching` 指向同一提交 `dcaa93b3`）：上游原版。E1 直接在基线上做，没有脚手架分支 `exp/E1`。
+- 实验脚手架 `exp/E2` … `exp/E7`：实验说明、`SDC/compare.sh`、`SDC/environment/`，不含示例答案。
+- 示例分支 `exp/e<n>-<NN>`：从对应脚手架分出。`NN=00` 是教师演示；E2、E5 没有 `-00`。
+- Issue #2–#41，按标签查看，例如 [E3](https://github.com/meng004/mall/issues?q=label%3AE3)。
+- 对照脚本 `SDC/compare.sh`。推送示例分支时，工作流 `.github/workflows/sdc-compare.yml` 自动重跑对照。
+- 分支 `sdc-java-migration` 存放课程文档和教师参考材料，含教师参考实现，不是做作业的起点。
 
 教师/助教看[环境准备](教师环境准备.md)。前端与微服务对照只用于已有理论讲解，不增加部署作业。课程边界：[理论章节](课程理论章节.md)、[实验方案](课程实验方案.md)、[考核方案](课程考核方案.md)。课程成绩构成不变，作业使用分实验评分细则；既有测试及安全要求保留。
-
-## 第一次运行
-
-IDEA打开mall根 `pom.xml`，Project SDK和Maven Runner选JDK17；在mall目录运行：
-
-```sh
-rtk proxy mvn -pl SDC/E1 -am test
-```
-
-E1的3项测试通过即可继续本次导读。其余实验替换模块名；也可在IDEA运行指定JUnit类。首次Maven需要联网准备依赖，缓存后可离线。未安装RTK时，普通Git/Maven命令可去掉 `rtk proxy`；JavaEvidence与Cursor适配器的RTK依赖由教师环境准备处理。
 
 ## 实验导航
 
 | 实验 | 课堂内容 | 入口 |
 |---|---|---|
-| E1 | 系统理解、依赖图、源码与运行证据 | [说明](E1/说明.md) · [操作](E1/操作说明.md) |
-| E2 | 分层问题、两种解耦方案与架构视图 | [说明](E2/说明.md) · [操作](E2/操作说明.md) |
-| E3 | 规格、积分缺陷、插入边界测试 | [说明](E3/说明.md) · [操作](E3/操作说明.md) |
-| E4 | 策略重构、金额与行为特征测试 | [说明](E4/说明.md) · [操作](E4/操作说明.md) |
-| E5 | 库存需求变更的影响分析 | [说明](E5/说明.md) · [操作](E5/操作说明.md) |
-| E6 | 库存预警、日志与交易返回值 | [说明](E6/说明.md) · [操作](E6/操作说明.md) |
-| E7 | 双查询实现、LLM 访问封装、只读验收 | [说明](E7/说明.md) · [操作](E7/操作说明.md) |
+| E1 | 系统理解、依赖图、源码与运行证据 | 基线 `baseline-dcaa93b3`（见[学生操作手册](学生操作手册.md)）。本页 [E1 说明](E1/说明.md) 是迁移前旧结构 |
+| E2 | 分层问题、两种解耦方案与架构视图 | [exp/E2 说明](https://github.com/meng004/mall/blob/exp/E2/SDC/E2/说明.md) · [Issue 标签 E2](https://github.com/meng004/mall/issues?q=label%3AE2) |
+| E3 | 规格、积分缺陷、插入边界测试 | [exp/E3 说明](https://github.com/meng004/mall/blob/exp/E3/SDC/E3/说明.md) · [Issue 标签 E3](https://github.com/meng004/mall/issues?q=label%3AE3) |
+| E4 | 策略重构、金额与行为特征测试 | [exp/E4 说明](https://github.com/meng004/mall/blob/exp/E4/SDC/E4/说明.md) · [Issue 标签 E4](https://github.com/meng004/mall/issues?q=label%3AE4) |
+| E5 | 库存需求变更的影响分析 | [exp/E5 说明](https://github.com/meng004/mall/blob/exp/E5/SDC/E5/说明.md) · [Issue 标签 E5](https://github.com/meng004/mall/issues?q=label%3AE5) |
+| E6 | 库存预警、日志与交易返回值 | [exp/E6 说明](https://github.com/meng004/mall/blob/exp/E6/SDC/E6/说明.md) · [Issue 标签 E6](https://github.com/meng004/mall/issues?q=label%3AE6) |
+| E7 | 双查询实现、LLM 访问封装、只读验收 | [exp/E7 说明](https://github.com/meng004/mall/blob/exp/E7/SDC/E7/说明.md) · [Issue 标签 E7](https://github.com/meng004/mall/issues?q=label%3AE7) |
 
-E1/E2/E5 的静态分析工具帮助定位和讲解，不是运行时业务验证。E3/E4/E6 直接调用实际业务服务，只替换外部系统依赖。E7 的普通测试和真实模型准确率验收分开记录。
+## 迁移前的旧结构（历史）
 
-## 两类产出
-
-- **产品代码**：`mall-portal/src/main/java` 中的积分修复、促销策略、库存预警，以及 E7 查询接口、两种实现和 LLM 访问层。其他原有产品模块保持原归属。
-- **实验与测试代码**：`SDC/E1` 至 `E7` 中的 Java 工具、演示、评测及 JUnit。业务模块不依赖 SDC。E2/E5 复用 E1 的源码与 POM 读取工具。
-
-产品代码只有一份；不会在每个实验中复制算法。E7 当前只读查询，不再提供库存草稿、确认或撤销。
-
-## 教师验证与参考证据
-
-首次准备 JaCoCo 依赖后，可用 Java 源文件运行器重建 E3/E4/E6 对照：
-
-```bash
-rtk proxy mvn -pl SDC/E3,SDC/E4,SDC/E6 -am org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test
-rtk proxy java SDC/tools/JavaEvidence.java --original
-rtk proxy java SDC/tools/JavaEvidence.java
-```
-
-`--original` 需要 mall 的 Git 历史包含原提交 `dcaa93b3150352e5044708d7211b5bed0af4509f`。它在临时目录重建原始订单/促销服务，不改当前源码；原版特定断言失败是预期结果。Java 工具内部调用 `rtk proxy mvn/git`，使用前需安装 RTK。普通 JUnit 运行不受此附加工具限制。
-
-新日志和 JaCoCo XML 在 [evidence/java-migration](evidence/java-migration)。历史日志、图和题集保留原文；历史 Python 测试数、旧模型的 34/34 不能作为新版 Java 或新模型通过的证明。迁移阶段曾记录16个Maven模块构建成功、32项JUnit通过；Cursor 真实模型最新独立评测31/32，失败原因与边界见[迁移验收](迁移验收.md)。
+实验代码曾放在 `SDC/E1`–`E7` 模块，首次检查用 `mvn -pl SDC/E1 -am test`，教师对照用 `JavaEvidence`。产品改动也曾直接写在 `sdc-java-migration` 上。这些页面、日志和工具保留作历史记录，不再是学生入口。历史日志见 [evidence/java-migration](evidence/java-migration) 与[迁移验收](迁移验收.md)。
 
 ## 设计与记录
 
