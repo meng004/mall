@@ -9,6 +9,7 @@ import com.macro.mall.common.service.RedisService;
 import com.macro.mall.mapper.*;
 import com.macro.mall.model.*;
 import com.macro.mall.portal.component.CancelOrderSender;
+import com.macro.mall.order.OrderStatus;
 import com.macro.mall.portal.dao.PortalOrderDao;
 import com.macro.mall.portal.dao.PortalOrderItemDao;
 import com.macro.mall.portal.dao.SmsCouponHistoryDao;
@@ -253,15 +254,17 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     public Integer paySuccess(Long orderId, Integer payType) {
         //修改订单支付状态
         OmsOrder order = new OmsOrder();
-        order.setId(orderId);
-        order.setStatus(1);
+        order.setStatus(OrderStatus.PAID);
         order.setPaymentTime(new Date());
         order.setPayType(payType);
-        orderMapper.updateByPrimaryKeySelective(order);
+        OmsOrderExample example = new OmsOrderExample();
+        example.createCriteria().andIdEqualTo(orderId).andStatusIn(OrderStatus.from(OrderStatus.PAID));
+        if (orderMapper.updateByExampleSelective(order, example) != 1) {
+            return 0;
+        }
         //恢复所有下单商品的锁定库存，扣减真实库存
         OmsOrderDetail orderDetail = portalOrderDao.getDetail(orderId);
-        int count = portalOrderDao.updateSkuStock(orderDetail.getOrderItemList());
-        return count;
+        return portalOrderDao.updateSkuStock(orderDetail.getOrderItemList());
     }
 
     @Override
@@ -340,13 +343,15 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         if(!member.getId().equals(order.getMemberId())){
             Asserts.fail("不能确认他人订单！");
         }
-        if(order.getStatus()!=2){
+        OmsOrder received = new OmsOrder();
+        received.setStatus(OrderStatus.COMPLETE);
+        received.setConfirmStatus(1);
+        received.setReceiveTime(new Date());
+        OmsOrderExample example = new OmsOrderExample();
+        example.createCriteria().andIdEqualTo(orderId).andStatusIn(OrderStatus.from(OrderStatus.COMPLETE));
+        if (orderMapper.updateByExampleSelective(received, example) == 0) {
             Asserts.fail("该订单还未发货！");
         }
-        order.setStatus(3);
-        order.setConfirmStatus(1);
-        order.setReceiveTime(new Date());
-        orderMapper.updateByPrimaryKey(order);
     }
 
     @Override

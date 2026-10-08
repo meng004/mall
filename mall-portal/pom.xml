@@ -24,6 +24,10 @@
         </dependency>
         <dependency>
             <groupId>com.macro.mall</groupId>
+            <artifactId>mall-order-rule</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.macro.mall</groupId>
             <artifactId>mall-security</artifactId>
         </dependency>
         <!--mongodb依赖配置-->

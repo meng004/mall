@@ -21,7 +21,8 @@ public interface OmsOrderDao {
     /**
      * 批量发货
      */
-    int delivery(@Param("list") List<OmsOrderDeliveryParam> deliveryParamList);
+    int delivery(@Param("list") List<OmsOrderDeliveryParam> deliveryParamList,
+                 @Param("fromStatus") List<Integer> fromStatus);
 
     /**
      * 获取订单详情

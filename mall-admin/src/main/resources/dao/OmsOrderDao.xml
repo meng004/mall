@@ -61,7 +61,10 @@
         <foreach collection="list" item="item" separator="," open="(" close=")">
             #{item.orderId}
         </foreach>
-        AND `status` = 1
+        AND `status` IN
+        <foreach collection="fromStatus" item="status" separator="," open="(" close=")">
+            #{status}
+        </foreach>
     </update>
     <select id="getDetail" resultMap="orderDetailResultMap">
         SELECT o.*,

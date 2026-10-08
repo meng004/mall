@@ -2,6 +2,7 @@ package com.macro.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.macro.mall.dao.OmsOrderDao;
+import com.macro.mall.order.OrderStatus;
 import com.macro.mall.dao.OmsOrderOperateHistoryDao;
 import com.macro.mall.dto.*;
 import com.macro.mall.mapper.OmsOrderMapper;
@@ -41,7 +42,7 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     @Override
     public int delivery(List<OmsOrderDeliveryParam> deliveryParamList) {
         //批量发货
-        int count = orderDao.delivery(deliveryParamList);
+        int count = orderDao.delivery(deliveryParamList, OrderStatus.from(OrderStatus.SHIPPED));
         //添加操作记录
         List<OmsOrderOperateHistory> operateHistoryList = deliveryParamList.stream()
                 .map(omsOrderDeliveryParam -> {
@@ -60,9 +61,9 @@ public class OmsOrderServiceImpl implements OmsOrderService {
     @Override
     public int close(List<Long> ids, String note) {
         OmsOrder record = new OmsOrder();
-        record.setStatus(4);
+        record.setStatus(OrderStatus.CLOSED);
         OmsOrderExample example = new OmsOrderExample();
-        example.createCriteria().andDeleteStatusEqualTo(0).andIdIn(ids);
+        example.createCriteria().andDeleteStatusEqualTo(0).andIdIn(ids).andStatusIn(OrderStatus.from(OrderStatus.CLOSED));
         int count = orderMapper.updateByExampleSelective(record, example);
         List<OmsOrderOperateHistory> historyList = ids.stream().map(orderId -> {
             OmsOrderOperateHistory history = new OmsOrderOperateHistory();

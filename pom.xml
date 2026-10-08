@@ -17,6 +17,7 @@
         <module>mall-admin</module>
         <module>mall-search</module>
         <module>mall-portal</module>
+        <module>mall-order-rule</module>
     </modules>
 
     <parent>
@@ -53,6 +54,7 @@
         <mall-common.version>1.0-SNAPSHOT</mall-common.version>
         <mall-mbg.version>1.0-SNAPSHOT</mall-mbg.version>
         <mall-security.version>1.0-SNAPSHOT</mall-security.version>
+        <mall-order-rule.version>1.0-SNAPSHOT</mall-order-rule.version>
         <commons-lang3.version>3.20.0</commons-lang3.version>
         <bouncycastle.version>1.84</bouncycastle.version>
     </properties>
@@ -106,6 +108,11 @@
                 <groupId>com.macro.mall</groupId>
                 <artifactId>mall-security</artifactId>
                 <version>${mall-security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.macro.mall</groupId>
+                <artifactId>mall-order-rule</artifactId>
+                <version>${mall-order-rule.version}</version>
             </dependency>
             <!--MyBatis分页插件starter-->
             <dependency>
