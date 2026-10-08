@@ -1,0 +1,11 @@
+注入验证：临时 detached worktree /tmp/e500-inject，起点为 ce706dee。
+产品补丁：git diff origin/exp/E6...origin/exp/e6-00 -- '*/main/*'
+应用结果：只改 OmsPortalOrderServiceImpl.java（+29）。origin/exp/E5 与 origin/exp/E6 的该文件 diff 为空，补丁可以套上。
+测试：SDCE500Test（selectByPrimaryKey(7) 返回 stock=10、lockStock=6、lowStock=5）。
+命令：mvn -B -o -pl mall-portal -am -DskipTests=false -Dtest=SDCE500Test -Dsurefire.failIfNoSpecifiedTests=false test
+结果：Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+Multiple Failures (2 failures)，断言在 SDCE500Test.java:62 的 assertAll：
+- 63 行 never selectByPrimaryKey：NeverWantedButInvoked，warnSku（注入后的 OmsPortalOrderServiceImpl.java:788）以参数 7 调用了 selectByPrimaryKey。
+- 64 行日志为空：expected <true> but was <false>。
+59 行返回值 3 没有失败（执行到了 assertAll）。61 行「不经 skuStockMapper 写库存」也没有失败。
+基线上这两条会通过：paySuccess 不调用 select，打桩不会被读到，也就不会记日志。
