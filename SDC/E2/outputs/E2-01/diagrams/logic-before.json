@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "订单状态迁移逻辑视图（改前）",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-logic-before-20261008-091200/logic-before.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "pay",
+      "type": "backend",
+      "label": "支付 0→1",
+      "sublabel": "paySuccess 不看状态",
+      "pos": [
+        36,
+        36
+      ],
+      "size": [
+        240,
+        80
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsPortalOrderController.java",
+          "line": 49,
+          "end_line": 53
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 253,
+          "end_line": 264
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 431,
+          "end_line": 435
+        }
+      ]
+    },
+    {
+      "id": "confirm",
+      "type": "backend",
+      "label": "确认收货 2→3",
+      "sublabel": "先读再判断",
+      "pos": [
+        36,
+        168
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 337,
+          "end_line": 349
+        }
+      ]
+    },
+    {
+      "id": "ship",
+      "type": "backend",
+      "label": "发货 1→2",
+      "sublabel": "SQL 限定 status=1",
+      "pos": [
+        36,
+        320
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/OmsOrderServiceImpl.java",
+          "line": 42,
+          "end_line": 44
+        },
+        {
+          "path": "mall-admin/src/main/resources/dao/OmsOrderDao.xml",
+          "line": 59,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "type": "backend",
+      "label": "后台关闭 →4",
+      "sublabel": "未删除就能关",
+      "pos": [
+        36,
+        452
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/OmsOrderServiceImpl.java",
+          "line": 61,
+          "end_line": 66
+        }
+      ]
+    },
+    {
+      "id": "order",
+      "type": "database",
+      "label": "oms_order",
+      "sublabel": "状态写在四条路径上",
+      "pos": [
+        460,
+        230
+      ],
+      "size": [
+        230,
+        84
+      ],
+      "sources": [
+        {
+          "path": "document/sql/mall.sql",
+          "line": 460,
+          "end_line": 460
+        }
+      ]
+    },
+    {
+      "id": "codes",
+      "type": "backend",
+      "label": "状态码注释",
+      "sublabel": "只在 OmsOrder",
+      "pos": [
+        780,
+        36
+      ],
+      "size": [
+        200,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-mbg/src/main/java/com/macro/mall/model/OmsOrder.java",
+          "line": 52,
+          "end_line": 53
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "mall-portal",
+      "wraps": [
+        "pay",
+        "confirm"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "mall-admin",
+      "wraps": [
+        "ship",
+        "close"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "pay-order",
+      "from": "pay",
+      "to": "order",
+      "label": "无条件写成 1，再扣库存"
+    },
+    {
+      "id": "confirm-order",
+      "from": "confirm",
+      "to": "order",
+      "label": "status 不是 2 就失败"
+    },
+    {
+      "id": "ship-order",
+      "from": "ship",
+      "to": "order",
+      "label": "仅 status=1 写成 2"
+    },
+    {
+      "id": "close-order",
+      "from": "close",
+      "to": "order",
+      "label": "未删除就写成 4"
+    },
+    {
+      "id": "codes-order",
+      "from": "codes",
+      "to": "order",
+      "label": "0 到 5 的注释",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "规则散落",
+      "items": [
+        "paySuccess 不检查；支付宝入口先读 status=0（非原子）",
+        "发货的 status=1 写在后台 SQL",
+        "确认收货先读后写",
+        "关闭不限出发状态"
+      ]
+    }
+  ]
+}

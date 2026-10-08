@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "订单模块开发视图（改前）",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-dev-before-20261008-085500/dev-before.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "dcaa93b3150352e5044708d7211b5bed0af4509f"
+    }
+  },
+  "components": [
+    {
+      "id": "common",
+      "type": "backend",
+      "label": "mall-common",
+      "sublabel": "公共库",
+      "pos": [360, 28],
+      "size": [190, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 13, "end_line": 13 },
+        { "path": "mall-common/pom.xml", "line": 8, "end_line": 8 }
+      ]
+    },
+    {
+      "id": "mbg",
+      "type": "backend",
+      "label": "mall-mbg",
+      "sublabel": "生成的 Mapper",
+      "pos": [230, 190],
+      "size": [190, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 14, "end_line": 14 },
+        { "path": "mall-mbg/pom.xml", "line": 22, "end_line": 25 }
+      ]
+    },
+    {
+      "id": "security",
+      "type": "security",
+      "label": "mall-security",
+      "sublabel": "认证模块",
+      "pos": [530, 400],
+      "size": [200, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 15, "end_line": 15 },
+        { "path": "mall-security/pom.xml", "line": 20, "end_line": 23 }
+      ]
+    },
+    {
+      "id": "search",
+      "type": "backend",
+      "label": "mall-search",
+      "sublabel": "搜索应用",
+      "pos": [16, 190],
+      "size": [180, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 18, "end_line": 18 },
+        { "path": "mall-search/pom.xml", "line": 21, "end_line": 30 }
+      ]
+    },
+    {
+      "id": "demo",
+      "type": "backend",
+      "label": "mall-demo",
+      "sublabel": "演示应用",
+      "pos": [16, 400],
+      "size": [170, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 16, "end_line": 16 },
+        { "path": "mall-demo/pom.xml", "line": 20, "end_line": 23 }
+      ]
+    },
+    {
+      "id": "admin",
+      "type": "backend",
+      "label": "mall-admin",
+      "sublabel": "后台应用",
+      "pos": [530, 190],
+      "size": [180, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 17, "end_line": 17 },
+        { "path": "mall-admin/pom.xml", "line": 20, "end_line": 23 },
+        { "path": "mall-admin/pom.xml", "line": 24, "end_line": 27 }
+      ]
+    },
+    {
+      "id": "portal",
+      "type": "backend",
+      "label": "mall-portal",
+      "sublabel": "前台应用",
+      "pos": [230, 400],
+      "size": [180, 72],
+      "sources": [
+        { "path": "pom.xml", "line": 19, "end_line": 19 },
+        { "path": "mall-portal/pom.xml", "line": 21, "end_line": 24 },
+        { "path": "mall-portal/pom.xml", "line": 25, "end_line": 28 }
+      ]
+    }
+  ],
+  "connections": [
+    { "id": "mbg-common", "from": "mbg", "to": "common", "label": "依赖" },
+    { "id": "security-common", "from": "security", "to": "common", "label": "依赖" },
+    { "id": "search-mbg", "from": "search", "to": "mbg", "label": "依赖" },
+    { "id": "demo-mbg", "from": "demo", "to": "mbg", "label": "依赖" },
+    { "id": "admin-mbg", "from": "admin", "to": "mbg", "label": "依赖" },
+    { "id": "admin-security", "from": "admin", "to": "security", "label": "依赖" },
+    { "id": "portal-mbg", "from": "portal", "to": "mbg", "label": "依赖" },
+    { "id": "portal-security", "from": "portal", "to": "security", "label": "依赖" }
+  ],
+  "cards": [
+    {
+      "dot": "slate",
+      "title": "改前",
+      "items": ["七个模块", "订单状态规则不在单独模块里"]
+    }
+  ]
+}

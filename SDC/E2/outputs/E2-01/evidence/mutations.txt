@@ -1,0 +1,17 @@
+变异在 fix 提交 c1cb8ca81a7de1344a05bab90a50673e955cc1e1 上临时修改，每处测完只撤回被改文件。结束后工作区干净。
+
+1. 去掉支付的出发状态条件：paySuccess 的条件只保留订单 id。
+   mvn -B -o -pl mall-portal -am -DskipTests=false -Dtest=SDCE201StatePortalTest#paidOrderPaySuccessDoesNotDeductOrRewrite -Dsurefire.failIfNoSpecifiedTests=false test
+   红。Tests run: 1, Failures: 1, Errors: 0, Skipped: 0。expected: <0> but was: <1>。已撤回。
+
+2. 关闭允许从 1 出发：OrderStatus.from(CLOSED) 改为 List.of(UNPAID, PAID)。只改这一行。
+   mvn -B -o -pl mall-admin -am -DskipTests=false -Dtest=SDCE201StateAdminTest#paidOrderCloseLeavesStatusAndReturnsZero -Dsurefire.failIfNoSpecifiedTests=false test
+   红。Tests run: 1, Failures: 1, Errors: 0, Skipped: 0。paidOrderCloseLeavesStatusAndReturnsZero:102 expected: <0> but was: <1>。已撤回。
+
+3. 确认收货改回先读后写，并且不再检查 status。
+   mvn -B -o -pl mall-portal -am -DskipTests=false -Dtest=SDCE201StatePortalTest#unshippedConfirmReceiveKeepsFailure -Dsurefire.failIfNoSpecifiedTests=false test
+   红。Tests run: 1, Failures: 1, Errors: 0, Skipped: 0。Expected ApiException to be thrown, but nothing was thrown。已撤回。
+
+4. 删掉 OmsOrderDao.xml 里的 AND status IN 出发集合。
+   mvn -B -o -pl mall-admin -am -DskipTests=false -Dtest=SDCE201StateAdminTest#unpaidOrderDeliveryDoesNotShip -Dsurefire.failIfNoSpecifiedTests=false test
+   红。Tests run: 1, Failures: 1, Errors: 0, Skipped: 0。unpaidOrderDeliveryDoesNotShip:125 expected: <0> but was: <1>。已撤回。

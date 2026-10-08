@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "订单状态迁移逻辑视图（改后）",
+    "locale": "zh-CN",
+    "output": ".archify/architecture-logic-after-20261008-091200/logic-after.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/meng004/mall.git",
+      "provider": "github",
+      "link_mode": "local-only",
+      "revision": "c1cb8ca81a7de1344a05bab90a50673e955cc1e1"
+    }
+  },
+  "components": [
+    {
+      "id": "rule",
+      "type": "backend",
+      "label": "OrderStatus",
+      "sublabel": "出发状态只写在这里",
+      "pos": [
+        36,
+        280
+      ],
+      "size": [
+        230,
+        88
+      ],
+      "sources": [
+        {
+          "path": "mall-order-rule/src/main/java/com/macro/mall/order/OrderStatus.java",
+          "line": 10,
+          "end_line": 14
+        },
+        {
+          "path": "mall-order-rule/src/main/java/com/macro/mall/order/OrderStatus.java",
+          "line": 19,
+          "end_line": 26
+        }
+      ]
+    },
+    {
+      "id": "pay",
+      "type": "backend",
+      "label": "支付 0→1",
+      "sublabel": "命中 1 行才扣库存",
+      "pos": [
+        400,
+        72
+      ],
+      "size": [
+        230,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 254,
+          "end_line": 267
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 436,
+          "end_line": 440
+        },
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/AlipayServiceImpl.java",
+          "line": 129,
+          "end_line": 132
+        }
+      ]
+    },
+    {
+      "id": "confirm",
+      "type": "backend",
+      "label": "确认收货 2→3",
+      "sublabel": "条件更新代替先读后判",
+      "pos": [
+        400,
+        210
+      ],
+      "size": [
+        240,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java",
+          "line": 340,
+          "end_line": 354
+        }
+      ]
+    },
+    {
+      "id": "ship",
+      "type": "backend",
+      "label": "发货 1→2",
+      "sublabel": "出发集传入 SQL",
+      "pos": [
+        400,
+        360
+      ],
+      "size": [
+        230,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/OmsOrderServiceImpl.java",
+          "line": 43,
+          "end_line": 45
+        },
+        {
+          "path": "mall-admin/src/main/resources/dao/OmsOrderDao.xml",
+          "line": 64,
+          "end_line": 67
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "type": "backend",
+      "label": "后台关闭 →4",
+      "sublabel": "只允许从 0",
+      "pos": [
+        400,
+        500
+      ],
+      "size": [
+        220,
+        76
+      ],
+      "sources": [
+        {
+          "path": "mall-admin/src/main/java/com/macro/mall/service/impl/OmsOrderServiceImpl.java",
+          "line": 62,
+          "end_line": 66
+        }
+      ]
+    },
+    {
+      "id": "order",
+      "type": "database",
+      "label": "oms_order",
+      "sublabel": "按出发集条件更新",
+      "pos": [
+        800,
+        280
+      ],
+      "size": [
+        220,
+        84
+      ],
+      "sources": [
+        {
+          "path": "document/sql/mall.sql",
+          "line": 460,
+          "end_line": 460
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "mall-portal",
+      "wraps": [
+        "pay",
+        "confirm"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "mall-admin",
+      "wraps": [
+        "ship",
+        "close"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "rule-pay",
+      "from": "rule",
+      "to": "pay",
+      "label": "支付只从 0",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rule-ship",
+      "from": "rule",
+      "to": "ship",
+      "label": "发货只从 1",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rule-confirm",
+      "from": "rule",
+      "to": "confirm",
+      "label": "收货只从 2",
+      "variant": "emphasis"
+    },
+    {
+      "id": "rule-close",
+      "from": "rule",
+      "to": "close",
+      "label": "关闭只从 0",
+      "variant": "emphasis"
+    },
+    {
+      "id": "pay-order",
+      "from": "pay",
+      "to": "order",
+      "label": "未命中则不扣库存"
+    },
+    {
+      "id": "confirm-order",
+      "from": "confirm",
+      "to": "order",
+      "label": "0 行则报未发货"
+    },
+    {
+      "id": "ship-order",
+      "from": "ship",
+      "to": "order",
+      "label": "status IN 出发集"
+    },
+    {
+      "id": "close-order",
+      "from": "close",
+      "to": "order",
+      "label": "返回实际关闭数"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "一处规则",
+      "items": [
+        "四个写入点都读 OrderStatus.from",
+        "支付宝查询仍先读 status=0，不在这处规则里"
+      ]
+    }
+  ]
+}
