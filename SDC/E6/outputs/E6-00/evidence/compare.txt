@@ -1,10 +1,10 @@
 示例：E6-00  模块：mall-portal  测试：SDCE600Test,SDCE600MemberPriceTest
 改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 24, Failures: 6, Errors: 0, Skipped: 0
-[ERROR]   SDCE600MemberPriceTest.firstPriceRowIsUsedWhenSeveralMatch:224->assertItems:228 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
-[ERROR]   SDCE600MemberPriceTest.memberPriceDiscountsSkuOriginalNotPromotionPrice:55->assertItems:228 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
-[ERROR]   SDCE600MemberPriceTest.onlySkusBelowMemberPriceAreDiscounted:100->assertItems:228 expected: <[95.00|0|无优惠|7, 200.00|50.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
-[ERROR]   SDCE600MemberPriceTest.perUnitReduceAmountIsWhatGenerateOrderCopies:212->assertItems:228 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
-[ERROR]   SDCE600MemberPriceTest.twoProductGroupsQueryOnceEach:187->assertItems:228 expected: <[100.00|30.00|会员价|7, 200.00|140.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
-[ERROR]   SDCE600MemberPriceTest.twoSkusInOneGroupShareOneLookup:68->assertItems:228 expected: <[100.00|30.00|会员价|7, 200.00|130.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
-改后 5e8288b9：pass（预期 pass）  [INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
+[ERROR]   SDCE600MemberPriceTest.memberPriceDiscountsSkuOriginalNotPromotionPrice:56->assertItems:244 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
+[ERROR]   SDCE600MemberPriceTest.onlySkusBelowMemberPriceAreDiscounted:101->assertItems:244 expected: <[95.00|0|无优惠|7, 200.00|50.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
+[ERROR]   SDCE600MemberPriceTest.perUnitReduceAmountIsWhatGenerateOrderCopies:218->assertItems:244 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
+[ERROR]   SDCE600MemberPriceTest.smallestIdIsUsedWhenSeveralMatch:240->assertItems:244 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
+[ERROR]   SDCE600MemberPriceTest.twoProductGroupsQueryOnceEach:188->assertItems:244 expected: <[100.00|30.00|会员价|7, 200.00|140.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
+[ERROR]   SDCE600MemberPriceTest.twoSkusInOneGroupShareOneLookup:69->assertItems:244 expected: <[100.00|30.00|会员价|7, 200.00|130.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
+改后 a1e6679f：pass（预期 pass）  [INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
 结论：符合
