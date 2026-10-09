@@ -1,0 +1,6 @@
+示例：E3-00  模块：mall-portal  测试：SDCE300Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0
+[ERROR]   SDCE300Test.pointsArePersistedSeparatelyBeforeInsert:81->lambda$pointsArePersistedSeparatelyBeforeInsert$0:72 consumed points at insert boundary ==> expected: <0> but was: <null>
+[ERROR]   SDCE300Test.pointsArePersistedSeparatelyBeforeInsert:81->lambda$pointsArePersistedSeparatelyBeforeInsert$0:72 consumed points at insert boundary ==> expected: <30> but was: <null>
+改后 a17829a9：pass（预期 pass）  [INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

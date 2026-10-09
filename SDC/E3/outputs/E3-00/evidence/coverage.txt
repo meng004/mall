@@ -1,0 +1,145 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）。
+命令（主工作区，可联网，未加 -o）：
+mvn -B -pl mall-portal -am -DskipTests=false -Dtest=SDCE300Test -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-portal/target/site/jacoco/jacoco.xml（target 已被 mall-portal/.gitignore 忽略，不提交）。
+
+提交：测试 604b116a36fe4bacee976e3d4743694cd58fb9d4；修复 a17829a931a0f345555ac049d98f509faa7ce1fc。覆盖率跑在该修复之上的工作区；docs 提交只收录本文件，不改被测代码。
+
+统计对象：OmsPortalOrderServiceImpl.generateOrder(OrderParam)。源码签名在第 94 行，JaCoCo 方法计数从第 95 行起，至 paySuccess 之前（第 247 行 return）。
+
+行覆盖：covered=95 missed=9，95/104=91.3%。
+分支覆盖：covered=31 missed=7，31/38=81.6%。
+指令覆盖：covered=452 missed=36，合计 488。
+方法计数：missed=0 covered=1。
+
+fix 改动行：a17829a9 相对基线只剩下一处新增语句，即第 182 行 order.setUseIntegration(orderParam.getUseIntegration())（mi=0 ci=4 mb=0 cb=0，已覆盖）。同一分支上的第 183 行 setIntegrationAmount 已覆盖。null 分支第 180 行 setIntegrationAmount 已覆盖（第 179 行 mb=0 cb=2，null 与非 null 都走到）。被删掉的 setIntegration 写入和插入之后的 setUseIntegration 已不在源码中。fix 仍存在的改动行全部覆盖。
+
+未覆盖行（ci=0）：
+- 98 Asserts.fail("请选择收货地址！")：invalidOrderDoesNotReachPersistence 会走到，异常在探针前抛出，JaCoCo 记不到。第 97 行条件 mb=0 cb=2，两个分支都有记录。
+- 125 Asserts.fail("库存不足，无法下单")：同上，由该测试的库存不足路径执行。第 124 行 mb=0 cb=2。
+- 137 Asserts.fail("该优惠券不可用")：同上，由该测试的不可用券路径执行。
+- 140 handleCouponAmount：要用一张真正可用的优惠券才会进入。本测试的券路径在第 137 行失败返回，没有可用券。
+- 153 Asserts.fail("积分不可用")：积分金额算出来为 0 才进入。use=30 的金额不为 0，走了另一支。
+- 176 order.setCouponId、177 order.setCouponAmount：下单参数带可用优惠券才进入。参数化用例不带券。
+- 231 updateCouponStatus：插入成功且 couponId 非空才更新券状态。没有成功的用券订单。
+- 236 currentMember.setIntegration(0)：会员积分已是 100，不为 null。
+
+未覆盖分支（mb>0）：
+- 136 if (couponHistoryDetail == null) 为 mb=1 cb=1。真分支（券明细为 null）由 invalidOrderDoesNotReachPersistence 执行，异常在探针前抛出，JaCoCo 记不到。
+- 151 getUseIntegrationAmount 的 couponId != null：参数化用例不带券，只覆盖 false。带券又用积分才会走 true，无效券在第 137 行已经返回。
+- 152 integrationAmount.compareTo(0) == 0：true 是「积分不可用」（第 153 行）。use=30 覆盖了不为 0 的一支。
+- 173 couponId == null 的 false：不带券的一支已覆盖，带券才进入第 176–177 行。
+- 218 CollUtil.isNotEmpty(orderSettings) 的 false：测试始终返回一条订单设置，空列表没有走到。这不是 useIntegration 缺陷。
+- 230 couponId != null 的 true：没有成功的用券订单，不会更新券状态。
+- 235 currentMember.getIntegration()==null 的 true：会员积分是 100，只覆盖了非 null。
+
+第 98、125、137 行的 Asserts.fail，以及第 136 行的真分支，都由 invalidOrderDoesNotReachPersistence 实际执行；异常在 JaCoCo 探针之前抛出，所以报告把它们记成未覆盖。上面的原始数字包含这几处。
+
+结论：未覆盖的都是优惠券与积分的相邻路径，与本次缺陷无关；覆盖率不能代替缺陷断言。
+
+逐行（只列 JaCoCo 有探针的行；nr mi ci mb cb）。ci 是该行已覆盖指令数，便于和 mi 对照。
+nr	mi	ci	mb	cb	源码
+95	0	4	0	0	        List<OmsOrderItem> orderItemList = new ArrayList<>();
+97	0	3	0	2	        if(orderParam.getMemberReceiveAddressId()==null){
+98	2	0	0	0	            Asserts.fail("请选择收货地址！");
+101	0	4	0	0	        UmsMember currentMember = memberService.getCurrentMember();
+102	0	8	0	0	        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
+103	0	10	0	2	        for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
+105	0	4	0	0	            OmsOrderItem orderItem = new OmsOrderItem();
+106	0	4	0	0	            orderItem.setProductId(cartPromotionItem.getProductId());
+107	0	4	0	0	            orderItem.setProductName(cartPromotionItem.getProductName());
+108	0	4	0	0	            orderItem.setProductPic(cartPromotionItem.getProductPic());
+109	0	4	0	0	            orderItem.setProductAttr(cartPromotionItem.getProductAttr());
+110	0	4	0	0	            orderItem.setProductBrand(cartPromotionItem.getProductBrand());
+111	0	4	0	0	            orderItem.setProductSn(cartPromotionItem.getProductSn());
+112	0	4	0	0	            orderItem.setProductPrice(cartPromotionItem.getPrice());
+113	0	4	0	0	            orderItem.setProductQuantity(cartPromotionItem.getQuantity());
+114	0	4	0	0	            orderItem.setProductSkuId(cartPromotionItem.getProductSkuId());
+115	0	4	0	0	            orderItem.setProductSkuCode(cartPromotionItem.getProductSkuCode());
+116	0	4	0	0	            orderItem.setProductCategoryId(cartPromotionItem.getProductCategoryId());
+117	0	4	0	0	            orderItem.setPromotionAmount(cartPromotionItem.getReduceAmount());
+118	0	4	0	0	            orderItem.setPromotionName(cartPromotionItem.getPromotionMessage());
+119	0	4	0	0	            orderItem.setGiftIntegration(cartPromotionItem.getIntegration());
+120	0	4	0	0	            orderItem.setGiftGrowth(cartPromotionItem.getGrowth());
+121	0	4	0	0	            orderItemList.add(orderItem);
+122	0	1	0	0	        }
+124	0	4	0	2	        if (!hasStock(cartPromotionItemList)) {
+125	2	0	0	0	            Asserts.fail("库存不足，无法下单");
+128	0	3	0	2	        if (orderParam.getCouponId() == null) {
+130	0	10	0	2	            for (OmsOrderItem orderItem : orderItemList) {
+131	0	6	0	0	                orderItem.setCouponAmount(new BigDecimal(0));
+132	0	2	0	0	            }
+135	0	6	0	0	            SmsCouponHistoryDetail couponHistoryDetail = getUseCoupon(cartPromotionItemList, orderParam.getCouponId());
+136	0	2	1	1	            if (couponHistoryDetail == null) {
+137	2	0	0	0	                Asserts.fail("该优惠券不可用");
+140	4	0	0	0	            handleCouponAmount(orderItemList, couponHistoryDetail);
+143	0	9	0	4	        if (orderParam.getUseIntegration() == null||orderParam.getUseIntegration().equals(0)) {
+145	0	10	0	2	            for (OmsOrderItem orderItem : orderItemList) {
+146	0	6	0	0	                orderItem.setIntegrationAmount(new BigDecimal(0));
+147	0	2	0	0	            }
+150	0	4	0	0	            BigDecimal totalAmount = calcTotalAmount(orderItemList);
+151	2	11	1	1	            BigDecimal integrationAmount = getUseIntegrationAmount(orderParam.getUseIntegration(), totalAmount, currentMember, orderParam.getCouponId() != null);
+152	0	7	1	1	            if (integrationAmount.compareTo(new BigDecimal(0)) == 0) {
+153	3	0	0	0	                Asserts.fail("积分不可用");
+156	0	10	0	2	                for (OmsOrderItem orderItem : orderItemList) {
+157	0	9	0	0	                    BigDecimal perAmount = orderItem.getProductPrice().divide(totalAmount, 3, RoundingMode.HALF_EVEN).multiply(integrationAmount);
+158	0	3	0	0	                    orderItem.setIntegrationAmount(perAmount);
+159	0	1	0	0	                }
+163	0	3	0	0	        handleRealAmount(orderItemList);
+165	0	3	0	0	        lockStock(cartPromotionItemList);
+167	0	4	0	0	        OmsOrder order = new OmsOrder();
+168	0	6	0	0	        order.setDiscountAmount(new BigDecimal(0));
+169	0	5	0	0	        order.setTotalAmount(calcTotalAmount(orderItemList));
+170	0	6	0	0	        order.setFreightAmount(new BigDecimal(0));
+171	0	5	0	0	        order.setPromotionAmount(calcPromotionAmount(orderItemList));
+172	0	5	0	0	        order.setPromotionInfo(getOrderPromotionInfo(orderItemList));
+173	0	3	1	1	        if (orderParam.getCouponId() == null) {
+174	0	7	0	0	            order.setCouponAmount(new BigDecimal(0));
+176	4	0	0	0	            order.setCouponId(orderParam.getCouponId());
+177	5	0	0	0	            order.setCouponAmount(calcCouponAmount(orderItemList));
+179	0	3	0	2	        if (orderParam.getUseIntegration() == null) {
+180	0	7	0	0	            order.setIntegrationAmount(new BigDecimal(0));
+182	0	4	0	0	            order.setUseIntegration(orderParam.getUseIntegration());
+183	0	5	0	0	            order.setIntegrationAmount(calcIntegrationAmount(orderItemList));
+185	0	5	0	0	        order.setPayAmount(calcPayAmount(order));
+187	0	4	0	0	        order.setMemberId(currentMember.getId());
+188	0	5	0	0	        order.setCreateTime(new Date());
+189	0	4	0	0	        order.setMemberUsername(currentMember.getUsername());
+191	0	4	0	0	        order.setPayType(orderParam.getPayType());
+193	0	4	0	0	        order.setSourceType(1);
+195	0	4	0	0	        order.setStatus(0);
+197	0	4	0	0	        order.setOrderType(0);
+199	0	6	0	0	        UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(orderParam.getMemberReceiveAddressId());
+200	0	4	0	0	        order.setReceiverName(address.getName());
+201	0	4	0	0	        order.setReceiverPhone(address.getPhoneNumber());
+202	0	4	0	0	        order.setReceiverPostCode(address.getPostCode());
+203	0	4	0	0	        order.setReceiverProvince(address.getProvince());
+204	0	4	0	0	        order.setReceiverCity(address.getCity());
+205	0	4	0	0	        order.setReceiverRegion(address.getRegion());
+206	0	4	0	0	        order.setReceiverDetailAddress(address.getDetailAddress());
+208	0	4	0	0	        order.setConfirmStatus(0);
+209	0	4	0	0	        order.setDeleteStatus(0);
+211	0	5	0	0	        order.setIntegration(calcGifIntegration(orderItemList));
+213	0	5	0	0	        order.setGrowth(calcGiftGrowth(orderItemList));
+215	0	5	0	0	        order.setOrderSn(generateOrderSn(order));
+217	0	7	0	0	        List<OmsOrderSetting> orderSettings = orderSettingMapper.selectByExample(new OmsOrderSettingExample());
+218	0	3	1	1	        if(CollUtil.isNotEmpty(orderSettings)){
+219	0	7	0	0	            order.setAutoConfirmDay(orderSettings.get(0).getConfirmOvertime());
+223	0	5	0	0	        orderMapper.insert(order);
+224	0	10	0	2	        for (OmsOrderItem orderItem : orderItemList) {
+225	0	4	0	0	            orderItem.setOrderId(order.getId());
+226	0	4	0	0	            orderItem.setOrderSn(order.getOrderSn());
+227	0	1	0	0	        }
+228	0	5	0	0	        orderItemDao.insertList(orderItemList);
+230	0	3	1	1	        if (orderParam.getCouponId() != null) {
+231	8	0	0	0	            updateCouponStatus(orderParam.getCouponId(), currentMember.getId(), 1);
+234	0	3	0	2	        if (orderParam.getUseIntegration() != null) {
+235	0	3	1	1	            if(currentMember.getIntegration()==null){
+236	4	0	0	0	                currentMember.setIntegration(0);
+238	0	13	0	0	            memberService.updateIntegration(currentMember.getId(), currentMember.getIntegration() - orderParam.getUseIntegration());
+241	0	4	0	0	        deleteCartItemList(cartPromotionItemList, currentMember);
+243	0	4	0	0	        sendDelayMessageCancelOrder(order.getId());
+244	0	4	0	0	        Map<String, Object> result = new HashMap<>();
+245	0	5	0	0	        result.put("order", order);
+246	0	5	0	0	        result.put("orderItemList", orderItemList);
+247	0	2	0	0	        return result;
