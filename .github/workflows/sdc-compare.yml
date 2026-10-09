@@ -28,6 +28,7 @@ jobs:
       - name: 改前/改后对照
         env:
           MVN_OFFLINE: ''
+        shell: bash
         run: |
           ID=$(echo "${GITHUB_REF_NAME#exp/}" | tr a-z A-Z)
           SDC/compare.sh "$ID" | tee -a "$GITHUB_STEP_SUMMARY"
