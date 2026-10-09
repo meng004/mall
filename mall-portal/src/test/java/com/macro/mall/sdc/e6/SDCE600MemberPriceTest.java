@@ -17,6 +17,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -189,7 +190,12 @@ class SDCE600MemberPriceTest {
             verify(fx.memberMapper, times(1)).selectByPrimaryKey(MEMBER_ID);
             verify(fx.memberMapper, times(1)).selectByPrimaryKey(OTHER_MEMBER_ID);
             verifyNoMoreInteractions(fx.memberMapper);
-            verify(fx.priceMapper, times(2)).selectByExample(any(PmsMemberPriceExample.class));
+            org.mockito.ArgumentCaptor<PmsMemberPriceExample> captor =
+                    org.mockito.ArgumentCaptor.forClass(PmsMemberPriceExample.class);
+            verify(fx.priceMapper, times(2)).selectByExample(captor.capture());
+            for (PmsMemberPriceExample example : captor.getAllValues()) {
+                assertEquals("id asc", example.getOrderByClause());
+            }
         }
     }
 
@@ -214,12 +220,22 @@ class SDCE600MemberPriceTest {
         assertGifts(result, 3);
     }
 
-    @Test void firstPriceRowIsUsedWhenSeveralMatch() {
+    @Test void smallestIdIsUsedWhenSeveralMatch() {
         Fixture fx = new Fixture();
         fx.member(MEMBER_ID, LEVEL_ID);
-        PmsMemberPrice first = price(PRODUCT_ID, LEVEL_ID, "70.00");
-        PmsMemberPrice second = price(PRODUCT_ID, LEVEL_ID, "10.00");
-        when(fx.priceMapper.selectByExample(any())).thenReturn(List.of(first, second));
+        PmsMemberPrice largerId = price(PRODUCT_ID, LEVEL_ID, "10.00");
+        largerId.setId(45L);
+        PmsMemberPrice smallerId = price(PRODUCT_ID, LEVEL_ID, "70.00");
+        smallerId.setId(26L);
+        when(fx.priceMapper.selectByExample(any())).thenAnswer(invocation -> {
+            PmsMemberPriceExample example = invocation.getArgument(0);
+            assertEquals("id asc", example.getOrderByClause());
+            List<PmsMemberPrice> rows = new ArrayList<>(List.of(largerId, smallerId));
+            if ("id asc".equals(example.getOrderByClause())) {
+                rows.sort(Comparator.comparing(PmsMemberPrice::getId));
+            }
+            return rows;
+        });
         fx.product(PRODUCT_ID, 2);
         assertItems(fx.calc(line(PRODUCT_ID, SKU_A, MEMBER_ID, 1)), "100.00|30.00|会员价|7");
     }
@@ -331,6 +347,9 @@ class SDCE600MemberPriceTest {
             org.mockito.ArgumentCaptor<PmsMemberPriceExample> captor =
                     org.mockito.ArgumentCaptor.forClass(PmsMemberPriceExample.class);
             verify(priceMapper, times(times)).selectByExample(captor.capture());
+            for (PmsMemberPriceExample example : captor.getAllValues()) {
+                assertEquals("id asc", example.getOrderByClause());
+            }
             if (times == 1) {
                 List<PmsMemberPriceExample.Criterion> criteria = captor.getValue().getOredCriteria().get(0).getCriteria();
                 assertEquals("product_id =", criteria.get(0).getCondition());

@@ -175,6 +175,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
                 return;
             }
             PmsMemberPriceExample example = new PmsMemberPriceExample();
+            example.setOrderByClause("id asc");
             example.createCriteria()
                     .andProductIdEqualTo(promotionProduct.getId())
                     .andMemberLevelIdEqualTo(member.getMemberLevelId());
