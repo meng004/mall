@@ -6,7 +6,7 @@ SDC 指 software design and conventions。学生从[学生操作手册](学生�
 
 - 基线标签 `baseline-dcaa93b3`（与分支 `sdc-teaching` 指向同一提交 `dcaa93b3`）：上游原版。E1 直接在基线上做，没有脚手架分支 `exp/E1`。
 - 实验脚手架 `exp/E2` … `exp/E7`：`SDC/E<n>/说明.md`、`SDC/compare.sh`、`SDC/environment/`、`.github/workflows/sdc-compare.yml`，不含示例答案。`exp/E2` 另有公共视图图件 `SDC/E2/diagrams/`；`exp/E7` 另有共用的 LLM 访问层（`mall-portal/src/main/java/com/macro/mall/portal/llm/` 与 `langchain4j-open-ai` 依赖）和评测支持类。
-- 示例分支 `exp/e<n>-<NN>`：从对应脚手架分出。`NN=00` 是教师演示。E2-00 是 Issue #42，E2-01 是 Issue #43；E5-00 是 Issue #44。
+- 示例分支 `exp/e<n>-<NN>`：从对应脚手架分出。`NN=00` 是教师演示。E2-00 是 Issue #42，E2-01 是 Issue #43；E4-00 是 Issue #20；E5-00 是 Issue #44；E6-00 是 Issue #14。E6-07（Issue #26）是扩展，不是教师演示。
 - Issue #2–#44，按标签查看，例如 [E3](https://github.com/meng004/mall/issues?q=label%3AE3)。
 - 对照脚本 `SDC/compare.sh`。推送示例分支时，工作流 `.github/workflows/sdc-compare.yml` 自动重跑对照。
 - 分支 `sdc-java-migration` 存放课程文档和教师参考材料，含教师参考实现，不是做作业的起点。
