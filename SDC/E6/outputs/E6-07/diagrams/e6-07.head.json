@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "E6-00 改后：私有方法 warnSku 在两个库存变更点之后只读预警（exp/e6-00 4a5f25b9）",
-    "output": "e6-00.head.html",
+    "title": "E6-07 改后：私有方法 warnSku 在两个库存变更点之后只读预警（exp/e6-07 4a5f25b9）",
+    "output": "e6-07.head.html",
     "locale": "zh-CN",
     "quality_profile": "showcase",
     "repository": {

@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "E6-00 改前：下单锁库存与付款扣库存之后都没有预警（基线 dcaa93b3）",
-    "output": "e6-00.base.html",
+    "title": "E6-07 改前：下单锁库存与付款扣库存之后都没有预警（基线 dcaa93b3）",
+    "output": "e6-07.base.html",
     "locale": "zh-CN",
     "quality_profile": "showcase",
     "repository": {
