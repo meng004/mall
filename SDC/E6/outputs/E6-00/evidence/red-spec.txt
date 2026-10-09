@@ -1,0 +1,14 @@
+在 refactor 提交 4a7f3d90（策略已抽出，还没有会员价策略）上运行：
+mvn -B -o -Ddocker.skip=true -pl mall-portal -am -DskipTests=false -Dtest=SDCE600MemberPriceTest -Dsurefire.failIfNoSpecifiedTests=false test
+
+[ERROR] Tests run: 16, Failures: 6, Errors: 0, Skipped: 0, Time elapsed: 6.965 s <<< FAILURE! -- in com.macro.mall.sdc.e6.SDCE600MemberPriceTest
+[ERROR]   SDCE600MemberPriceTest.firstPriceRowIsUsedWhenSeveralMatch:220->assertItems:224 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
+[ERROR]   SDCE600MemberPriceTest.memberPriceDiscountsSkuOriginalNotPromotionPrice:54->assertItems:224 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
+[ERROR]   SDCE600MemberPriceTest.onlySkusBelowMemberPriceAreDiscounted:99->assertItems:224 expected: <[95.00|0|无优惠|7, 200.00|50.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
+[ERROR]   SDCE600MemberPriceTest.perUnitReduceAmountIsWhatGenerateOrderCopies:208->assertItems:224 expected: <[100.00|30.00|会员价|7]> but was: <[95.00|0|无优惠|7]>
+[ERROR]   SDCE600MemberPriceTest.twoProductGroupsQueryOnceEach:184->assertItems:224 expected: <[100.00|30.00|会员价|7, 200.00|140.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
+[ERROR]   SDCE600MemberPriceTest.twoSkusInOneGroupShareOneLookup:67->assertItems:224 expected: <[100.00|30.00|会员价|7, 200.00|130.00|会员价|15]> but was: <[95.00|0|无优惠|7, 95.00|0|无优惠|15]>
+[ERROR] Tests run: 16, Failures: 6, Errors: 0, Skipped: 0
+[INFO] BUILD FAILURE
+
+失败原因：promotionType=2 仍走无优惠，购物车单价留在 95.00，优惠额为 0，文案是「无优惠」。不是编译失败，也不是环境错误。另外 10 项在该提交上通过，它们断言的就是无优惠，或断言单品促销不查会员价。
