@@ -6,7 +6,7 @@
 #   TESTS=SDCE301Test          测试类，逗号分隔
 #   EXPECT_BASE=fail           改前预期：fail 测试运行且失败；pass 测试通过；absent 被测功能尚不存在（编译失败）
 #   HEAD_ONLY_TESTS=           可选：只在改后运行的测试类，逗号分隔。用于依赖新接缝、在基线上无法编译的测试；不拷到基线
-# 改后必须通过。结果写入同目录 evidence/compare.txt；与预期不符时退出码为 1。
+# 改后必须通过。任一侧有测试被跳过（Skipped > 0）即判不符合。结果写入同目录 evidence/compare.txt；与预期不符时退出码为 1。
 # 需要 JDK 17；默认离线（-o），设 MVN_OFFLINE= 允许下载依赖。
 set -uo pipefail
 ID=$1
@@ -15,8 +15,8 @@ ROOT=$(git rev-parse --show-toplevel)
 source "$ROOT/$DIR/compare.env"
 HEAD_ONLY_TESTS=${HEAD_ONLY_TESTS:-}
 BASE=baseline-dcaa93b3
-# 记录最后一次改动代码的提交；补交证据不会改变它。
-HEAD_SHA=$(git log -1 --format=%h -- . ':!SDC/*/outputs/*')
+# 记录最后一次改动代码的提交；补交证据或改对照脚本、工作流都不会改变它。
+HEAD_SHA=$(git log -1 --format=%h -- . ':!SDC/*/outputs/*' ':!SDC/compare.sh' ':!.github/*')
 TMP=$(mktemp -d) WT=$(mktemp -d)/base
 mvn_test() { mvn -B ${MVN_OFFLINE--o} -pl "$MODULE" -am -DskipTests=false -Dtest="$1" -Dsurefire.failIfNoSpecifiedTests=false test; }
 
@@ -32,9 +32,10 @@ done
 (cd "$ROOT" && mvn_test "$TESTS${HEAD_ONLY_TESTS:+,$HEAD_ONLY_TESTS}" >"$TMP/head.log" 2>&1); HEAD_EXIT=$?
 git worktree remove --force "$WT"
 
-# 结果：pass / fail（测试运行但失败）/ absent（编译失败）/ error（其他原因，如未找到测试）
+# 结果：skipped（有测试被跳过）/ pass / fail（测试运行但失败）/ absent（编译失败）/ error（其他原因，如未找到测试）
 outcome() {
-  if [ "$2" = 0 ] && grep -qE "Tests run: [1-9]" "$1"; then echo pass
+  if grep -qE 'Tests run:.*Skipped: [1-9]' "$1"; then echo skipped
+  elif [ "$2" = 0 ] && grep -qE "Tests run: [1-9]" "$1"; then echo pass
   elif grep -qE 'Tests run:.*(Failures|Errors): [1-9]' "$1"; then echo fail
   elif grep -q 'COMPILATION ERROR' "$1"; then echo absent
   else echo error; fi
