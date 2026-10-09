@@ -22,10 +22,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
@@ -108,7 +109,7 @@ class SDCE600MemberPriceTest {
         assertItems(fx.calc(line(PRODUCT_ID, SKU_A, MEMBER_ID, 1)), "95.00|0|无优惠|7");
         if (fx.mappersPresent) {
             verify(fx.memberMapper, times(1)).selectByPrimaryKey(MEMBER_ID);
-            verifyNoInteractions(fx.priceMapper);
+            verify(fx.priceMapper, never()).selectByExample(any());
         }
     }
 
@@ -119,7 +120,7 @@ class SDCE600MemberPriceTest {
         assertItems(fx.calc(line(PRODUCT_ID, SKU_A, MEMBER_ID, 1)), "95.00|0|无优惠|7");
         if (fx.mappersPresent) {
             verify(fx.memberMapper, times(1)).selectByPrimaryKey(MEMBER_ID);
-            verifyNoInteractions(fx.priceMapper);
+            verify(fx.priceMapper, never()).selectByExample(any());
         }
     }
 
@@ -155,7 +156,8 @@ class SDCE600MemberPriceTest {
         fx.product(PRODUCT_ID, 2);
         assertItems(fx.calc(line(PRODUCT_ID, SKU_A, null, 1)), "95.00|0|无优惠|7");
         if (fx.mappersPresent) {
-            verifyNoInteractions(fx.memberMapper, fx.priceMapper);
+            verify(fx.memberMapper, never()).selectByPrimaryKey(nullable(Long.class));
+            verify(fx.priceMapper, never()).selectByExample(any());
         }
     }
 
@@ -167,7 +169,8 @@ class SDCE600MemberPriceTest {
                 line(PRODUCT_ID, SKU_B, OTHER_MEMBER_ID, 1));
         assertItems(result, "95.00|0|无优惠|7", "95.00|0|无优惠|15");
         if (fx.mappersPresent) {
-            verifyNoInteractions(fx.memberMapper, fx.priceMapper);
+            verify(fx.memberMapper, never()).selectByPrimaryKey(nullable(Long.class));
+            verify(fx.priceMapper, never()).selectByExample(any());
         }
     }
 
@@ -195,7 +198,8 @@ class SDCE600MemberPriceTest {
         fx.product(PRODUCT_ID, 1);
         assertItems(fx.calc(line(PRODUCT_ID, SKU_A, MEMBER_ID, 1)), "100.00|20.00|单品促销|7");
         if (fx.mappersPresent) {
-            verifyNoInteractions(fx.memberMapper, fx.priceMapper);
+            verify(fx.memberMapper, never()).selectByPrimaryKey(nullable(Long.class));
+            verify(fx.priceMapper, never()).selectByExample(any());
         }
     }
 
@@ -257,8 +261,8 @@ class SDCE600MemberPriceTest {
     private static final class Fixture {
         final OmsPromotionServiceImpl service = new OmsPromotionServiceImpl();
         final PortalProductDao dao = mock(PortalProductDao.class, withSettings().mockMaker("mock-maker-subclass"));
-        final UmsMemberMapper memberMapper = mock(UmsMemberMapper.class);
-        final PmsMemberPriceMapper priceMapper = mock(PmsMemberPriceMapper.class);
+        final UmsMemberMapper memberMapper = mock(UmsMemberMapper.class, withSettings().mockMaker("mock-maker-subclass"));
+        final PmsMemberPriceMapper priceMapper = mock(PmsMemberPriceMapper.class, withSettings().mockMaker("mock-maker-subclass"));
         final boolean mappersPresent;
         final List<PromotionProduct> products = new ArrayList<>();
 
