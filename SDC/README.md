@@ -22,7 +22,7 @@ SDC 指 software design and conventions。学生从[学生操作手册](学生�
 | E3 | 规格、积分缺陷、插入边界测试 | [exp/E3 说明](https://github.com/meng004/mall/blob/exp/E3/SDC/E3/说明.md) · [Issue 标签 E3](https://github.com/meng004/mall/issues?q=label%3AE3) |
 | E4 | 策略重构、金额与行为特征测试 | [exp/E4 说明](https://github.com/meng004/mall/blob/exp/E4/SDC/E4/说明.md) · [Issue 标签 E4](https://github.com/meng004/mall/issues?q=label%3AE4) |
 | E5 | 库存需求变更的影响分析 | [exp/E5 说明](https://github.com/meng004/mall/blob/exp/E5/SDC/E5/说明.md) · [Issue 标签 E5](https://github.com/meng004/mall/issues?q=label%3AE5) |
-| E6 | 库存预警、日志与交易返回值 | [exp/E6 说明](https://github.com/meng004/mall/blob/exp/E6/SDC/E6/说明.md) · [Issue 标签 E6](https://github.com/meng004/mall/issues?q=label%3AE6) |
+| E6 | 会员价（E6-00，#14）；库存预警为扩展（E6-07，#26） | [exp/E6 说明](https://github.com/meng004/mall/blob/exp/E6/SDC/E6/说明.md) · [Issue 标签 E6](https://github.com/meng004/mall/issues?q=label%3AE6) |
 | E7 | 双查询实现、LLM 访问封装、只读验收 | [exp/E7 说明](https://github.com/meng004/mall/blob/exp/E7/SDC/E7/说明.md) · [Issue 标签 E7](https://github.com/meng004/mall/issues?q=label%3AE7) |
 
 ## 迁移前的旧结构（历史）
