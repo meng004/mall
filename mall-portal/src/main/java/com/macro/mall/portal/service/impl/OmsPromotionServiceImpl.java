@@ -1,9 +1,14 @@
 package com.macro.mall.portal.service.impl;
 
+import com.macro.mall.mapper.PmsMemberPriceMapper;
+import com.macro.mall.mapper.UmsMemberMapper;
 import com.macro.mall.model.OmsCartItem;
+import com.macro.mall.model.PmsMemberPrice;
+import com.macro.mall.model.PmsMemberPriceExample;
 import com.macro.mall.model.PmsProductFullReduction;
 import com.macro.mall.model.PmsProductLadder;
 import com.macro.mall.model.PmsSkuStock;
+import com.macro.mall.model.UmsMember;
 import com.macro.mall.portal.dao.PortalProductDao;
 import com.macro.mall.portal.domain.CartPromotionItem;
 import com.macro.mall.portal.domain.PromotionProduct;
@@ -24,6 +29,10 @@ import java.util.*;
 public class OmsPromotionServiceImpl implements OmsPromotionService {
     @Autowired
     private PortalProductDao portalProductDao;
+    @Autowired
+    private UmsMemberMapper umsMemberMapper;
+    @Autowired
+    private PmsMemberPriceMapper pmsMemberPriceMapper;
 
     @Override
     public List<CartPromotionItem> calcCartPromotion(List<OmsCartItem> cartItemList) {
@@ -54,7 +63,7 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
     }
 
     private List<PromotionApplier> appliers() {
-        return Arrays.asList(new SingleApplier(), new LadderApplier(), new FullApplier(), new NoneApplier());
+        return Arrays.asList(new SingleApplier(), new MemberPriceApplier(), new LadderApplier(), new FullApplier(), new NoneApplier());
     }
 
     private interface PromotionApplier {
@@ -134,6 +143,59 @@ public class OmsPromotionServiceImpl implements OmsPromotionService {
                 PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
                 BigDecimal originalPrice = skuStock.getPrice();
                 cartPromotionItem.setReduceAmount(originalPrice.divide(totalAmount, RoundingMode.HALF_EVEN).multiply(fullReduction.getReducePrice()));
+                cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
+                cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
+                cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
+                out.add(cartPromotionItem);
+            }
+        }
+    }
+
+    private class MemberPriceApplier implements PromotionApplier {
+        public boolean supports(Integer promotionType) {
+            return promotionType == 2;
+        }
+
+        public void apply(List<CartPromotionItem> out, List<OmsCartItem> itemList,
+                          PromotionProduct promotionProduct, List<PromotionProduct> promotionProductList) {
+            Long memberId = itemList.get(0).getMemberId();
+            for (OmsCartItem item : itemList) {
+                if (!Objects.equals(memberId, item.getMemberId())) {
+                    handleNoReduce(out, itemList, promotionProduct);
+                    return;
+                }
+            }
+            if (memberId == null) {
+                handleNoReduce(out, itemList, promotionProduct);
+                return;
+            }
+            UmsMember member = umsMemberMapper.selectByPrimaryKey(memberId);
+            if (member == null || member.getMemberLevelId() == null) {
+                handleNoReduce(out, itemList, promotionProduct);
+                return;
+            }
+            PmsMemberPriceExample example = new PmsMemberPriceExample();
+            example.createCriteria()
+                    .andProductIdEqualTo(promotionProduct.getId())
+                    .andMemberLevelIdEqualTo(member.getMemberLevelId());
+            List<PmsMemberPrice> prices = pmsMemberPriceMapper.selectByExample(example);
+            BigDecimal memberPrice = prices == null || prices.isEmpty() ? null : prices.get(0).getMemberPrice();
+            if (memberPrice == null) {
+                handleNoReduce(out, itemList, promotionProduct);
+                return;
+            }
+            for (OmsCartItem item : itemList) {
+                PmsSkuStock skuStock = getOriginalPrice(promotionProduct, item.getProductSkuId());
+                BigDecimal originalPrice = skuStock.getPrice();
+                if (memberPrice.compareTo(originalPrice) >= 0) {
+                    handleNoReduce(out, List.of(item), promotionProduct);
+                    continue;
+                }
+                CartPromotionItem cartPromotionItem = new CartPromotionItem();
+                BeanUtils.copyProperties(item, cartPromotionItem);
+                cartPromotionItem.setPromotionMessage("会员价");
+                cartPromotionItem.setPrice(originalPrice);
+                cartPromotionItem.setReduceAmount(originalPrice.subtract(memberPrice));
                 cartPromotionItem.setRealStock(skuStock.getStock() - skuStock.getLockStock());
                 cartPromotionItem.setIntegration(promotionProduct.getGiftPoint());
                 cartPromotionItem.setGrowth(promotionProduct.getGiftGrowth());
