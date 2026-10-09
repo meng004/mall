@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "E6-00 改后：策略接缝上登记会员价（exp/e6-00 4251c662）",
+    "title": "E6-00 改后：策略接缝上登记会员价（exp/e6-00 a1e6679f）",
     "output": "e6-00.head.html",
     "locale": "zh-CN",
     "quality_profile": "showcase",
@@ -10,35 +10,35 @@
       "url": "https://github.com/meng004/mall.git",
       "provider": "github",
       "link_mode": "web",
-      "revision": "4251c6624eac27801116fde6fd76af6a3ee7fe24"
+      "revision": "a1e6679f72e7482533f76ed9cf79b0027bb05f8d"
     }
   },
   "components": [
     { "id": "ctl", "type": "frontend", "label": "OmsCartItemController", "sublabel": "GET /cart/list/promotion", "pos": [40, 40], "size": [230, 64],
       "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/controller/OmsCartItemController.java", "line": 52, "end_line": 54, "label": "签名未改" }] },
-    { "id": "calc", "type": "backend", "label": "calcCartPromotion", "sublabel": "只分组，再 applyPromotion", "tag": "改动", "pos": [360, 40], "size": [250, 64],
+    { "id": "calc", "type": "backend", "label": "calcCartPromotion", "sublabel": "只分组，再 applyPromotion", "tag": "改动", "pos": [420, 40], "size": [250, 64],
       "sources": [
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 38, "end_line": 52, "label": "不再按类型写 if/else" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 54, "end_line": 63, "label": "第一个 supports 的策略" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 66, "label": "MemberPriceApplier 在 None 之前" }
       ] },
-    { "id": "member", "type": "backend", "label": "MemberPriceApplier", "sublabel": "promotionType == 2", "tag": "新增", "pos": [700, 40], "size": [240, 64],
+    { "id": "member", "type": "backend", "label": "MemberPriceApplier", "sublabel": "promotionType == 2", "tag": "新增", "pos": [840, 40], "size": [240, 64],
       "sources": [
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 154, "end_line": 205, "label": "整段策略" },
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 190, "end_line": 198, "label": "compareTo；单价原价；优惠额相减；文案会员价" }
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 154, "end_line": 206, "label": "整段策略" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 191, "end_line": 199, "label": "compareTo；单价原价；优惠额相减；文案会员价" }
       ] },
-    { "id": "ums", "type": "database", "label": "UmsMemberMapper", "sublabel": "selectByPrimaryKey", "pos": [1040, 40], "size": [220, 64],
+    { "id": "ums", "type": "database", "label": "UmsMemberMapper", "sublabel": "selectByPrimaryKey", "pos": [1220, 40], "size": [220, 64],
       "sources": [
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 33, "label": "注入" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 172, "label": "每个商品分组至多一次" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/config/MyBatisConfig.java", "line": 13, "label": "已扫描 com.macro.mall.mapper" }
       ] },
-    { "id": "price", "type": "database", "label": "PmsMemberPriceMapper", "sublabel": "selectByExample", "pos": [1040, 200], "size": [230, 64],
-      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 177, "end_line": 181, "label": "商品 id + memberLevelId，至多一次" }] },
+    { "id": "price", "type": "database", "label": "PmsMemberPriceMapper", "sublabel": "selectByExample", "pos": [1220, 200], "size": [230, 64],
+      "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 178, "end_line": 183, "label": "id asc 后取第一条，即最小 id" }] },
     { "id": "none", "type": "backend", "label": "NoneApplier", "sublabel": "supports 恒真，必须最后", "pos": [700, 200], "size": [230, 64],
       "sources": [
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 207, "end_line": 215, "label": "对应原来的 else" },
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 265, "end_line": 279, "label": "handleNoReduce" }
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 208, "end_line": 216, "label": "对应原来的 else" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 266, "end_line": 280, "label": "handleNoReduce" }
       ] },
     { "id": "order", "type": "backend", "label": "确认单与下单", "sublabel": "优惠额会进订单金额", "pos": [360, 280], "size": [250, 64],
       "sources": [
@@ -58,8 +58,8 @@
   "cards": [
     { "dot": "emerald", "title": "变化", "items": [
       "calcCartPromotion 只剩分组和调度（38–52）。类型选择在 applyPromotion（54–63），登记在 appliers()（66）",
-      "会员价是 NoneApplier 之前的新策略（154–205）：单价改写为 SKU 原价（197），优惠额 = 原价 − 会员价（198），文案「会员价」（196）。不低于原价的 SKU 走 handleNoReduce（190–192）",
-      "每个商品分组至多一次会员查询（172）和一次会员价查询（181）。memberId 为空或组内会员不一致则一次都不查（163–170）",
+      "会员价是 NoneApplier 之前的新策略（154–206）：单价改写为 SKU 原价（198），优惠额 = 原价 − 会员价（199），文案「会员价」（197）。不低于原价的 SKU 走 handleNoReduce（191–193）",
+      "每个商品分组至多一次会员查询（172）和一次会员价查询（182）。查询按 id asc（178），取结果第一条，也就是 id 最小的一条（183）。memberId 为空或组内会员不一致则一次都不查（163–170）",
       "公开接口仍是 OmsPromotionService.calcCartPromotion（接口 17 行）。满减的 HALF_EVEN 没动"
     ] },
     { "dot": "violet", "title": "职责落点与备选", "items": [
@@ -72,13 +72,13 @@
       "确认单（74）和下单（102）都会拿到新的 price 与 reduceAmount。下单 112、117 行把它们写进订单商品；591 行再乘数量汇总到订单优惠。这是需求本意：会员价商品的下单金额会变",
       "优惠券列表（UmsMemberCouponController 71 行）也走 listPromotion，会员价商品的优惠额会进入券的可用判断。本次没有为它加测试",
       "appliers() 每次调用都 new 五个策略。NoneApplier 仍必须最后登记。库存、积分、成长值的赋值还在各策略里重复",
-      "同一商品同一等级若有多行会员价，取结果第一条（182），不报错"
+      "同一商品同一等级若有多行会员价，按 id 升序后取第一条（178、183），也就是 id 最小的一条，不报错"
     ] },
     { "dot": "cyan", "title": "证据", "items": [
       "SDCE600Test 8 项锁定 1/3/4/0/99 的单价、优惠额、文案、库存、积分、成长值，改后仍 8/0/0",
-      "SDCE600MemberPriceTest 16 项只替换 DAO 和两个 Mapper。在 4a7f3d90 上 6 项失败（期望会员价，实际无优惠）；在 4251c662 上 16/0/0",
+      "SDCE600MemberPriceTest 16 项只替换 DAO 和两个 Mapper。在 4a7f3d90 上 6 项失败（期望会员价，实际无优惠）；在 a1e6679f 上 16/0/0，并断言 order by 为 id asc",
       "下单金额没有跑 generateOrder。perUnitReduceAmountIsWhatGenerateOrderCopies 把单价优惠额锁在 30.00、数量锁在 3；117 与 766–771 行说明确认单优惠是 90、应付是 210（运费按源码为 0）",
-      "未走 HTTP，未连数据库。本机没有 archify，只有 json 图稿"
+      "未走 HTTP，未连数据库。图由 archify 从这份 json 生成"
     ] }
   ]
 }

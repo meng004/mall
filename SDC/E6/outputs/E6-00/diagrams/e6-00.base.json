@@ -20,9 +20,8 @@
       "sources": [{ "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsCartItemServiceImpl.java", "line": 82, "end_line": 89, "label": "先按会员取购物车，再 calcCartPromotion" }] },
     { "id": "calc", "type": "backend", "label": "calcCartPromotion", "sublabel": "if 1 / else if 3 / else if 4 / else", "pos": [400, 160], "size": [260, 72],
       "sources": [
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 29, "end_line": 110, "label": "82 行方法，条件链 41–107" },
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 29, "end_line": 110, "label": "82 行方法；阶梯在 58–80" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 41, "end_line": 57, "label": "type==1 单品促销" },
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 58, "end_line": 80, "label": "type==3 阶梯" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPromotionServiceImpl.java", "line": 81, "end_line": 103, "label": "type==4 满减" }
       ] },
     { "id": "dao", "type": "database", "label": "PortalProductDao", "sublabel": "getPromotionProductList", "pos": [780, 40], "size": [230, 64],
@@ -37,8 +36,7 @@
       "sources": [
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 74, "label": "generateConfirmOrder" },
         { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 102, "label": "generateOrder" },
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 112, "label": "productPrice = price" },
-        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 117, "label": "promotionAmount = reduceAmount" }
+        { "path": "mall-portal/src/main/java/com/macro/mall/portal/service/impl/OmsPortalOrderServiceImpl.java", "line": 112, "end_line": 117, "label": "单价与优惠额写入订单商品" }
       ] }
   ],
   "connections": [
