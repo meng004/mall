@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "E4-07 改后：按范围选择策略（exp/e4-07 37e30f14）",
-    "output": "e4-07.head.html",
+    "title": "E4-00 改后：按范围选择策略（exp/e4-00 37e30f14）",
+    "output": "e4-00.head.html",
     "locale": "zh-CN",
     "quality_profile": "showcase",
     "repository": {
@@ -89,7 +89,7 @@
       "策略是私有内部类，对外接口不变，测试仍只能经 listCart 观察"
     ] },
     { "dot": "cyan", "title": "行为保持证据", "items": [
-      "SDCE407Test 5 项，改前 dcaa93b3 与改后 37e30f14 都是 5/0/0，断言不改（evidence/compare.txt）",
+      "SDCE400Test 5 项，改前 dcaa93b3 与改后 37e30f14 都是 5/0/0，断言不改（evidence/compare.txt）",
       "终审实测变异：未知范围改为放入不可用 → 1 项变红",
       "终审实测：门槛改为 compareTo → 仍绿；测试只打印 THRESHOLD_BASELINE，不锁定截断，未混入修复靠读 diff 核对"
     ] }

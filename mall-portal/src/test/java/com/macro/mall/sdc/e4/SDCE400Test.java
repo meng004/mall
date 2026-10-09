@@ -28,7 +28,7 @@ import static org.mockito.Mockito.withSettings;
  * threshold under both integer truncation and numeric comparison. The 99.90 truncation is printed
  * for the evidence log and is not a permanent assertion.
  */
-class SDCE407Test {
+class SDCE400Test {
     private static final long MEMBER_ID = 101L;
     private static final Date FUTURE = new Date(4_102_444_800_000L);
     private static final Date PAST = new Date(0L);

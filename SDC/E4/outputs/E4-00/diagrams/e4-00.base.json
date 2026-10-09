@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "E4-07 改前：购物车优惠券可用判定（基线 dcaa93b3）",
-    "output": "e4-07.base.html",
+    "title": "E4-00 改前：购物车优惠券可用判定（基线 dcaa93b3）",
+    "output": "e4-00.base.html",
     "locale": "zh-CN",
     "quality_profile": "showcase",
     "repository": {
