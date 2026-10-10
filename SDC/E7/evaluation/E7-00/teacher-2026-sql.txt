@@ -1,0 +1,458 @@
+E7-00 教师题集 2026 秋：20 道正常题 SQL 与执行输出
+编写日期：2026-10-10
+连接：MySQL 127.0.0.1:13306，库 mall，字符集 utf8mb4（SET NAMES utf8mb4，客户端 --default-character-set=utf8mb4）
+账号：课程 compose 中的 mall 应用账号（口令不写入本文件）
+执行方式：docker exec 进入容器 sdc-classroom-mysql-1 的 mysql 客户端，只读 SELECT
+复核：同一批 SQL 连续执行两遍，两次输出全文一致。空结果题另做单独一轮抽查，仍无数据行。
+
+mysql 批处理模式对空结果集不打印列头，因此空结果的执行输出记为「（无数据行）」。
+t26-n18 的 SQL 源码中 LOCATE 参数写成两个反斜杠（'\\'），在 MySQL 默认字符串转义下表示一个反斜杠字符。
+
+======== t26-n01 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('手机', name) > 0
+ORDER BY id;
+
+第一次输出:
+id
+27
+28
+29
+37
+
+第二次输出:
+id
+27
+28
+29
+37
+
+两次一致: 是
+
+======== t26-n02 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('iPhone', name) > 0
+ORDER BY id;
+
+第一次输出:
+id
+29
+37
+
+第二次输出:
+id
+29
+37
+
+两次一致: 是
+
+======== t26-n03 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 100
+ORDER BY id;
+
+第一次输出:
+id
+30
+31
+32
+
+第二次输出:
+id
+30
+31
+32
+
+两次一致: 是
+
+======== t26-n04 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 500
+ORDER BY id;
+
+第一次输出:
+id
+30
+31
+32
+35
+36
+44
+
+第二次输出:
+id
+30
+31
+32
+35
+36
+44
+
+两次一致: 是
+
+======== t26-n05 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 2000
+ORDER BY id;
+
+第一次输出:
+id
+28
+30
+31
+32
+35
+36
+43
+44
+
+第二次输出:
+id
+28
+30
+31
+32
+35
+36
+43
+44
+
+两次一致: 是
+
+======== t26-n06 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND stock < 200
+ORDER BY id;
+
+第一次输出:
+id
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+
+第二次输出:
+id
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+
+两次一致: 是
+
+======== t26-n07 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND stock < 1000
+ORDER BY id;
+
+第一次输出:
+id
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+39
+40
+
+第二次输出:
+id
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+39
+40
+
+两次一致: 是
+
+======== t26-n08 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 1000
+  AND LOCATE('手机', name) > 0
+ORDER BY id;
+
+第一次输出:
+id
+28
+
+第二次输出:
+id
+28
+
+两次一致: 是
+
+======== t26-n09 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 3000
+  AND LOCATE('小米', name) > 0
+ORDER BY id;
+
+第一次输出:
+id
+27
+28
+33
+40
+
+第二次输出:
+id
+27
+28
+33
+40
+
+两次一致: 是
+
+======== t26-n10 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND stock < 500
+  AND LOCATE('T恤', name) > 0
+ORDER BY id;
+
+第一次输出:
+id
+30
+31
+32
+
+第二次输出:
+id
+30
+31
+32
+
+两次一致: 是
+
+======== t26-n11 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 400
+  AND stock < 200
+ORDER BY id;
+
+第一次输出:
+id
+30
+31
+32
+35
+
+第二次输出:
+id
+30
+31
+32
+35
+
+两次一致: 是
+
+======== t26-n12 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('小米', name) > 0
+  AND price < 4000
+  AND stock < 800
+ORDER BY id;
+
+第一次输出:
+id
+27
+28
+33
+34
+40
+
+第二次输出:
+id
+27
+28
+33
+34
+40
+
+两次一致: 是
+
+======== t26-n13 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('海澜之家', name) > 0
+  AND price < 90
+  AND stock < 500
+ORDER BY id;
+
+第一次输出:
+id
+32
+
+第二次输出:
+id
+32
+
+两次一致: 是
+
+======== t26-n14 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 50
+ORDER BY id;
+
+第一次输出:
+（无数据行）
+
+第二次输出:
+（无数据行）
+
+两次一致: 是
+单独抽查: 仍无数据行
+
+======== t26-n15 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND stock < 100
+ORDER BY id;
+
+第一次输出:
+（无数据行）
+
+第二次输出:
+（无数据行）
+
+两次一致: 是
+
+======== t26-n16 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('100%', name) > 0
+ORDER BY id;
+
+第一次输出:
+（无数据行）
+
+第二次输出:
+（无数据行）
+
+两次一致: 是
+单独抽查: 仍无数据行
+
+======== t26-n17 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('_', name) > 0
+ORDER BY id;
+
+第一次输出:
+（无数据行）
+
+第二次输出:
+（无数据行）
+
+两次一致: 是
+单独抽查: 仍无数据行
+
+======== t26-n18 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND LOCATE('\\', name) > 0
+ORDER BY id;
+
+第一次输出:
+（无数据行）
+
+第二次输出:
+（无数据行）
+
+两次一致: 是
+单独抽查: 仍无数据行
+
+======== t26-n19 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 369
+ORDER BY id;
+
+第一次输出:
+id
+30
+31
+32
+
+第二次输出:
+id
+30
+31
+32
+
+两次一致: 是
+单独抽查: 30 31 32
+
+======== t26-n20 ========
+SQL:
+SELECT id FROM pms_product
+WHERE delete_status = 0 AND publish_status = 1
+  AND price < 650
+  AND stock < 150
+  AND LOCATE('红米', name) > 0
+ORDER BY id;
+
+第一次输出:
+id
+28
+
+第二次输出:
+id
+28
+
+两次一致: 是
