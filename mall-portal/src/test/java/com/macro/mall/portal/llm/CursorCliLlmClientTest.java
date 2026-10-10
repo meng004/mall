@@ -13,6 +13,15 @@ class CursorCliLlmClientTest {
             "-cp",System.getProperty("surefire.test.class.path",System.getProperty("java.class.path")),
             Stub.class.getName(),mode,marker.toString());
     }
+    @Test void commandDefaultsToCursorAgentAndSplitsOnSpaces() {
+        assertEquals(List.of("cursor-agent"), CursorCliLlmClient.commandFrom(null));
+        assertEquals(List.of("cursor-agent"), CursorCliLlmClient.commandFrom("   "));
+        assertEquals(List.of("cursor-agent"), CursorCliLlmClient.commandFrom("cursor-agent"));
+        assertEquals(List.of("/home/lemon/.local/bin/cursor-agent"),
+            CursorCliLlmClient.commandFrom("  /home/lemon/.local/bin/cursor-agent  "));
+        assertEquals(List.of("rtk", "proxy", "cursor-agent"),
+            CursorCliLlmClient.commandFrom("rtk proxy cursor-agent"));
+    }
     @Test void isolatesWorkspaceDeniesToolsAndEncodesInput() throws Exception {
         Path marker = Files.createTempFile("cursor-test-", ".txt");
         try {
