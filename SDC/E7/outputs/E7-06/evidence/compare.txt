@@ -1,24 +1,24 @@
 示例：E7-06  模块：mall-portal  测试：SDCE706Test,CandidateE706EvaluationTest
 改前 baseline-dcaa93b3：absent（预期 absent）  
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[5,40] package com.macro.mall.portal.ai.reasons does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[6,40] package com.macro.mall.portal.ai.reasons does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[7,40] package com.macro.mall.portal.ai.reasons does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[8,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[9,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[10,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[11,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[27,119] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[31,118] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[79,54] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[80,82] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[84,54] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[86,48] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[220,62] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[220,97] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[386,51] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[513,40] cannot find symbol
-[ERROR] /tmp/tmp.ZpXjzTSINP/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[513,67] cannot find symbol
-改后 16452986：pass（预期 pass）  [INFO] Tests run: 23, Failures: 0, Errors: 0, Skipped: 0
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[5,40] package com.macro.mall.portal.ai.reasons does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[6,40] package com.macro.mall.portal.ai.reasons does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[7,40] package com.macro.mall.portal.ai.reasons does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[8,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[9,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[10,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[11,65] package com.macro.mall.portal.ai.reasons.ReturnReasonBatchService does not exist
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[27,119] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[31,118] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[79,54] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[80,82] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[8,33] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/EvaluationSupport.java:[9,33] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[84,54] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[86,48] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[219,62] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[219,97] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[385,51] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[510,40] cannot find symbol
+[ERROR] /tmp/tmp.RYBSB9T6aw/base/mall-portal/src/test/java/com/macro/mall/sdc/e7/CandidateE706Evaluation.java:[510,67] cannot find symbol
+改后 476f03e9：pass（预期 pass）  [INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
 结论：符合
