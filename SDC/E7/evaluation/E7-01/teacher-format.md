@@ -26,8 +26,8 @@
 | `input.llm` | 交给模型的文本，见下文 |
 | `input.form` | 交给普通实现的表单，见下文 |
 | `expected.state` | 期望状态 |
-| `expected.orders` | 订单数组。比较时只用其中的 `id` |
-| `expected.total` | 符合条件的订单总数，含其它页 |
+| `expected.orders` | 只填当前页的订单。筛选完成后、截取页之前按 `create_time desc` 排序，这一页就是该顺序上 `pageNum`/`pageSize` 对应的那些订单。比较时只用 `id`，按集合比较，JSON 里的先后不影响对错，但 `id` 必须是这一页上的订单 |
+| `expected.total` | 分页前的订单总数，不是当前页条数。必须是整数，不能省略 |
 
 `input.llm` 只使用 `text`（用户原话）。不要把 `status`、时间、页码、`expected`、`kind` 或标准答案放进模型输入。
 
@@ -42,11 +42,25 @@
 | `pageNum` | 页码，从 1 起 |
 | `pageSize` | 每页条数，1–100。分页不是模型协议字段，两种实现查库时都用表单里的页码和页大小 |
 
+上面的范围适用于期望为 `OK` 或 `UNSUPPORTED` 的题。期望为 `NEEDS_INPUT` 时是例外：表单要故意越界，页码小于 1、每页数量不在 1–100、`status` 不在 0–5，或起点不早于终点，三选一或多选。普通实现只在这些越界条件上返回 `NEEDS_INPUT`。
+
 状态整数：`0` 待付款，`1` 待发货，`2` 已发货，`3` 已完成，`4` 已关闭，`5` 无效订单。
 
-相对日期由 Java 按 `clock` 和 `Asia/Shanghai` 换算，不是由模型换算。`LAST_WEEK` 是上周一 00:00 至本周一 00:00，左闭右开。普通实现不识别「上周」「今天」等词，表单里要写成已经换算好的 `fromInclusive` 和 `untilExclusive`。
+## 时间换算
 
-下面这条是格式示例。会员 `999999` 和订单 `888001` 在课程库里不存在，不能当作真题。
+相对日期只出现在模型输出的 `period` 里，由 Java 按 `clock` 和 `Asia/Shanghai` 换算。先取 `clock` 在该时区的本地日期，记为今天。一天的边界是当地 00:00。表单不写 `TODAY` 这些词，要写成换算后的 `fromInclusive` 和 `untilExclusive`。
+
+| `period` | 区间 |
+|---|---|
+| `ANY` | 不限创建时间，两端都空。`fromDate` 和 `throughDate` 必须为 null。 |
+| `TODAY` | 今天 00:00（含）至明天 00:00（不含）。两个日期字段必须为 null。 |
+| `YESTERDAY` | 昨天 00:00（含）至今天 00:00（不含）。两个日期字段必须为 null。 |
+| `LAST_WEEK` | 本周一 00:00 再往前 7 天（含）至本周一 00:00（不含）。本周一是今天或今天之前最近的周一；若 `clock` 当天就是周一，本周一就是当天，上周是上周一 00:00 至本周一 00:00。两个日期字段必须为 null。 |
+| `RANGE` | `fromDate`、`throughDate` 是不含时分的 ISO 日期，`throughDate` 不得早于 `fromDate`。区间是 `fromDate` 当天 00:00（含）至 `throughDate` 次日 00:00（不含）。结束日期含当天。 |
+
+`ANY`、`TODAY`、`YESTERDAY`、`LAST_WEEK` 若带了非空日期，或 `RANGE` 缺日期、结束早于开始，这一题是 `UNSUPPORTED`，不会按错误区间查库。
+
+下面这条是格式示例。会员 `999999` 和订单 `888001` 在课程库里不存在，不能当作真题。`clock` 是周一，所以上周是 2018-09-10 00:00（含）至 2018-09-17 00:00（不含）。`orders` 只写这一页；若筛选结果一共 3 笔而页大小是 10，`total` 仍是 3。
 
 ```json
 {
@@ -79,6 +93,31 @@
 ```
 
 示例里的时钟是周一，所以上周的左闭右开区间是 2018-09-10 00:00 至 2018-09-17 00:00。
+
+下面这条也是示例，不是真题。它期望 `NEEDS_INPUT`：模型看到含糊的「没发货」，表单故意把终点写到起点之前。会员编号仍用库中不存在的 `999999`。订单列表为空，所以没有订单编号。
+
+```json
+{
+  "id": "example-needs-input",
+  "kind": "normal",
+  "input": {
+    "llm": {"text": "没发货的订单"},
+    "form": {
+      "text": "",
+      "status": null,
+      "fromInclusive": "2018-09-17T00:00:00+08:00",
+      "untilExclusive": "2018-09-10T00:00:00+08:00",
+      "pageNum": 1,
+      "pageSize": 10
+    }
+  },
+  "expected": {
+    "state": "NEEDS_INPUT",
+    "orders": [],
+    "total": 0
+  }
+}
+```
 
 ## 两种输入如何对应同一个请求
 

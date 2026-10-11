@@ -46,7 +46,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 class SDCE701Test {
     private static final ZoneId SHANGHAI = ZoneId.of("Asia/Shanghai");
@@ -461,7 +460,7 @@ class SDCE701Test {
     }
 
     private static <T> T dependency(OmsPortalOrderServiceImpl service, String field, Class<T> type) {
-        T value = mock(type, withSettings().mockMaker("mock-maker-subclass"));
+        T value = mock(type);
         ReflectionTestUtils.setField(service, field, value);
         return value;
     }

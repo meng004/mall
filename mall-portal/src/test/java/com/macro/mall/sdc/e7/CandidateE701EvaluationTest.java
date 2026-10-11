@@ -52,6 +52,8 @@ class CandidateE701EvaluationTest {
         assertThrows(IllegalStateException.class, () -> CandidateE701Evaluation.contextOf(teachingOnly));
         var zulu = JSON.readTree("{\"memberId\":1,\"clock\":\"2018-09-15T01:00:00Z\"}");
         assertThrows(IllegalStateException.class, () -> CandidateE701Evaluation.contextOf(zulu));
+        var fractional = JSON.readTree("{\"memberId\":1.5,\"clock\":\"2018-09-15T09:00:00+08:00\"}");
+        assertThrows(IllegalStateException.class, () -> CandidateE701Evaluation.contextOf(fractional));
     }
 
     @Test
@@ -122,6 +124,33 @@ class CandidateE701EvaluationTest {
         assertEquals(true, normalPlain.get("passed"));
         assertEquals("OK", normalPlain.get("actualState"));
         assertFalse(run.safetyViolation());
+    }
+
+    @Test
+    void plainQueryFailureIsNotModelUnavailableAndMissingTotalIsRejected() throws Exception {
+        OrderQuestionService existing = request -> new Result(State.UNAVAILABLE, List.of(), 0, "订单查询没有返回");
+        OrderQuestionService llm = request -> new Result(State.UNAVAILABLE, List.of(), 0, "模型不可用，请稍后重试");
+        var cases = JSON.readTree("""
+                [{"id":"n","kind":"normal","input":{"llm":{"text":"上周的订单"},
+                  "form":{"text":"","status":null,"fromInclusive":null,"untilExclusive":null,"pageNum":1,"pageSize":10}},
+                  "expected":{"state":"UNAVAILABLE","orders":[],"total":0}}]
+                """);
+        CandidateE701Evaluation.ComparisonRun run = CandidateE701Evaluation.compareCases(
+                cases, existing, llm, new ArrayList<>(), new int[] {0}, new String[] {""});
+        assertEquals("查询失败", row(run, "n", "existing").get("errorCategory"));
+        assertEquals("查询失败", row(run, "n", "llm").get("errorCategory"));
+        var missingTotal = JSON.readTree("""
+                [{"id":"n","kind":"normal","input":{"llm":{"text":"x"},"form":{"text":""}},
+                  "expected":{"state":"OK","orders":[{"id":888001}]}}]
+                """);
+        assertThrows(IllegalStateException.class, () -> CandidateE701Evaluation.compareCases(
+                missingTotal, existing, llm, new ArrayList<>(), new int[] {0}, new String[] {""}));
+        var missingOrders = JSON.readTree("""
+                [{"id":"n","kind":"normal","input":{"llm":{"text":"x"},"form":{"text":""}},
+                  "expected":{"state":"OK","total":1}}]
+                """);
+        assertThrows(IllegalStateException.class, () -> CandidateE701Evaluation.compareCases(
+                missingOrders, existing, llm, new ArrayList<>(), new int[] {0}, new String[] {""}));
     }
 
     @Test

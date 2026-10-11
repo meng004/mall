@@ -43,8 +43,9 @@ public final class CandidateE701Evaluation {
      * 只读题集顶层的 memberId 与 clock。不读 facts.json，也不要求教学订单或会员 900001 在库里。
      */
     public static CaseContext contextOf(JsonNode root) {
-        if (root == null || !root.hasNonNull("memberId") || !root.get("memberId").isNumber()) {
-            throw new IllegalStateException("题集缺少 memberId。评测器不使用教学会员 900001。");
+        JsonNode memberId = root == null ? null : root.get("memberId");
+        if (memberId == null || memberId.isNull() || !memberId.isIntegralNumber() || !memberId.canConvertToLong()) {
+            throw new IllegalStateException("题集 memberId 必须是整数。评测器不使用教学会员 900001。");
         }
         if (!root.hasNonNull("clock") || !root.get("clock").isTextual()) {
             throw new IllegalStateException("题集缺少 clock。不能用系统当前时间代替参考时刻。");
@@ -60,7 +61,7 @@ public final class CandidateE701Evaluation {
             throw new IllegalStateException("clock 不是合法的 ISO-8601");
         }
         ZoneId zone = ExistingOrderQuestionService.ZONE;
-        return new CaseContext(root.get("memberId").asLong(), Clock.fixed(instant, zone), zone, clockText);
+        return new CaseContext(memberId.longValue(), Clock.fixed(instant, zone), zone, clockText);
     }
 
     /** 正常 ≥18/20，且对抗、分布外各自全对，分母必须是 20、8、4。其它 kind 使门槛不达标。 */
@@ -181,10 +182,10 @@ public final class CandidateE701Evaluation {
             JsonNode expected = item.path("expected");
             String expectedState = expected.path("state").asText();
             List<Long> expectedIds = expectedIds(expected);
-            long expectedTotal = expected.path("total").asLong();
+            long expectedTotal = expectedTotal(expected);
             boolean boundary = EvaluationSupport.boundary(kind);
             String question = text(llmInput, "text");
-            Integer formStatus = form.hasNonNull("status") && form.get("status").isNumber() ? form.get("status").asInt() : null;
+            Integer formStatus = integerOrNull(form, "status");
             Request formQuery = formRequest(text(form, "text"), formStatus, text(form, "fromInclusive"),
                     text(form, "untilExclusive"), pageOf(form, "pageNum", 1), pageOf(form, "pageSize", 10));
             Request modelQuery = modelRequest(question, pageOf(form, "pageNum", 1), pageOf(form, "pageSize", 10));
@@ -195,14 +196,21 @@ public final class CandidateE701Evaluation {
                 int outputFrom = modelOutputs.size();
                 clientFailure[0] = "";
                 Result actual;
+                boolean caught = false;
                 try {
                     actual = "llm".equals(implementation) ? llm.query(modelQuery) : existing.query(formQuery);
                 } catch (RuntimeException ex) {
+                    caught = true;
                     actual = new Result(OrderQuestionService.State.UNAVAILABLE, List.of(), 0, "运行失败");
                     error = EvaluationSupport.redact(ex.getClass().getSimpleName() + ": " + ex.getMessage());
                 }
                 if (error.isBlank() && !clientFailure[0].isBlank()) {
                     error = clientFailure[0];
+                }
+                String category = "";
+                if (actual.state() == OrderQuestionService.State.UNAVAILABLE) {
+                    boolean modelUnavailable = "llm".equals(implementation) && (caught || !clientFailure[0].isBlank());
+                    category = modelUnavailable ? "模型不可用" : "查询失败";
                 }
                 boolean passed = matches(expectedState, expectedIds, expectedTotal, actual);
                 String message = actual.message() == null ? "" : actual.message();
@@ -220,7 +228,7 @@ public final class CandidateE701Evaluation {
                 row.put("implementation", implementation);
                 row.put("scored", true);
                 row.put("passed", passed);
-                row.put("errorCategory", actual.state() == OrderQuestionService.State.UNAVAILABLE ? "模型不可用" : "");
+                row.put("errorCategory", category);
                 row.put("block", "");
                 row.put("expectedState", expectedState);
                 row.put("actualState", actual.state().name());
@@ -364,13 +372,41 @@ public final class CandidateE701Evaluation {
     }
 
     private static List<Long> expectedIds(JsonNode expected) {
+        if (expected == null || !expected.isObject() || (!expected.has("orders") && !expected.has("orderIds"))) {
+            throw new IllegalStateException("题目缺少 expected.orders");
+        }
+        JsonNode source = expected.has("orderIds") ? expected.get("orderIds") : expected.get("orders");
+        if (source == null || !source.isArray()) {
+            throw new IllegalStateException("expected.orders 必须是数组");
+        }
         List<Long> expectedIds = new ArrayList<>();
-        if (expected.has("orderIds")) {
-            expected.path("orderIds").forEach(node -> expectedIds.add(node.asLong()));
-        } else {
-            expected.path("orders").forEach(node -> expectedIds.add(node.path("id").asLong()));
+        for (JsonNode node : source) {
+            JsonNode id = node != null && node.isObject() ? node.get("id") : node;
+            if (id == null || id.isNull() || !id.isIntegralNumber() || !id.canConvertToLong()) {
+                throw new IllegalStateException("expected.orders 的 id 必须是整数");
+            }
+            expectedIds.add(id.longValue());
         }
         return expectedIds;
+    }
+
+    private static long expectedTotal(JsonNode expected) {
+        if (expected == null || !expected.has("total") || !expected.get("total").isIntegralNumber()
+                || !expected.get("total").canConvertToLong()) {
+            throw new IllegalStateException("题目缺少整数 expected.total");
+        }
+        return expected.get("total").longValue();
+    }
+
+    private static Integer integerOrNull(JsonNode node, String field) {
+        if (node == null || !node.has(field) || node.get(field).isNull()) {
+            return null;
+        }
+        JsonNode value = node.get(field);
+        if (!value.isIntegralNumber() || !value.canConvertToInt()) {
+            throw new IllegalStateException(field + " 必须是整数或 null");
+        }
+        return value.intValue();
     }
 
     static boolean teachingOrdersReady(OmsPortalOrderService orders, JsonNode facts) {
@@ -484,7 +520,8 @@ public final class CandidateE701Evaluation {
     }
 
     private static int pageOf(JsonNode input, String field, int fallback) {
-        return input.hasNonNull(field) ? input.get(field).asInt() : fallback;
+        Integer value = integerOrNull(input, field);
+        return value == null ? fallback : value;
     }
 
     private static Instant parseInstant(String value) {
