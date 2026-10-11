@@ -133,6 +133,25 @@ class CandidateE706EvaluationTest {
     }
 
     @Test
+    void uncertainNullEvidenceIsAcceptedAndOtherNullEvidenceFails() {
+        Item blank = new Item("b01", "鞋", "质量问题", "");
+        var uncertain = ExistingReturnReasonBatchService.aggregate(null,
+                List.of(new Classified("b01", Label.UNCERTAIN, null, false)), 1);
+        assertTrue(CandidateE706Evaluation.score(List.of(blank), "OK", Map.of("b01", "UNCERTAIN"), 1, 0, uncertain).passed());
+        var missingQuote = ExistingReturnReasonBatchService.aggregate(null,
+                List.of(new Classified("b01", Label.QUALITY, null, false)), 1);
+        var failed = CandidateE706Evaluation.score(List.of(blank), "OK", Map.of("b01", "QUALITY"), 1, 0, missingQuote);
+        assertFalse(failed.passed());
+        assertEquals("evidence", failed.failedFields());
+        var rejected = ExistingReturnReasonBatchService.rejected(List.of(
+                new Item("b01", "鞋", "", "鞋底开胶"),
+                new Item("b01", "鞋", "", "快递慢")));
+        assertTrue(CandidateE706Evaluation.score(List.of(
+                new Item("b01", "鞋", "", "鞋底开胶"),
+                new Item("b01", "鞋", "", "快递慢")), "UNSUPPORTED", Map.of(), 2, 0, rejected).passed());
+    }
+
+    @Test
     void verdictUsesTheSharedThresholds() {
         assertEquals("NO_RELEASE", CandidateE706Evaluation.verdict(20, 20, 12, 11, true, false));
     }

@@ -67,12 +67,9 @@ public class ExistingReturnReasonBatchService implements ReturnReasonBatchServic
         return new Result(State.NEEDS_INPUT, List.of(), Map.of(), Map.of(), 0, 0);
     }
 
+    /** 编号空白或重复：整批拒绝。items 为空，failedCount 为 0，分母仍是输入条数。 */
     public static Result rejected(List<Item> input) {
-        List<Classified> items = new ArrayList<>();
-        for (Item item : input) {
-            items.add(new Classified(item == null ? null : item.anonymousId(), null, null, true));
-        }
-        return aggregate(State.UNSUPPORTED, items, input.size());
+        return aggregate(State.UNSUPPORTED, List.of(), input.size());
     }
 
     public static Result aggregate(State forced, List<Classified> items, int denominator) {

@@ -47,7 +47,12 @@ public final class CandidateE706Evaluation {
         if (actual.failedCount() != failedCount) {
             return "failedCount";
         }
-        if (actual.items().size() != denominator) {
+        boolean rejectedBatch = "UNSUPPORTED".equals(expectedState) && labels.isEmpty() && failedCount == 0;
+        if (rejectedBatch) {
+            if (!actual.items().isEmpty()) {
+                return "items";
+            }
+        } else if (actual.items().size() != denominator) {
             return "items";
         }
         Map<String, String> actualLabels = new LinkedHashMap<>();
@@ -61,7 +66,11 @@ public final class CandidateE706Evaluation {
         if (!labels.equals(actualLabels)) {
             return "labels";
         }
-        if (classified + actual.failedCount() != actual.denominator()) {
+        if (rejectedBatch) {
+            if (classified != 0 || actual.failedCount() != 0) {
+                return "accounting";
+            }
+        } else if (classified + actual.failedCount() != actual.denominator()) {
             return "accounting";
         }
         return null;
@@ -99,7 +108,15 @@ public final class CandidateE706Evaluation {
             }
             Item source = byId.get(item.anonymousId());
             String text = source == null ? "" : (source.reason() == null ? "" : source.reason()) + "\n" + (source.description() == null ? "" : source.description());
-            if (item.evidence() == null || item.evidence().isBlank() || !text.contains(item.evidence())) {
+            boolean expectUncertainNull = "UNCERTAIN".equals(labels.get(item.anonymousId()))
+                    && !accepted.containsKey(item.anonymousId());
+            if (item.evidence() == null || item.evidence().isBlank()) {
+                if (expectUncertainNull) {
+                    continue;
+                }
+                return EvaluationSupport.Score.fail("evidence", "业务", "证据为空或不在原文");
+            }
+            if (!text.contains(item.evidence())) {
                 return EvaluationSupport.Score.fail("evidence", "业务", "证据为空或不在原文");
             }
             if (checkQuotes && !accepted.getOrDefault(item.anonymousId(), java.util.Set.of()).contains(item.evidence())) {

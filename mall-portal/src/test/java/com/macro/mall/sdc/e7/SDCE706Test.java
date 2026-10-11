@@ -121,11 +121,11 @@ class SDCE706Test {
                 new Item("r1", "鞋", "物流问题", "快递破损")));
         assertEquals(State.UNSUPPORTED, result.state());
         assertEquals(2, result.denominator());
-        assertEquals(2, result.failedCount());
-        assertEquals(2, result.items().size());
-        assertTrue(result.items().stream().allMatch(Classified::failed));
+        assertEquals(0, result.failedCount());
+        assertTrue(result.items().isEmpty());
+        assertEquals(0, result.counts().values().stream().mapToInt(Integer::intValue).sum());
+        assertEquals(ratio(0, 2), result.ratios().get(Label.QUALITY));
         assertEquals(0, calls.get());
-        assertEquals(result.denominator(), result.failedCount());
     }
 
     @Test
@@ -135,9 +135,9 @@ class SDCE706Test {
                 new Item("r2", "鞋", "物流问题", "快递破损")));
         assertEquals(State.UNSUPPORTED, result.state());
         assertEquals(2, result.denominator());
-        assertEquals(2, result.failedCount());
-        assertTrue(result.items().stream().allMatch(Classified::failed));
-        assertNotEquals(2, result.counts().getOrDefault(Label.QUALITY, 0) + result.counts().getOrDefault(Label.LOGISTICS, 0));
+        assertEquals(0, result.failedCount());
+        assertTrue(result.items().isEmpty());
+        assertEquals(0, result.counts().getOrDefault(Label.QUALITY, 0) + result.counts().getOrDefault(Label.LOGISTICS, 0));
     }
 
     @Test
@@ -158,17 +158,37 @@ class SDCE706Test {
     }
 
     @Test
-    void blankDescriptionSelectsTheOrdinaryPath() {
+    void blankDescriptionIsUncertainAndDoesNotUseTheReasonVocabulary() {
         AtomicInteger calls = new AtomicInteger();
         Result result = new LlmReturnReasonBatchService(new ExistingReturnReasonBatchService(), (system, input) -> {
             calls.incrementAndGet();
             throw new AssertionError("blank description must not call the model");
-        }).analyze(List.of(new Item("r1", "鞋", "不喜欢", " ")));
+        }).analyze(List.of(new Item("r1", "鞋", "质量问题", " ")));
         assertEquals(State.OK, result.state());
-        assertEquals(Label.PREFERENCE, result.items().get(0).label());
+        assertEquals(Label.UNCERTAIN, result.items().get(0).label());
+        assertNull(result.items().get(0).evidence());
+        assertFalse(result.items().get(0).failed());
         assertEquals(0, calls.get());
         assertEquals(1, result.denominator());
         assertEquals(0, result.failedCount());
+        Result ordinary = new ExistingReturnReasonBatchService().analyze(List.of(new Item("r1", "鞋", "不喜欢", " ")));
+        assertEquals(Label.PREFERENCE, ordinary.items().get(0).label());
+        assertEquals("不喜欢", ordinary.items().get(0).evidence());
+    }
+
+    @Test
+    void evidenceMustBeAFragmentOfTheDescription() {
+        Result quotedReason = new LlmReturnReasonBatchService(new ExistingReturnReasonBatchService(),
+                (system, input) -> "{\"action\":\"classify\",\"anonymousId\":\"r1\",\"label\":\"QUALITY\",\"evidence\":\"质量问题\"}")
+                .analyze(List.of(new Item("r1", "鞋", "质量问题", "鞋底开胶")));
+        assertEquals(State.PARTIAL, quotedReason.state());
+        assertEquals(1, quotedReason.failedCount());
+        Result quotedDescription = new LlmReturnReasonBatchService(new ExistingReturnReasonBatchService(),
+                (system, input) -> "{\"action\":\"classify\",\"anonymousId\":\"r1\",\"label\":\"QUALITY\",\"evidence\":\"鞋底开胶\"}")
+                .analyze(List.of(new Item("r1", "鞋", "物流问题", "鞋底开胶")));
+        assertEquals(State.OK, quotedDescription.state());
+        assertEquals(Label.QUALITY, quotedDescription.items().get(0).label());
+        assertEquals("鞋底开胶", quotedDescription.items().get(0).evidence());
     }
 
     @Test
@@ -235,11 +255,13 @@ class SDCE706Test {
     @Test
     void unavailableDoesNotCountAsSuccessfulRejection() {
         Result unavailable = new Result(State.UNAVAILABLE, List.of(), Map.of(), Map.of(), 0, 0);
-        Result rejected = new Result(State.UNSUPPORTED, List.of(
+        Result rejected = new Result(State.UNSUPPORTED, List.of(), Map.of(), Map.of(), 2, 0);
+        Result oldFailedRows = new Result(State.UNSUPPORTED, List.of(
                 new Classified("r1", null, null, true),
                 new Classified("r2", null, null, true)), Map.of(), Map.of(), 2, 2);
-        assertFalse(CandidateE706Evaluation.matches("UNSUPPORTED", Map.of(), 2, 2, unavailable));
-        assertTrue(CandidateE706Evaluation.matches("UNSUPPORTED", Map.of(), 2, 2, rejected));
+        assertFalse(CandidateE706Evaluation.matches("UNSUPPORTED", Map.of(), 2, 0, unavailable));
+        assertTrue(CandidateE706Evaluation.matches("UNSUPPORTED", Map.of(), 2, 0, rejected));
+        assertFalse(CandidateE706Evaluation.matches("UNSUPPORTED", Map.of(), 2, 0, oldFailedRows));
         assertEquals("INCOMPLETE", CandidateE706Evaluation.verdict(20, 18, 12, 12, true, false));
         assertEquals("DEGRADE", CandidateE706Evaluation.verdict(20, 17, 12, 12, true, false));
         assertEquals("NO_RELEASE", CandidateE706Evaluation.verdict(20, 20, 12, 11, true, false));
