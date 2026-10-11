@@ -37,6 +37,8 @@ class SDCE705Test {
         Result byModel = new LlmAttributeExtractionService(existing, (system, input) -> {
             assertEquals(RED_128, input);
             assertFalse(input.contains("128GB"));
+            assertTrue(system.contains("单位按白名单单位规范化"));
+            assertFalse(system.contains("单位只写原文中的写法"));
             return """
                     {"action":"extract","values":[{"attributeId":1,"value":"红色","evidence":"红色"},{"attributeId":2,"value":"128G","evidence":"128G"}],"unknownIds":[]}""";
         }).extract(new Request(SPECS, RED_128));
@@ -60,6 +62,7 @@ class SDCE705Test {
         }).extract(new Request(SPECS, " "));
         assertEquals(State.NEEDS_INPUT, result.state());
         assertTrue(result.values().isEmpty());
+        assertEquals(Set.of(1L, 2L), result.unknownIds());
         verifyNoInteractions(writer);
     }
 
@@ -67,7 +70,8 @@ class SDCE705Test {
     void omittedCapacityStaysUnknown() {
         PmsProductMapper writer = mock(PmsProductMapper.class);
         Result result = new ExistingAttributeExtractionService(writer).extract(new Request(SPECS, "红色"));
-        assertEquals(State.PARTIAL, result.state());
+        assertEquals(State.OK, result.state());
+        assertNotEquals(State.PARTIAL, result.state());
         assertEquals(Map.of(1L, "红"), values(result));
         assertEquals(Set.of(2L), result.unknownIds());
         verifyNoInteractions(writer);
@@ -83,7 +87,7 @@ class SDCE705Test {
         assertEquals(State.UNSUPPORTED, unknownId.state());
         assertTrue(unknownId.values().isEmpty());
         Result disallowed = existing.extract(new Request(SPECS, "红色，512G"));
-        assertEquals(State.PARTIAL, disallowed.state());
+        assertEquals(State.OK, disallowed.state());
         assertEquals(Map.of(1L, "红"), values(disallowed));
         assertEquals(Set.of(2L), disallowed.unknownIds());
         assertFalse(values(disallowed).containsValue("512GB"));
@@ -99,8 +103,99 @@ class SDCE705Test {
         assertTrue(wide.values().isEmpty());
         assertTrue(wide.unknownIds().contains(2L));
         Result terabyte = existing.extract(new Request(SPECS, "红色，1TB"));
-        assertEquals(State.NEEDS_INPUT, terabyte.state());
-        assertTrue(terabyte.values().stream().noneMatch(value -> value.value().contains("TB") || value.value().endsWith("GB")));
+        assertEquals(State.OK, terabyte.state());
+        assertEquals(Map.of(1L, "红"), values(terabyte));
+        assertEquals(Set.of(2L), terabyte.unknownIds());
+        assertTrue(terabyte.values().stream().noneMatch(value -> value.value().contains("TB")));
+        Result onlyTerabyte = existing.extract(new Request(SPECS, "1TB"));
+        assertEquals(State.NEEDS_INPUT, onlyTerabyte.state());
+        assertTrue(onlyTerabyte.values().isEmpty());
+        assertEquals(Set.of(1L, 2L), onlyTerabyte.unknownIds());
+        verifyNoInteractions(writer);
+    }
+
+    @Test
+    void needsInputFillsEveryWhitelistId() {
+        PmsProductMapper writer = mock(PmsProductMapper.class);
+        ExistingAttributeExtractionService existing = new ExistingAttributeExtractionService(writer);
+        Result byModel = new LlmAttributeExtractionService(existing, (system, input) -> "{\"action\":\"needs_input\"}")
+                .extract(new Request(SPECS, "今天天气不错"));
+        assertEquals(State.NEEDS_INPUT, byModel.state());
+        assertTrue(byModel.values().isEmpty());
+        assertEquals(Set.of(1L, 2L), byModel.unknownIds());
+        Result kept = new LlmAttributeExtractionService(existing, (system, input) -> """
+                {"action":"extract","values":[{"attributeId":1,"value":"红","evidence":"红色"}],"unknownIds":[2]}""")
+                .extract(new Request(SPECS, "红色，1TB"));
+        assertEquals(State.OK, kept.state());
+        assertEquals(Map.of(1L, "红"), values(kept));
+        assertEquals(Set.of(2L), kept.unknownIds());
+        verifyNoInteractions(writer);
+    }
+
+    @Test
+    void fullWidthCapacityUsesTheSameRuleOnBothPaths() {
+        PmsProductMapper writer = mock(PmsProductMapper.class);
+        ExistingAttributeExtractionService existing = new ExistingAttributeExtractionService(writer);
+        Result byRule = existing.extract(new Request(List.of(CAPACITY), "１２８Ｇ"));
+        Result byModel = new LlmAttributeExtractionService(existing, (system, input) -> """
+                {"action":"extract","values":[{"attributeId":2,"value":"１２８Ｇ","evidence":"１２８Ｇ"}],"unknownIds":[]}""")
+                .extract(new Request(List.of(CAPACITY), "１２８Ｇ"));
+        for (Result result : List.of(byRule, byModel)) {
+            assertEquals(State.OK, result.state());
+            assertEquals(Map.of(2L, "128GB"), values(result));
+            assertEquals("１２８Ｇ", evidence(result, 2L));
+        }
+        verifyNoInteractions(writer);
+    }
+
+    @Test
+    void courseCatalogTextsStayInsideTheLiteralRules() {
+        PmsProductMapper writer = mock(PmsProductMapper.class);
+        ExistingAttributeExtractionService existing = new ExistingAttributeExtractionService(writer);
+        AttributeSpec gigabytes = new AttributeSpec(44L, "容量", Set.of("64GB", "128GB"), "GB");
+        String phone = "Apple iPhone 14 (A2884) 128GB 支持移动联通电信5G 双卡双待手机";
+        Result named = existing.extract(new Request(List.of(gigabytes), phone));
+        assertEquals(State.OK, named.state());
+        assertEquals("128GB", evidence(named, 44L));
+
+        Result firstOnly = existing.extract(new Request(List.of(gigabytes), "6GB+64GB 黑色"));
+        assertEquals(State.NEEDS_INPUT, firstOnly.state());
+        assertEquals(Set.of(44L), firstOnly.unknownIds());
+
+        AttributeSpec black = new AttributeSpec(43L, "颜色", Set.of("黑色", "蓝色"), null);
+        AttributeSpec thirtyTwo = new AttributeSpec(44L, "容量", Set.of("32GB", "64GB"), "GB");
+        String sku = "[{\"key\":\"颜色\",\"value\":\"黑色\"},{\"key\":\"容量\",\"value\":\"32G\"}]";
+        Result stock = existing.extract(new Request(List.of(black, thirtyTwo), sku));
+        assertEquals(State.OK, stock.state());
+        assertEquals(Map.of(43L, "黑色", 44L, "32GB"), values(stock));
+        assertEquals("32G", evidence(stock, 44L));
+
+        AttributeSpec catalogColor = new AttributeSpec(49L, "颜色", Set.of("红色", "蓝色", "绿色"), null);
+        Result catalog = existing.extract(new Request(List.of(catalogColor), "蓝色"));
+        assertEquals(Map.of(49L, "蓝色"), values(catalog));
+
+        AttributeSpec screenGb = new AttributeSpec(45L, "屏幕尺寸", Set.of("6.1"), "GB");
+        AttributeSpec batteryGb = new AttributeSpec(48L, "电池容量", Set.of("3000", "5500"), "GB");
+        Result mixed = existing.extract(new Request(List.of(COLOR, screenGb, batteryGb), "红色，6.1英寸，3000ml，5500mAh"));
+        assertEquals(State.OK, mixed.state());
+        assertEquals(Map.of(1L, "红"), values(mixed));
+        assertEquals(Set.of(45L, 48L), mixed.unknownIds());
+
+        AttributeSpec batteryText = new AttributeSpec(48L, "电池容量", Set.of("3000ml"), null);
+        AttributeSpec milliamp = new AttributeSpec(48L, "电池容量", Set.of("5500mAh"), null);
+        AttributeSpec screenText = new AttributeSpec(45L, "屏幕尺寸", Set.of("6.1英寸"), null);
+        assertEquals("3000ml", evidence(existing.extract(new Request(List.of(batteryText), "3000ml")), 48L));
+        assertEquals("5500mAh", evidence(existing.extract(new Request(List.of(milliamp), "5500mAh")), 48L));
+        assertEquals("6.1英寸", evidence(existing.extract(new Request(List.of(screenText), "6.1英寸")), 45L));
+        AttributeSpec size = new AttributeSpec(1L, "尺寸", Set.of("M", "X"), null);
+        assertEquals("M", evidence(existing.extract(new Request(List.of(size), "M号")), 1L));
+        Result brand = existing.extract(new Request(List.of(CAPACITY), "牌子一般是 256GB"));
+        assertEquals(State.OK, brand.state());
+        assertEquals(Map.of(2L, "256GB"), values(brand));
+        Result save = existing.extract(new Request(SPECS, "把商品保存，红色"));
+        assertEquals(State.OK, save.state());
+        assertEquals(Map.of(1L, "红"), values(save));
+        assertEquals(Set.of(2L), save.unknownIds());
         verifyNoInteractions(writer);
     }
 
@@ -116,6 +211,7 @@ class SDCE705Test {
             Result result = new LlmAttributeExtractionService(existing, (system, input) -> output).extract(new Request(SPECS, RED_128));
             assertEquals(State.UNSUPPORTED, result.state(), output);
             assertTrue(result.values().isEmpty(), output);
+            assertTrue(result.unknownIds().isEmpty(), output);
         }
         verifyNoInteractions(writer);
     }
@@ -128,6 +224,7 @@ class SDCE705Test {
         }).extract(new Request(SPECS, RED_128));
         assertEquals(State.UNAVAILABLE, result.state());
         assertTrue(result.values().isEmpty());
+        assertTrue(result.unknownIds().isEmpty());
         verifyNoInteractions(writer);
     }
 

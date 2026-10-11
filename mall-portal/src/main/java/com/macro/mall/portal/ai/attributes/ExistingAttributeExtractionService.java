@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 @Service
 public class ExistingAttributeExtractionService implements AttributeExtractionService {
     private static final Pattern CAPACITY = Pattern.compile("([0-9０-９]+)([GgＧ])([BbＢ])?");
-    private static final Pattern TERABYTE = Pattern.compile("[0-9０-９]+\\s*(?:[TtＴ][BbＢ]|TiB)");
     private static final Map<String, String> COLOR_ALIASES = Map.of("红色", "红", "蓝色", "蓝");
     private final PmsProductMapper writer;
 
@@ -33,10 +32,7 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
             throw new IllegalStateException("writer");
         }
         if (input.attributes() == null || input.attributes().isEmpty() || input.text() == null || input.text().isBlank()) {
-            return new Result(State.NEEDS_INPUT, List.of(), Set.of());
-        }
-        if (TERABYTE.matcher(input.text()).find()) {
-            return new Result(State.NEEDS_INPUT, List.of(), ids(input.attributes()));
+            return new Result(State.NEEDS_INPUT, List.of(), Set.copyOf(whitelistIds(input.attributes())));
         }
         List<Value> values = new ArrayList<>();
         Set<Long> unknown = new LinkedHashSet<>();
@@ -52,9 +48,6 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
     }
 
     public Result check(Request input, List<Value> proposed, Set<Long> proposedUnknown) {
-        if (input.text() != null && TERABYTE.matcher(input.text()).find()) {
-            return new Result(State.NEEDS_INPUT, List.of(), ids(input.attributes()));
-        }
         Map<Long, AttributeSpec> specs = new LinkedHashMap<>();
         for (AttributeSpec spec : input.attributes()) {
             specs.put(spec.id(), spec);
@@ -112,10 +105,7 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
         if (ordered.isEmpty()) {
             return new Result(State.NEEDS_INPUT, List.of(), Set.copyOf(unknown));
         }
-        if (!unknown.isEmpty()) {
-            return new Result(State.PARTIAL, ordered, Set.copyOf(unknown));
-        }
-        return new Result(State.OK, ordered, Set.of());
+        return new Result(State.OK, ordered, Set.copyOf(unknown));
     }
 
     private static Value literal(AttributeSpec spec, String text) {
@@ -124,7 +114,7 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
             if (!matcher.find()) {
                 return null;
             }
-            String canonical = foldDigits(matcher.group(1)) + "GB";
+            String canonical = foldWidth(matcher.group(1)) + "GB";
             if (!spec.allowedValues().contains(canonical)) {
                 return null;
             }
@@ -148,7 +138,7 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
             return null;
         }
         if ("GB".equals(spec.unit())) {
-            String folded = foldDigits(raw).replace(" ", "");
+            String folded = foldWidth(raw).replace(" ", "");
             Matcher matcher = Pattern.compile("^(\\d+)[Gg][Bb]?$").matcher(folded);
             if (!matcher.matches()) {
                 return null;
@@ -166,12 +156,17 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
         return null;
     }
 
-    private static String foldDigits(String raw) {
+    /** 全角数字折成半角，全角 Ｇ/Ｂ 折成半角 G/B。两条路径共用。 */
+    private static String foldWidth(String raw) {
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < raw.length(); i++) {
             char c = raw.charAt(i);
             if (c >= '０' && c <= '９') {
                 builder.append((char) ('0' + (c - '０')));
+            } else if (c == 'Ｇ') {
+                builder.append('G');
+            } else if (c == 'Ｂ') {
+                builder.append('B');
             } else {
                 builder.append(c);
             }
@@ -179,8 +174,11 @@ public class ExistingAttributeExtractionService implements AttributeExtractionSe
         return builder.toString();
     }
 
-    private static Set<Long> ids(List<AttributeSpec> attributes) {
+    static Set<Long> whitelistIds(List<AttributeSpec> attributes) {
         Set<Long> ids = new LinkedHashSet<>();
+        if (attributes == null) {
+            return ids;
+        }
         for (AttributeSpec spec : attributes) {
             ids.add(spec.id());
         }
