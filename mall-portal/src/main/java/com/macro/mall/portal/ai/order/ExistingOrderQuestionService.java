@@ -62,14 +62,10 @@ public class ExistingOrderQuestionService implements OrderQuestionService {
         List<OmsOrderDetail> rows = page.getList() == null ? List.of() : page.getList();
         long total = page.getTotal() == null ? 0L : page.getTotal();
         List<OrderFact> facts = new ArrayList<>();
-        boolean logisticsMissing = false;
         StringBuilder message = new StringBuilder();
         for (OmsOrderDetail row : rows) {
             String company = blankToNull(row.getDeliveryCompany());
             String code = blankToNull(row.getDeliverySn());
-            if (company == null || code == null) {
-                logisticsMissing = true;
-            }
             facts.add(new OrderFact(row.getId(), row.getStatus(),
                     row.getCreateTime() == null ? null : row.getCreateTime().toInstant(), company, code));
             if (!message.isEmpty()) {
@@ -85,7 +81,7 @@ public class ExistingOrderQuestionService implements OrderQuestionService {
         if (facts.isEmpty()) {
             return new Result(State.OK, facts, total, "没有符合条件的订单");
         }
-        return new Result(logisticsMissing ? State.PARTIAL : State.OK, facts, total, message.toString());
+        return new Result(State.OK, facts, total, message.toString());
     }
 
     private static Date toDate(Instant instant) {

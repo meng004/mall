@@ -5,7 +5,11 @@ import java.util.List;
 
 /** 当前会员的订单状态问答。请求不含会员编号，会员来自既有登录上下文。 */
 public interface OrderQuestionService {
-    enum State { OK, NEEDS_INPUT, UNSUPPORTED, UNAVAILABLE, PARTIAL }
+    enum State {
+        OK, NEEDS_INPUT, UNSUPPORTED, UNAVAILABLE,
+        /** 查询不再返回。物流公司或单号为空时结果仍是 OK，空着的字段保持为空。 */
+        PARTIAL
+    }
 
     Result query(Request input);
 

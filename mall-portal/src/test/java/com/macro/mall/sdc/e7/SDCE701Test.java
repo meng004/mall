@@ -125,23 +125,41 @@ class SDCE701Test {
 
     @Test
     void missingLogisticsStaysUnknown() {
-        OmsOrderDetail order = order(11L, 1, LAST_WEEK_FROM);
-        order.setDeliveryCompany(null);
-        order.setDeliverySn("");
-        order.setDeliveryTime(Date.from(Instant.parse("2026-03-09T00:00:00Z")));
-        order.setReceiverPhone("13812345678");
-        order.setReceiverDetailAddress("秘密地址");
+        OmsOrderDetail missing = order(11L, 1, LAST_WEEK_FROM);
+        missing.setDeliveryCompany(null);
+        missing.setDeliverySn("");
+        missing.setDeliveryTime(Date.from(Instant.parse("2026-03-09T00:00:00Z")));
+        missing.setReceiverPhone("13812345678");
+        missing.setReceiverDetailAddress("秘密地址");
+        OmsOrderDetail companyOnly = order(12L, 1, LAST_WEEK_FROM.plusSeconds(1));
+        companyOnly.setDeliveryCompany("顺丰");
+        companyOnly.setDeliverySn("  ");
+        OmsOrderDetail codeOnly = order(13L, 1, LAST_WEEK_FROM.plusSeconds(2));
+        codeOnly.setDeliveryCompany("");
+        codeOnly.setDeliverySn("YT13");
+        OmsOrderDetail complete = order(14L, 2, LAST_WEEK_FROM.plusSeconds(3));
+        complete.setDeliveryCompany("圆通");
+        complete.setDeliverySn("YT14");
         OmsPortalOrderService orders = mock(OmsPortalOrderService.class);
         when(orders.list(eq(1), eq(Date.from(LAST_WEEK_FROM)), eq(Date.from(LAST_WEEK_UNTIL)), eq(1), eq(10)))
-                .thenReturn(page(List.of(order), 1));
+                .thenReturn(page(List.of(missing, companyOnly, codeOnly, complete), 4));
         ExistingOrderQuestionService existing = new ExistingOrderQuestionService(orders, MONDAY, SHANGHAI);
 
         Result result = existing.query(new Request(null, 1, LAST_WEEK_FROM, LAST_WEEK_UNTIL, 1, 10));
 
-        assertEquals(State.PARTIAL, result.state());
+        assertEquals(State.OK, result.state());
+        assertEquals(4L, result.total());
         assertNull(result.orders().get(0).logisticsCompany());
         assertNull(result.orders().get(0).logisticsCode());
+        assertEquals("顺丰", result.orders().get(1).logisticsCompany());
+        assertNull(result.orders().get(1).logisticsCode());
+        assertNull(result.orders().get(2).logisticsCompany());
+        assertEquals("YT13", result.orders().get(2).logisticsCode());
+        assertEquals("圆通", result.orders().get(3).logisticsCompany());
+        assertEquals("YT14", result.orders().get(3).logisticsCode());
         assertTrue(result.message().contains("未知"));
+        assertTrue(result.message().contains("圆通"));
+        assertTrue(result.message().contains("YT14"));
         assertFalse(result.message().contains("预计"));
         assertFalse(result.message().contains("2026-03-09"));
         assertFalse(result.message().contains("13812345678"));
