@@ -97,28 +97,29 @@ class SDCE702DatabaseTest {
         assertEquals("1GB", stored.rows().get(0).right().raw());
         assertEquals("1024MB", stored.rows().get(0).left().normalized());
         assertEquals("1024MB", stored.rows().get(0).right().normalized());
-        assertEquals("equivalent", stored.rows().get(0).relation());
+        assertEquals("数值等价", stored.rows().get(0).relation());
 
         Result ram = service.compare(new Request(left, right, null, null, null, List.of(memory)));
         assertEquals("8GB", ram.rows().get(0).left().raw());
         assertEquals("6GB", ram.rows().get(0).right().raw());
         assertEquals("8192MB", ram.rows().get(0).left().normalized());
         assertEquals("6144MB", ram.rows().get(0).right().normalized());
-        assertEquals("different", ram.rows().get(0).relation());
+        assertEquals("左大于右", ram.rows().get(0).relation());
 
         Result paint = service.compare(new Request(left, right, null, null, null, List.of(color)));
         assertEquals("红", paint.rows().get(0).left().raw());
         assertEquals("蓝", paint.rows().get(0).right().raw());
-        assertEquals("uncompared", paint.rows().get(0).relation());
+        assertEquals("原值对照", paint.rows().get(0).relation());
 
         Result mass = service.compare(new Request(left, right, null, null, null, List.of(weight)));
         assertEquals("500g", mass.rows().get(0).left().raw());
         assertEquals("0.5kg", mass.rows().get(0).right().raw());
-        assertEquals("uncompared", mass.rows().get(0).relation());
+        assertEquals("原值对照", mass.rows().get(0).relation());
 
         Result absent = service.compare(new Request(left, right, null, null, null, List.of(screen)));
+        assertEquals(State.OK, absent.state());
         assertNull(absent.rows().get(0).left().raw());
-        assertEquals("unknown", absent.rows().get(0).relation());
+        assertEquals("未知", absent.rows().get(0).relation());
 
         Result needSku = service.compare(new Request(multi, right, null, null, null, List.of(capacity)));
         assertEquals(State.NEEDS_INPUT, needSku.state());
@@ -127,7 +128,7 @@ class SDCE702DatabaseTest {
         assertEquals("128GB", sku.rows().get(0).right().raw());
         assertEquals("262144MB", sku.rows().get(0).left().normalized());
         assertEquals("131072MB", sku.rows().get(0).right().normalized());
-        assertEquals("different", sku.rows().get(0).relation());
+        assertEquals("左大于右", sku.rows().get(0).relation());
 
         Result buried = service.compare(new Request(hidden, left, null, null, null, List.of(capacity)));
         assertEquals(State.UNSUPPORTED, buried.state());

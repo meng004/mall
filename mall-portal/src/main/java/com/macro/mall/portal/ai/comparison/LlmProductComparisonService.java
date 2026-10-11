@@ -60,7 +60,7 @@ public class LlmProductComparisonService implements ProductComparisonService {
             return new Result(State.UNSUPPORTED, List.of(), List.of());
         }
         if (parsed.ids.size() > 3) {
-            return new Result(State.UNSUPPORTED, List.of(), List.of());
+            return new Result(State.NEEDS_INPUT, List.of(), List.of("最多比较三个属性"));
         }
         Set<Long> candidates = existing.candidateIds(input.leftId(), input.rightId());
         if (parsed.ids.isEmpty() || parsed.ids.stream().anyMatch(id -> !candidates.contains(id))) {

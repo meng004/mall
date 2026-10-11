@@ -62,7 +62,6 @@ public class ExistingProductComparisonService implements ProductComparisonServic
         }
         List<Row> rows = new ArrayList<>();
         List<String> questions = new ArrayList<>();
-        boolean unknown = false;
         for (Long attributeId : input.attributeIds()) {
             PmsProductAttribute attribute = left.attributes.getOrDefault(attributeId, right.attributes.get(attributeId));
             if (attribute == null) {
@@ -74,13 +73,12 @@ public class ExistingProductComparisonService implements ProductComparisonServic
             Value leftValue = read(left, attribute, input.leftSkuId());
             Value rightValue = read(right, attribute, input.rightSkuId());
             String relation = relation(leftValue.raw(), rightValue.raw());
-            if ("unknown".equals(relation)) {
-                unknown = true;
+            if ("未知".equals(relation)) {
                 questions.add("属性未记录");
             }
             rows.add(new Row(attributeId, leftValue, rightValue, relation));
         }
-        return new Result(unknown ? State.PARTIAL : State.OK, rows, questions);
+        return new Result(State.OK, rows, questions);
     }
 
     public boolean visible(long id) {
@@ -188,28 +186,43 @@ public class ExistingProductComparisonService implements ProductComparisonServic
     }
 
     static String normalize(String raw) {
+        BigDecimal megabytes = megabytes(raw);
+        if (raw == null) {
+            return null;
+        }
+        if (megabytes == null) {
+            return raw.trim();
+        }
+        return megabytes.stripTrailingZeros().toPlainString() + "MB";
+    }
+
+    /** MB/GB only. {@code 1GB}=1024MB. Anything else, including {@code 32G}, is not a storage quantity. */
+    static BigDecimal megabytes(String raw) {
         if (raw == null) {
             return null;
         }
         Matcher matcher = UNIT.matcher(raw.replace(" ", ""));
         if (!matcher.matches()) {
-            return raw.trim();
+            return null;
         }
         BigDecimal number = new BigDecimal(matcher.group(1));
-        BigDecimal megabytes = matcher.group(2).equalsIgnoreCase("GB") ? number.multiply(new BigDecimal("1024")) : number;
-        return megabytes.stripTrailingZeros().toPlainString() + "MB";
+        return matcher.group(2).equalsIgnoreCase("GB") ? number.multiply(new BigDecimal("1024")) : number;
     }
 
     private static String relation(String leftRaw, String rightRaw) {
         if (leftRaw == null || rightRaw == null) {
-            return "unknown";
+            return "未知";
         }
-        boolean leftUnit = UNIT.matcher(leftRaw.replace(" ", "")).matches();
-        boolean rightUnit = UNIT.matcher(rightRaw.replace(" ", "")).matches();
-        if (leftUnit && rightUnit) {
-            return normalize(leftRaw).equals(normalize(rightRaw)) ? "equivalent" : "different";
+        BigDecimal left = megabytes(leftRaw);
+        BigDecimal right = megabytes(rightRaw);
+        if (left == null || right == null) {
+            return "原值对照";
         }
-        return "uncompared";
+        int order = left.compareTo(right);
+        if (order == 0) {
+            return "数值等价";
+        }
+        return order > 0 ? "左大于右" : "右大于左";
     }
 
     private static String blank(String value) {
