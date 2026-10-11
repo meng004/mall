@@ -33,7 +33,7 @@ public final class CandidateE702Evaluation {
 
     private CandidateE702Evaluation() {}
 
-    public record ExpectedSide(Long productId, Long skuId, String raw, String normalized, String sourceField) {}
+    public record ExpectedSide(Long productId, Long skuId, Long attributeId, String raw, String normalized, String sourceField) {}
 
     public record ExpectedRow(long attributeId, String relation, ExpectedSide left, ExpectedSide right) {}
 
@@ -74,6 +74,7 @@ public final class CandidateE702Evaluation {
         return actual != null && expected != null
                 && Objects.equals(expected.productId(), actual.productId())
                 && Objects.equals(expected.skuId(), actual.skuId())
+                && Objects.equals(expected.attributeId(), actual.attributeId())
                 && Objects.equals(expected.raw(), actual.raw())
                 && Objects.equals(expected.normalized(), actual.normalized())
                 && Objects.equals(expected.sourceField(), actual.sourceField());
@@ -411,17 +412,17 @@ public final class CandidateE702Evaluation {
                     sideFrom(node.get("left")), sideFrom(node.get("right")));
         }
         return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.get("relation")),
-                new ExpectedSide(nullableLong(node, "leftProductId"), nullableLong(node, "leftSkuId"),
+                new ExpectedSide(nullableLong(node, "leftProductId"), nullableLong(node, "leftSkuId"), nullableLong(node, "leftAttributeId"),
                         nullableText(node.get("leftRaw")), nullableText(node.get("leftNormalized")), nullableText(node.get("leftSourceField"))),
-                new ExpectedSide(nullableLong(node, "rightProductId"), nullableLong(node, "rightSkuId"),
+                new ExpectedSide(nullableLong(node, "rightProductId"), nullableLong(node, "rightSkuId"), nullableLong(node, "rightAttributeId"),
                         nullableText(node.get("rightRaw")), nullableText(node.get("rightNormalized")), nullableText(node.get("rightSourceField"))));
     }
 
     private static ExpectedSide sideFrom(JsonNode node) {
         if (node == null || node.isNull() || node.isMissingNode()) {
-            return new ExpectedSide(null, null, null, null, null);
+            return new ExpectedSide(null, null, null, null, null, null);
         }
-        return new ExpectedSide(nullableLong(node, "productId"), nullableLong(node, "skuId"),
+        return new ExpectedSide(nullableLong(node, "productId"), nullableLong(node, "skuId"), nullableLong(node, "attributeId"),
                 nullableText(node.get("raw")), nullableText(node.get("normalized")), nullableText(node.get("sourceField")));
     }
 
@@ -454,6 +455,7 @@ public final class CandidateE702Evaluation {
         Map<String, Object> side = new LinkedHashMap<>();
         side.put("productId", value.productId());
         side.put("skuId", value.skuId());
+        side.put("attributeId", value.attributeId());
         side.put("raw", value.raw());
         side.put("normalized", value.normalized());
         side.put("sourceField", value.sourceField());

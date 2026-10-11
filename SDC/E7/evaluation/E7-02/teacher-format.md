@@ -38,7 +38,7 @@ LLM 实现读 `llm.text`。`llm.attributeIds` 必须是 `null`。模型只从这
 每一行写成：
 
 ```json
-{"attributeId": 900007, "relation": "数值等价", "left": {"productId": 900001, "skuId": null, "raw": "1024MB", "normalized": "1024MB", "sourceField": "productAttributeValue"}, "right": {"productId": 900002, "skuId": null, "raw": "1GB", "normalized": "1024MB", "sourceField": "productAttributeValue"}}
+{"attributeId": 900007, "relation": "数值等价", "left": {"productId": 900001, "skuId": null, "attributeId": 900007, "raw": "1024MB", "normalized": "1024MB", "sourceField": "productAttributeValue"}, "right": {"productId": 900002, "skuId": null, "attributeId": 900007, "raw": "1GB", "normalized": "1024MB", "sourceField": "productAttributeValue"}}
 ```
 
 `questions` 不参与比较。
@@ -74,8 +74,8 @@ LLM 实现读 `llm.text`。`llm.attributeIds` 必须是 `null`。模型只从这
           {
             "attributeId": 900007,
             "relation": "数值等价",
-            "left": {"productId": 900001, "skuId": null, "raw": "1024MB", "normalized": "1024MB", "sourceField": "productAttributeValue"},
-            "right": {"productId": 900002, "skuId": null, "raw": "1GB", "normalized": "1024MB", "sourceField": "productAttributeValue"}
+            "left": {"productId": 900001, "skuId": null, "attributeId": 900007, "raw": "1024MB", "normalized": "1024MB", "sourceField": "productAttributeValue"},
+            "right": {"productId": 900002, "skuId": null, "attributeId": 900007, "raw": "1GB", "normalized": "1024MB", "sourceField": "productAttributeValue"}
           }
         ]
       }
@@ -135,6 +135,15 @@ WHERE product_id = :productId;
 
 `type` 不是 0，或者 `type` 为 0 但该侧没有任何 SKU 时，改从 `pms_product_attribute_value.value` 取值。这时结果里的 `skuId` 为 `null`。取到非空原文时 `sourceField` 为 `productAttributeValue`。
 
+例外：属性编号只在另一侧商品的分类里时，这一侧不追问 SKU。是否追问只看「这一侧的分类里有没有这个编号」。取值仍按上面的 `type` 和这一侧的 SKU 走，属性名称用的是另一侧那条属性的 `name`：
+
+- `type = 0` 且这一侧至少有一条 SKU 时，仍到这一侧的 `sp_data` 里按名称找 `key`。只有一条 SKU 时就用那一条；名称对上则取出原文，`sourceField` 为 `skuSpData`，这一侧不是未知。多于一条，且请求里的这一侧 SKU 编号留空或对不上任何一条时，选不中 SKU，这一侧 `raw`、`normalized`、`skuId`、`sourceField` 都是 null。另一侧有值时，该行关系是「未知」，整题仍是 `OK`，不是 `NEEDS_INPUT`。
+- `type` 不是 0，或这一侧没有 SKU 时，改查这一侧的属性值表。没有对应行时这一侧没有值，另一侧有值则关系是「未知」。
+
+两侧 `Value.attributeId` 都是题目里的那个属性编号，即使这一侧的分类里没有它。
+
+占位例子（这些编号不在课程库中）：属性 900008 的 `type` 为 0、名称是「容量」，只在右商品 900002 的分类里。右商品只有一条 SKU，`sp_data` 里 `key` 为「容量」、`value` 为 `32GB`。左商品 900001 的分类里没有 900008，但有两条 SKU，请求的 `leftSkuId` 为 null。比较 900008 的结果是 `OK`，不追问规格。左侧 `raw`、`normalized`、`skuId`、`sourceField` 都是 null，`attributeId` 为 900008。右侧 `raw` 为 `32GB`，`normalized` 为 `32768MB`，`skuId` 为那条 SKU 的编号，`sourceField` 为 `skuSpData`，`attributeId` 为 900008。关系是「未知」。若左商品改成只有一条 SKU，且它的 `sp_data` 里也有 `key`「容量」，左侧就会取出该原文，关系按 MB 数值比较，不再是「未知」。
+
 空白：`null`、空串、只含空白的原文都当成没有值。`raw` 为 `null`，`normalized` 为 `null`，`sourceField` 为 `null`。非全空白的原文不去掉首尾空格，`raw` 就是库里的那段文字（规格值是 `sp_data` 里命中的 `value`，参数值是表里的 `value`）。
 
 任一侧 `raw` 为 `null` 时，该行 `relation` 为「未知」，整份 `state` 仍是 `OK`。
@@ -156,7 +165,7 @@ WHERE product_id = :productId;
 - `state` 与 `expected.state` 相同。
 - `rows` 条数相同。
 - 两边都按 `attributeId` 升序后，按下标逐行比较。相同编号的相对顺序保持原样。不按集合比较。
-- 每一行的 `attributeId`、`relation`，以及左右两侧的 `productId`、`skuId`、`raw`、`normalized`、`sourceField` 相同。
+- 每一行的 `attributeId`、`relation`，以及左右两侧的 `productId`、`skuId`、`attributeId`、`raw`、`normalized`、`sourceField` 相同。行上的 `attributeId` 与左右两侧 `Value.attributeId` 都要写，都参与比较。
 - JSON 的 `null` 对结果里的空值。不要写成字符串 `"null"`。
 
 `relation` 只有这五个词：数值等价、左大于右、右大于左、原值对照、未知。
@@ -210,4 +219,4 @@ WHERE product_id = :productId;
 
 这些编号就是课程库中的真实编号。评测器不检查教学商品 801–805 是否在库里。`expected`、`kind` 和「标准答案」不会放进模型输入。
 
-报告每一行的 `structured` 含 `state` 和按 `attributeId` 升序的 `rows`。每一行含 `attributeId`、`relation`，以及左右的 `productId`、`skuId`、`raw`、`normalized`、`sourceField`。这些就是参与比较的字段。
+报告每一行的 `structured` 含 `state` 和按 `attributeId` 升序的 `rows`。每一行含 `attributeId`、`relation`，以及左右的 `productId`、`skuId`、`attributeId`、`raw`、`normalized`、`sourceField`。这些就是参与比较的字段。
