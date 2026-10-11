@@ -116,7 +116,8 @@ final class EvaluationSupport {
     }
 
     static boolean boundary(String kind) {
-        return "adversarial".equals(kind) || "ood".equals(kind) || "对抗".equals(kind) || "分布外".equals(kind);
+        return "adversarial".equals(kind) || "ood".equals(kind) || "out_of_domain".equals(kind)
+                || "对抗".equals(kind) || "分布外".equals(kind);
     }
 
     static String redact(String text) {
