@@ -1,0 +1,477 @@
+E7-01 teacher-2026 期望 OK 的逐题 SQL 与原样执行输出
+编写日期：2026-10-11
+会员：member_id = 1；未删除：delete_status = 0
+客户端：docker exec -i sdc-classroom-mysql-1 mysql --default-character-set=utf8mb4 -umall mall --batch --raw
+排序与分页：ORDER BY create_time DESC，LIMIT pageSize OFFSET (pageNum-1)*pageSize
+时间比较使用上海本地时刻的朴素 datetime（课程库 create_time 无时区）
+空结果的 id 查询在 --batch --raw 下没有任何输出行（连表头也没有）；COUNT 仍打印表头和 0
+两遍完整执行输出逐字节一致。下面每题的「原样输出」即该客户端输出。
+
+======== t26-n01 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+68
+67
+66
+65
+64
+63
+62
+61
+60
+59
+
+======== t26-n01 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0;
+
+原样输出：
+total
+40
+
+======== t26-n02 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 10;
+
+原样输出：
+id
+58
+57
+56
+55
+54
+53
+52
+51
+50
+49
+
+======== t26-n02 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0;
+
+原样输出：
+total
+40
+
+======== t26-n03 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=1
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+68
+67
+58
+57
+56
+54
+53
+51
+50
+49
+
+======== t26-n03 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=1;
+
+原样输出：
+total
+16
+
+======== t26-n04 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=1
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 10;
+
+原样输出：
+id
+46
+45
+42
+40
+32
+13
+
+======== t26-n04 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=1;
+
+原样输出：
+total
+16
+
+======== t26-n05 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=3
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+62
+60
+52
+48
+47
+41
+37
+35
+30
+14
+
+======== t26-n05 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=3;
+
+原样输出：
+total
+10
+
+======== t26-n06 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=4
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+66
+64
+61
+59
+55
+44
+43
+38
+36
+31
+
+======== t26-n06 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=4;
+
+原样输出：
+total
+12
+
+======== t26-n07 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=5
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+（空，零行）
+
+======== t26-n07 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=5;
+
+原样输出：
+total
+0
+
+======== t26-n08 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=2
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+65
+63
+
+======== t26-n08 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=2;
+
+原样输出：
+total
+2
+
+======== t26-n09 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-16 00:00:00'
+  AND create_time < '2020-05-19 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+41
+40
+38
+37
+36
+35
+32
+31
+
+======== t26-n09 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-16 00:00:00'
+  AND create_time < '2020-05-19 00:00:00';
+
+原样输出：
+total
+8
+
+======== t26-n10 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-18 00:00:00'
+  AND create_time < '2020-05-19 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+41
+40
+
+======== t26-n10 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-18 00:00:00'
+  AND create_time < '2020-05-19 00:00:00';
+
+原样输出：
+total
+2
+
+======== t26-n11 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-17 00:00:00'
+  AND create_time < '2020-05-18 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+38
+37
+36
+35
+32
+
+======== t26-n11 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-17 00:00:00'
+  AND create_time < '2020-05-18 00:00:00';
+
+原样输出：
+total
+5
+
+======== t26-n12 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-11 00:00:00'
+  AND create_time < '2020-05-18 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+38
+37
+36
+35
+32
+31
+
+======== t26-n12 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2020-05-11 00:00:00'
+  AND create_time < '2020-05-18 00:00:00';
+
+原样输出：
+total
+6
+
+======== t26-n13 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=3
+  AND create_time >= '2020-05-01 00:00:00'
+  AND create_time < '2020-06-01 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+41
+37
+35
+
+======== t26-n13 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=3
+  AND create_time >= '2020-05-01 00:00:00'
+  AND create_time < '2020-06-01 00:00:00';
+
+原样输出：
+total
+3
+
+======== t26-n14 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=4
+  AND create_time >= '2020-05-17 00:00:00'
+  AND create_time < '2020-05-18 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+38
+36
+
+======== t26-n14 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=4
+  AND create_time >= '2020-05-17 00:00:00'
+  AND create_time < '2020-05-18 00:00:00';
+
+原样输出：
+total
+2
+
+======== t26-n15 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=1
+  AND create_time >= '2020-05-18 00:00:00'
+  AND create_time < '2020-05-19 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+40
+
+======== t26-n15 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=1
+  AND create_time >= '2020-05-18 00:00:00'
+  AND create_time < '2020-05-19 00:00:00';
+
+原样输出：
+total
+1
+
+======== t26-n16 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=0
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+（空，零行）
+
+======== t26-n16 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0 AND status=0;
+
+原样输出：
+total
+0
+
+======== t26-n17 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2019-01-01 00:00:00'
+  AND create_time < '2020-01-01 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+（空，零行）
+
+======== t26-n17 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2019-01-01 00:00:00'
+  AND create_time < '2020-01-01 00:00:00';
+
+原样输出：
+total
+0
+
+======== t26-n18 分页 ========
+SELECT id
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2023-01-10 00:00:00'
+  AND create_time < '2023-01-11 00:00:00'
+ORDER BY create_time DESC
+LIMIT 10 OFFSET 0;
+
+原样输出：
+id
+68
+67
+66
+
+======== t26-n18 总数 ========
+SELECT COUNT(*) AS total
+FROM oms_order
+WHERE member_id=1 AND delete_status=0
+  AND create_time >= '2023-01-10 00:00:00'
+  AND create_time < '2023-01-11 00:00:00';
+
+原样输出：
+total
+3
+
+t26-n19、t26-n20 期望 NEEDS_INPUT，不查库。
+t26-a01–t26-a08、t26-o01–t26-o04 期望 UNSUPPORTED，不查库。
