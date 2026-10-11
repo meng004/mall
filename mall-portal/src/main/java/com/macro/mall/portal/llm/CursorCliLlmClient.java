@@ -16,7 +16,13 @@ public final class CursorCliLlmClient implements LlmClient {
     private final List<String> executable;
 
     public CursorCliLlmClient(String model, Duration timeout) {
-        this(model,timeout,List.of("rtk","proxy","cursor-agent"));
+        this(model, timeout, commandFrom(System.getenv("MALL_LLM_CURSOR_CMD")));
+    }
+
+    /** Splits {@code MALL_LLM_CURSOR_CMD} on spaces. Unset or blank uses {@code cursor-agent}. */
+    static List<String> commandFrom(String configured) {
+        if (configured == null || configured.isBlank()) return List.of("cursor-agent");
+        return List.of(configured.trim().split(" +"));
     }
     // Package-private process seam lets tests exercise the real timeout/protocol without an online model.
     CursorCliLlmClient(String model, Duration timeout, List<String> executable) {
