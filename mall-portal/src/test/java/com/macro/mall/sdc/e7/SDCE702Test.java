@@ -14,9 +14,11 @@ import com.macro.mall.model.PmsSkuStock;
 import com.macro.mall.model.PmsSkuStockExample;
 import com.macro.mall.portal.ai.comparison.ExistingProductComparisonService;
 import com.macro.mall.portal.ai.comparison.LlmProductComparisonService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.macro.mall.portal.ai.comparison.ProductComparisonService.Request;
 import com.macro.mall.portal.ai.comparison.ProductComparisonService.Result;
 import com.macro.mall.portal.ai.comparison.ProductComparisonService.Row;
+import com.macro.mall.portal.ai.comparison.ProductComparisonService.Value;
 import com.macro.mall.portal.ai.comparison.ProductComparisonService.State;
 import com.macro.mall.portal.llm.LlmClient;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -233,16 +236,21 @@ class SDCE702Test {
     void courseLibrarySpellingsStayLiteral() {
         String[] samples = {"32G", "6GB+64GB", "5.8", "6.1英寸", "3000ml", "5500mAh"};
         for (String sample : samples) {
-            assertEquals(null, ExistingProductComparisonService.megabytes(sample), sample);
-            assertEquals(sample, ExistingProductComparisonService.normalize(sample), sample);
+            Result literal = capacityCatalog(sample, sample).service()
+                    .compare(new Request(LEFT, RIGHT, null, null, null, List.of(CAPACITY)));
+            assertEquals(sample, literal.rows().get(0).left().normalized(), sample);
+            assertEquals("原值对照", literal.rows().get(0).relation(), sample);
         }
         Result mixed = capacityCatalog("32G", "32GB").service()
                 .compare(new Request(LEFT, RIGHT, null, null, null, List.of(CAPACITY)));
         assertEquals("32G", mixed.rows().get(0).left().normalized());
         assertEquals("32768MB", mixed.rows().get(0).right().normalized());
         assertEquals("原值对照", mixed.rows().get(0).relation());
-        assertEquals("1024MB", ExistingProductComparisonService.normalize("1 GB"));
-        assertEquals("1536MB", ExistingProductComparisonService.normalize("1.5GB"));
+        Result spaced = capacityCatalog("1 GB", "1.5GB").service()
+                .compare(new Request(LEFT, RIGHT, null, null, null, List.of(CAPACITY)));
+        assertEquals("1024MB", spaced.rows().get(0).left().normalized());
+        assertEquals("1536MB", spaced.rows().get(0).right().normalized());
+        assertEquals("右大于左", spaced.rows().get(0).relation());
     }
 
     @Test
@@ -260,6 +268,66 @@ class SDCE702Test {
         assertEquals(State.NEEDS_INPUT, byModel.state());
         assertTrue(byModel.rows().isEmpty());
         assertEquals(List.of("最多比较三个属性"), byModel.questions());
+    }
+
+    @Test
+    void nullNormalizedMatchesNullAndUnknownRowStaysOk() throws Exception {
+        var node = new ObjectMapper().readTree(
+                "{\"attributeId\":10,\"left\":{\"normalized\":null},\"right\":{\"normalized\":null},\"relation\":\"未知\"}");
+        var expected = CandidateE702Evaluation.rowFrom(node);
+        assertNull(expected.leftNormalized());
+        assertNull(expected.rightNormalized());
+        Result actual = new Result(State.OK, List.of(new Row(10,
+                new Value(1, null, 10, null, null, null),
+                new Value(2, null, 10, null, null, null),
+                "未知")), List.of("属性未记录"));
+        assertTrue(CandidateE702Evaluation.matches("OK", List.of(expected), actual));
+        assertFalse(CandidateE702Evaluation.matches("PARTIAL", List.of(expected), actual));
+    }
+
+    @Test
+    void bothPathsAreScoredAndATimeoutDoesNotDropLaterCases() {
+        assertEquals("UNAVAILABLE", CandidateE702Evaluation.stateFor("OK", "Cursor model request timed out"));
+        assertEquals("OK", CandidateE702Evaluation.stateFor("OK", ""));
+        assertTrue(EvaluationSupport.boundary("out_of_domain"));
+        assertTrue(EvaluationSupport.boundary("ood"));
+
+        var rows = new ArrayList<CandidateE702Evaluation.ScoredCase>();
+        for (int i = 0; i < 20; i++) {
+            boolean ok = i != 3;
+            rows.add(caseOf("n" + i, "normal", "existing", ok));
+            rows.add(caseOf("n" + i, "normal", "llm", ok));
+        }
+        for (int i = 0; i < 8; i++) {
+            rows.add(caseOf("a" + i, "adversarial", "existing", true));
+            rows.add(caseOf("a" + i, "adversarial", "llm", true));
+        }
+        for (int i = 0; i < 4; i++) {
+            String kind = i == 0 ? "ood" : "out_of_domain";
+            rows.add(caseOf("o" + i, kind, "existing", true));
+            rows.add(caseOf("o" + i, kind, "llm", true));
+        }
+        var existing = CandidateE702Evaluation.implementationBoard(rows, "existing");
+        var llm = CandidateE702Evaluation.implementationBoard(rows, "llm");
+        assertEquals(20, existing.get("normalTotal"));
+        assertEquals("19/20", existing.get("normal"));
+        assertEquals("8/8", existing.get("adversarial"));
+        assertEquals("4/4", existing.get("outOfDomain"));
+        assertEquals("达标", existing.get("qualityGate"));
+        assertEquals("19/20", llm.get("normal"));
+        assertEquals("达标", llm.get("qualityGate"));
+
+        rows.set(7, caseOf("n3", "normal", "llm", false));
+        rows.add(caseOf("x", "other", "llm", true));
+        assertEquals("未达标", CandidateE702Evaluation.implementationBoard(rows, "llm").get("qualityGate"));
+        assertFalse(CandidateE702Evaluation.meetsQualityGate(17, 20, 8, 8, 4, 4, 0));
+        assertFalse(CandidateE702Evaluation.meetsQualityGate(20, 20, 7, 8, 4, 4, 0));
+        assertFalse(CandidateE702Evaluation.meetsQualityGate(20, 20, 8, 8, 3, 4, 0));
+        assertTrue(CandidateE702Evaluation.meetsQualityGate(18, 20, 8, 8, 4, 4, 0));
+    }
+
+    private static CandidateE702Evaluation.ScoredCase caseOf(String id, String kind, String implementation, boolean ok) {
+        return new CandidateE702Evaluation.ScoredCase(id, kind, implementation, ok ? "OK" : "UNAVAILABLE", ok, ok);
     }
 
     @Test

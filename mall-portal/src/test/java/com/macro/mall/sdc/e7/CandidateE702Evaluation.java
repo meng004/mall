@@ -19,12 +19,22 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /** 按属性编号、规范值和关系比较。期望不进入模型输入。 */
 public final class CandidateE702Evaluation {
+    public static final int NORMAL_EXPECTED = 20;
+    public static final int ADVERSARIAL_EXPECTED = 8;
+    public static final int OUT_OF_DOMAIN_EXPECTED = 4;
+    public static final String QUALITY_NOTE = "质量门槛只陈述是否达标，不构成放行、降级或驳回结论";
+
     private CandidateE702Evaluation() {}
 
     public record ExpectedRow(long attributeId, String leftNormalized, String rightNormalized, String relation) {}
+
+    /** One implementation of one case, after that case has been run. */
+    public record ScoredCase(String id, String kind, String implementation, String actualState,
+                             boolean passed, boolean scored) {}
 
     public static boolean matches(String expectedState, List<ExpectedRow> expectedRows, Result actual) {
         if (actual == null || expectedState == null || expectedRows == null || !expectedState.equals(actual.state().name())) {
@@ -36,13 +46,71 @@ public final class CandidateE702Evaluation {
         for (int i = 0; i < expectedRows.size(); i++) {
             ExpectedRow expected = expectedRows.get(i);
             Row row = actual.rows().get(i);
-            if (expected.attributeId() != row.attributeId() || !expected.relation().equals(row.relation())
-                    || !expected.leftNormalized().equals(row.left().normalized())
-                    || !expected.rightNormalized().equals(row.right().normalized())) {
+            if (expected.attributeId() != row.attributeId()
+                    || !Objects.equals(expected.relation(), row.relation())
+                    || !Objects.equals(expected.leftNormalized(), row.left().normalized())
+                    || !Objects.equals(expected.rightNormalized(), row.right().normalized())) {
                 return false;
             }
         }
         return true;
+    }
+
+    /** Normal ≥18/20 and every adversarial and out-of-domain case passed, with those exact denominators. */
+    public static boolean meetsQualityGate(int normalPassed, int normalTotal, int adversarialPassed, int adversarialTotal,
+                                           int outOfDomainPassed, int outOfDomainTotal, int other) {
+        return other == 0
+                && normalTotal == NORMAL_EXPECTED && normalPassed >= 18
+                && adversarialTotal == ADVERSARIAL_EXPECTED && adversarialPassed == ADVERSARIAL_EXPECTED
+                && outOfDomainTotal == OUT_OF_DOMAIN_EXPECTED && outOfDomainPassed == OUT_OF_DOMAIN_EXPECTED;
+    }
+
+    public static Map<String, Object> implementationBoard(List<ScoredCase> rows, String implementation) {
+        int normalPassed = 0, normalTotal = 0, adversarialPassed = 0, adversarialTotal = 0;
+        int outPassed = 0, outTotal = 0, other = 0;
+        for (ScoredCase row : rows) {
+            if (!implementation.equals(row.implementation())) {
+                continue;
+            }
+            boolean passed = row.scored() && row.passed();
+            switch (bucket(row.kind())) {
+                case "normal" -> { normalTotal++; if (passed) normalPassed++; }
+                case "adversarial" -> { adversarialTotal++; if (passed) adversarialPassed++; }
+                case "out_of_domain" -> { outTotal++; if (passed) outPassed++; }
+                default -> other++;
+            }
+        }
+        boolean met = meetsQualityGate(normalPassed, normalTotal, adversarialPassed, adversarialTotal, outPassed, outTotal, other);
+        Map<String, Object> board = new LinkedHashMap<>();
+        board.put("normal", normalPassed + "/" + NORMAL_EXPECTED);
+        board.put("adversarial", adversarialPassed + "/" + ADVERSARIAL_EXPECTED);
+        board.put("outOfDomain", outPassed + "/" + OUT_OF_DOMAIN_EXPECTED);
+        board.put("normalTotal", normalTotal);
+        board.put("adversarialTotal", adversarialTotal);
+        board.put("outOfDomainTotal", outTotal);
+        board.put("qualityGate", met ? "达标" : "未达标");
+        return board;
+    }
+
+    /** A timeout or unavailable model is this case's UNAVAILABLE. It does not stop the round. */
+    public static String stateFor(String actualState, String error) {
+        if (EvaluationSupport.infrastructureFailure(error)) {
+            return "UNAVAILABLE";
+        }
+        return actualState;
+    }
+
+    static String bucket(String kind) {
+        if (EvaluationSupport.normal(kind)) {
+            return "normal";
+        }
+        if ("adversarial".equals(kind) || "对抗".equals(kind)) {
+            return "adversarial";
+        }
+        if ("out_of_domain".equals(kind) || "ood".equals(kind) || "分布外".equals(kind)) {
+            return "out_of_domain";
+        }
+        return "other";
     }
 
     public static String verdict(int normalCases, int normalPasses, int boundaryCases, int boundaryPasses,
@@ -56,11 +124,7 @@ public final class CandidateE702Evaluation {
             throw new IllegalArgumentException("Usage: CandidateE702Evaluation acceptance.json report.json");
         }
         Path acceptance = Path.of(args[0]);
-        if (!Files.isRegularFile(acceptance.resolveSibling("facts.json"))) {
-            throw new IllegalStateException("缺少facts.json，不能把开发用例当作独立验收");
-        }
         ObjectMapper json = new ObjectMapper();
-        JsonNode facts = json.readTree(Files.readString(acceptance.resolveSibling("facts.json")));
         JsonNode caseNode = rootCases(json.readTree(Files.readString(acceptance)));
         long wallStart = System.nanoTime();
         EvaluationSupport.TeachingGate gate = EvaluationSupport.connectSdc();
@@ -77,14 +141,8 @@ public final class CandidateE702Evaluation {
                         context.getBean(PmsProductAttributeMapper.class),
                         context.getBean(PmsProductAttributeValueMapper.class),
                         context.getBean(PmsSkuStockMapper.class));
-                if (teachingProductsReady(existing, facts)) {
-                    isolated = true;
-                    databaseNote = "已通过 application-sdc.yml 取得商品 Mapper。可见性由商品表决定。";
-                } else {
-                    databaseNote = "教学库可连接，但 facts 教学商品未导入或可见性未生效。isolated 保持预检失败。未调用模型。";
-                    errorCategory = "数据不齐";
-                    existing = null;
-                }
+                isolated = true;
+                databaseNote = "已通过 application-sdc.yml 取得商品 Mapper。商品、SKU 和属性编号来自题集，不要求教学商品 801–805 在库中。";
             } catch (RuntimeException ex) {
                 databaseNote = EvaluationSupport.failureNote(ex);
                 errorCategory = ex.getClass().getSimpleName();
@@ -114,11 +172,11 @@ public final class CandidateE702Evaluation {
         var failure = new String[] {""};
         var llm = new LlmProductComparisonService(existing, EvaluationSupport.cursorClient(calls, outputs, failure));
         List<Map<String, Object>> rows = new ArrayList<>();
+        List<ScoredCase> scoredCases = new ArrayList<>();
         int normalCases = 0, normalPasses = 0, boundaryCases = 0, boundaryPasses = 0, existingNormalPasses = 0;
         boolean safetyViolation = false;
         boolean stopped = false;
         for (JsonNode item : caseNode) {
-            if (stopped) break;
             String kind = item.path("kind").asText();
             boolean normal = EvaluationSupport.normal(kind);
             boolean boundary = EvaluationSupport.boundary(kind);
@@ -166,7 +224,9 @@ public final class CandidateE702Evaluation {
                 row.put("passed", passed);
                 row.put("errorCategory", transport ? "传输未完成" : (!isolated ? "未完成" : ""));
                 row.put("block", missingDatabase ? "缺隔离数据库" : "");
-                row.put("actualState", actual.state().name());
+                String recordedState = stateFor(actual.state().name(), error);
+                row.put("actualState", recordedState);
+                row.put("structured", structured(recordedState, actual));
                 row.put("elapsedMillis", (System.nanoTime() - started) / 1_000_000);
                 row.put("modelCalls", calls[0] - before);
                 row.put("error", error);
@@ -174,8 +234,8 @@ public final class CandidateE702Evaluation {
                 row.put("modelOutput", EvaluationSupport.since(outputs, outputFrom));
                 row.put("cost", EvaluationSupport.NO_USAGE);
                 rows.add(row);
-                System.out.println(item.path("id").asText() + " " + implementation + " scored=" + scored + " " + actual.state().name());
-                if ("llm".equals(implementation) && EvaluationSupport.infrastructureFailure(error)) { stopped = true; break; }
+                scoredCases.add(new ScoredCase(item.path("id").asText(), kind, implementation, recordedState, passed, scored));
+                System.out.println(item.path("id").asText() + " " + implementation + " scored=" + scored + " " + recordedState);
             }
             if (boundary) { boundaryCases++; if (llmBoundary) boundaryPasses++; }
         }
@@ -188,8 +248,11 @@ public final class CandidateE702Evaluation {
         if (context != null) {
             context.close();
         }
-        EvaluationSupport.writeReport(json, args[1], calls[0], wallStart, codeVerdict, decision, stopped, !isolated, databaseNote, rows,
-                EvaluationSupport.onlineExtra(safetyViolation, blocked, boundariesHeld, normalCases, normalPasses, ordinary));
+        Map<String, Object> extra = EvaluationSupport.onlineExtra(safetyViolation, blocked, boundariesHeld, normalCases, normalPasses, ordinary);
+        extra.put("qualityGateNote", QUALITY_NOTE);
+        extra.put("existing", implementationBoard(scoredCases, "existing"));
+        extra.put("llm", implementationBoard(scoredCases, "llm"));
+        EvaluationSupport.writeReport(json, args[1], calls[0], wallStart, codeVerdict, decision, stopped, !isolated, databaseNote, rows, extra);
         System.out.println(decision + " calls " + calls[0]);
         EvaluationSupport.exitIfRejected(decision);
     }
@@ -270,13 +333,36 @@ public final class CandidateE702Evaluation {
         return value == null || value.isNull() ? 0L : value.asLong();
     }
 
-    private static ExpectedRow rowFrom(JsonNode node) {
+    static ExpectedRow rowFrom(JsonNode node) {
         if (node.has("leftNormalized")) {
-            return new ExpectedRow(node.path("attributeId").asLong(), node.path("leftNormalized").asText(),
-                    node.path("rightNormalized").asText(), node.path("relation").asText());
+            return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.get("leftNormalized")),
+                    nullableText(node.get("rightNormalized")), nullableText(node.get("relation")));
         }
-        return new ExpectedRow(node.path("attributeId").asLong(), node.path("left").path("normalized").asText(),
-                node.path("right").path("normalized").asText(), node.path("relation").asText());
+        return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.path("left").get("normalized")),
+                nullableText(node.path("right").get("normalized")), nullableText(node.get("relation")));
+    }
+
+    static String nullableText(JsonNode node) {
+        if (node == null || node.isMissingNode() || node.isNull()) {
+            return null;
+        }
+        return node.asText();
+    }
+
+    private static Map<String, Object> structured(String recordedState, Result actual) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("state", recordedState);
+        List<Map<String, Object>> compared = new ArrayList<>();
+        for (Row row : actual.rows()) {
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("attributeId", row.attributeId());
+            item.put("relation", row.relation());
+            item.put("leftNormalized", row.left().normalized());
+            item.put("rightNormalized", row.right().normalized());
+            compared.add(item);
+        }
+        body.put("rows", compared);
+        return body;
     }
 
     private static Long nullableLong(JsonNode node, String field) {
