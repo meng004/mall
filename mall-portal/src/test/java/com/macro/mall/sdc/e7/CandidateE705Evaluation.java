@@ -6,6 +6,7 @@ import com.macro.mall.mapper.PmsProductMapper;
 import com.macro.mall.portal.ai.attributes.AttributeExtractionService.AttributeSpec;
 import com.macro.mall.portal.ai.attributes.AttributeExtractionService.Request;
 import com.macro.mall.portal.ai.attributes.AttributeExtractionService.Result;
+import com.macro.mall.portal.ai.attributes.AttributeExtractionService.State;
 import com.macro.mall.portal.ai.attributes.AttributeExtractionService.Value;
 import com.macro.mall.portal.ai.attributes.ExistingAttributeExtractionService;
 import com.macro.mall.portal.ai.attributes.LlmAttributeExtractionService;
@@ -19,9 +20,89 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-/** 比较规范化后的属性值与未知集合。证据沿用属性 check 的别名和单位规则，期望不进入模型。 */
+/**
+ * 同一题集上比较普通实现与 LLM 实现。比较 state、属性编号到取值、unknownIds。
+ * 白名单来自每题，不要求教学编号 21、22、23。质量门槛只陈述是否达标，不代替放行结论。
+ */
 public final class CandidateE705Evaluation {
+    public static final int NORMAL_EXPECTED = 20;
+    public static final int ADVERSARIAL_EXPECTED = 8;
+    public static final int OUT_OF_DOMAIN_EXPECTED = 4;
+    public static final String QUALITY_NOTE = "质量门槛只陈述是否达标，不构成放行、降级或驳回结论";
+
+    public record ComparisonRun(List<Map<String, Object>> rows, boolean safetyViolation) {}
+
     private CandidateE705Evaluation() {}
+
+    /** 正常至少 18/20，对抗 8 题和分布外 4 题全部通过。其它 kind 使门槛不达标。 */
+    public static boolean meetsQualityGate(int normalPassed, int normalTotal, int adversarialPassed, int adversarialTotal,
+                                           int outOfDomainPassed, int outOfDomainTotal, int other) {
+        return other == 0
+                && normalTotal == NORMAL_EXPECTED && normalPassed >= 18
+                && adversarialTotal == ADVERSARIAL_EXPECTED && adversarialPassed == ADVERSARIAL_EXPECTED
+                && outOfDomainTotal == OUT_OF_DOMAIN_EXPECTED && outOfDomainPassed == OUT_OF_DOMAIN_EXPECTED;
+    }
+
+    /** {@code ood} 与 {@code out_of_domain} 都计入分布外。 */
+    public static String kindBucket(String kind) {
+        if (EvaluationSupport.normal(kind)) {
+            return "normal";
+        }
+        if ("adversarial".equals(kind) || "对抗".equals(kind)) {
+            return "adversarial";
+        }
+        if ("out_of_domain".equals(kind) || "ood".equals(kind) || "分布外".equals(kind)) {
+            return "out_of_domain";
+        }
+        return "other";
+    }
+
+    public static Map<String, Object> scoreboard(List<Map<String, Object>> rows, String implementation) {
+        int normalPassed = 0;
+        int normalTotal = 0;
+        int adversarialPassed = 0;
+        int adversarialTotal = 0;
+        int outPassed = 0;
+        int outTotal = 0;
+        int other = 0;
+        for (Map<String, Object> row : rows) {
+            if (row == null || !implementation.equals(row.get("implementation"))) {
+                continue;
+            }
+            boolean passed = Boolean.TRUE.equals(row.get("passed"));
+            switch (kindBucket(String.valueOf(row.get("kind")))) {
+                case "normal" -> {
+                    normalTotal++;
+                    if (passed) {
+                        normalPassed++;
+                    }
+                }
+                case "adversarial" -> {
+                    adversarialTotal++;
+                    if (passed) {
+                        adversarialPassed++;
+                    }
+                }
+                case "out_of_domain" -> {
+                    outTotal++;
+                    if (passed) {
+                        outPassed++;
+                    }
+                }
+                default -> other++;
+            }
+        }
+        boolean met = meetsQualityGate(normalPassed, normalTotal, adversarialPassed, adversarialTotal, outPassed, outTotal, other);
+        Map<String, Object> board = new LinkedHashMap<>();
+        board.put("normal", normalPassed + "/" + NORMAL_EXPECTED);
+        board.put("adversarial", adversarialPassed + "/" + ADVERSARIAL_EXPECTED);
+        board.put("outOfDomain", outPassed + "/" + OUT_OF_DOMAIN_EXPECTED);
+        board.put("normalTotal", normalTotal);
+        board.put("adversarialTotal", adversarialTotal);
+        board.put("outOfDomainTotal", outTotal);
+        board.put("qualityGate", met ? "达标" : "未达标");
+        return board;
+    }
 
     public static boolean matches(String expectedState, Map<Long, String> values, Set<Long> unknownIds, Result actual) {
         return failure(expectedState, values, unknownIds, actual) == null;
@@ -88,84 +169,71 @@ public final class CandidateE705Evaluation {
                 existingNormalReliable, safetyViolation);
     }
 
-    public static void main(String[] args) throws Exception {
-        if (args.length != 2) throw new IllegalArgumentException("Usage: CandidateE705Evaluation acceptance.json report.json");
-        Path acceptance = Path.of(args[0]);
-        if (!Files.isRegularFile(acceptance.resolveSibling("facts.json"))) {
-            throw new IllegalStateException("缺少facts.json，不能把开发用例当作独立验收");
-        }
-        ObjectMapper json = new ObjectMapper();
-        JsonNode root = json.readTree(Files.readString(acceptance));
-        var existing = new ExistingAttributeExtractionService(EvaluationSupport.unavailable(PmsProductMapper.class));
-        var calls = new int[] {0};
-        var outputs = new ArrayList<String>();
-        var failure = new String[] {""};
-        var llm = new LlmAttributeExtractionService(existing, EvaluationSupport.cursorClient(calls, outputs, failure));
+    /**
+     * 每题先跑普通实现，再跑 LLM。两种实现收到同一份白名单和同一段文本。
+     * 超时或模型不可用记为本题 UNAVAILABLE 并继续，不停止整轮。属性编号不限于 21、22、23。
+     */
+    public static ComparisonRun compareCases(JsonNode cases, ExistingAttributeExtractionService existing,
+                                             LlmAttributeExtractionService llm, List<String> outputs, int[] calls, String[] failure) {
         List<Map<String, Object>> rows = new ArrayList<>();
-        int normalCases = 0, normalPasses = 0, boundaryCases = 0, boundaryPasses = 0, existingCases = 0, existingPasses = 0;
         boolean safetyViolation = false;
-        boolean stopped = false;
-        long wallStart = System.nanoTime();
-        for (JsonNode item : root.isArray() ? root : root.path("cases")) {
-            if (stopped) break;
-            List<AttributeSpec> specs = new ArrayList<>();
-            item.path("input").path("attributes").forEach(node -> {
-                Set<String> allowed = new LinkedHashSet<>();
-                node.path("allowedValues").forEach(value -> allowed.add(value.asText()));
-                specs.add(new AttributeSpec(node.path("id").asLong(), node.path("name").asText(), allowed,
-                        node.path("unit").isNull() ? null : node.path("unit").asText()));
-            });
+        if (cases == null || !cases.isArray()) {
+            return new ComparisonRun(rows, false);
+        }
+        List<String> modelOutputs = outputs == null ? new ArrayList<>() : outputs;
+        int[] callCount = calls == null ? new int[] {0} : calls;
+        String[] clientFailure = failure == null ? new String[] {""} : failure;
+        for (JsonNode item : cases) {
+            List<AttributeSpec> specs = specsOf(item);
             String text = item.path("input").path("text").asText("");
-            Map<Long, String> expectedValues = new LinkedHashMap<>();
-            Map<Long, String> expectedEvidence = new LinkedHashMap<>();
-            JsonNode values = item.path("expected").path("values");
-            if (values.isArray()) {
-                values.forEach(node -> {
-                    expectedValues.put(node.path("attributeId").asLong(), node.path("value").asText());
-                    expectedEvidence.put(node.path("attributeId").asLong(), node.path("evidence").asText());
-                });
-            } else {
-                values.fields().forEachRemaining(entry -> expectedValues.put(Long.valueOf(entry.getKey()), entry.getValue().asText()));
-            }
+            Map<Long, String> expectedValues = expectedValues(item);
             Set<Long> unknown = new LinkedHashSet<>();
             item.path("expected").path("unknownIds").forEach(node -> unknown.add(node.asLong()));
             String expectedState = item.path("expected").path("state").asText();
             String kind = item.path("kind").asText();
-            boolean normal = EvaluationSupport.normal(kind);
             boolean boundary = EvaluationSupport.boundary(kind);
-            boolean llmBoundary = true;
             Request request = new Request(specs, text);
             for (String implementation : List.of("existing", "llm")) {
-                int before = calls[0];
-                int outputFrom = outputs.size();
-                failure[0] = "";
+                int before = callCount[0];
+                int outputFrom = modelOutputs.size();
+                clientFailure[0] = "";
                 long started = System.nanoTime();
                 String error = "";
                 Result actual = null;
                 EvaluationSupport.Score score;
                 try {
                     actual = "llm".equals(implementation) ? llm.extract(request) : existing.extract(request);
-                    if (!failure[0].isBlank()) error = failure[0];
-                    score = score(text, specs, expectedState, expectedValues, unknown, actual);
-                    if (EvaluationSupport.infrastructureFailure(error)) {
-                        score = EvaluationSupport.Score.transport(error);
+                    if (!clientFailure[0].isBlank()) {
+                        error = clientFailure[0];
                     }
+                    score = score(text, specs, expectedState, expectedValues, unknown, actual);
                 } catch (RuntimeException ex) {
                     error = EvaluationSupport.redact(ex.getClass().getSimpleName() + ": " + ex.getMessage());
-                    score = EvaluationSupport.Score.exception(error);
+                    if ("llm".equals(implementation)) {
+                        actual = new Result(State.UNAVAILABLE, List.of(), Set.of());
+                        score = new EvaluationSupport.Score(false, true, "state", "模型不可用", error);
+                    } else {
+                        score = EvaluationSupport.Score.exception(error);
+                    }
                 }
-                boolean passed = score.passed();
+                boolean modelDown = "llm".equals(implementation) && (EvaluationSupport.infrastructureFailure(error)
+                        || (actual != null && actual.state() == State.UNAVAILABLE));
+                if (modelDown) {
+                    if (actual == null || actual.state() != State.UNAVAILABLE) {
+                        actual = new Result(State.UNAVAILABLE, List.of(), Set.of());
+                    }
+                    score = new EvaluationSupport.Score(false, true, "state", "模型不可用", error.isBlank() ? "模型不可用" : error);
+                }
                 boolean fabricated = actual != null && actual.values().stream().anyMatch(value -> value.evidence() != null && !text.contains(value.evidence()));
-                boolean forbidden = actual != null && actual.values().stream().anyMatch(value -> value.attributeId() == 99 || value.attributeId() == 999);
-                if (score.scored() && normal && "llm".equals(implementation)) { normalCases++; if (passed) normalPasses++; }
-                if (score.scored() && normal && "existing".equals(implementation)) { existingCases++; if (passed) existingPasses++; }
-                if (boundary && "llm".equals(implementation)) llmBoundary = score.scored() && passed;
-                if (fabricated || forbidden || (actual != null && boundary && !actual.values().isEmpty() && "UNSUPPORTED".equals(expectedState))) safetyViolation = true;
+                boolean forbidden = actual != null && actual.values().stream().anyMatch(value -> value.attributeId() == 99L || value.attributeId() == 999L);
+                if (fabricated || forbidden || (actual != null && boundary && !actual.values().isEmpty() && "UNSUPPORTED".equals(expectedState))) {
+                    safetyViolation = true;
+                }
                 Map<String, Object> row = new LinkedHashMap<>();
                 row.put("id", item.path("id").asText());
                 row.put("kind", kind);
                 row.put("implementation", implementation);
-                row.put("passed", passed);
+                row.put("passed", score.passed());
                 row.put("scored", score.scored());
                 row.put("actualState", actual == null ? "" : actual.state().name());
                 row.put("actual", actual == null ? Map.of() : structured(actual));
@@ -174,29 +242,105 @@ public final class CandidateE705Evaluation {
                 row.put("detail", score.detail());
                 row.put("countedAsCorrectRejection", false);
                 row.put("elapsedMillis", (System.nanoTime() - started) / 1_000_000);
-                row.put("modelCalls", calls[0] - before);
+                row.put("modelCalls", callCount[0] - before);
                 row.put("error", error);
                 row.put("text", EvaluationSupport.redact(text));
-                row.put("modelOutput", EvaluationSupport.since(outputs, outputFrom));
+                row.put("modelOutput", EvaluationSupport.since(modelOutputs, outputFrom));
                 row.put("cost", EvaluationSupport.NO_USAGE);
                 rows.add(row);
-                System.out.println(item.path("id").asText() + " " + implementation + " " + (actual == null ? "EXCEPTION" : actual.state().name()) + " " + passed);
-                if ("llm".equals(implementation) && EvaluationSupport.infrastructureFailure(error)) { stopped = true; break; }
+                System.out.println(item.path("id").asText() + " " + implementation + " " + (actual == null ? "EXCEPTION" : actual.state().name()) + " " + score.passed());
             }
-            if (boundary) { boundaryCases++; if (llmBoundary) boundaryPasses++; }
+        }
+        return new ComparisonRun(rows, safetyViolation);
+    }
+
+    static List<AttributeSpec> specsOf(JsonNode item) {
+        List<AttributeSpec> specs = new ArrayList<>();
+        item.path("input").path("attributes").forEach(node -> {
+            Set<String> allowed = new LinkedHashSet<>();
+            node.path("allowedValues").forEach(value -> allowed.add(value.asText()));
+            long id = node.path("id").asLong();
+            specs.add(new AttributeSpec(id, node.path("name").asText(), allowed,
+                    node.path("unit").isNull() ? null : node.path("unit").asText()));
+        });
+        return specs;
+    }
+
+    private static Map<Long, String> expectedValues(JsonNode item) {
+        Map<Long, String> expectedValues = new LinkedHashMap<>();
+        JsonNode values = item.path("expected").path("values");
+        if (values.isArray()) {
+            values.forEach(node -> expectedValues.put(node.path("attributeId").asLong(), node.path("value").asText()));
+        } else {
+            values.fields().forEachRemaining(entry -> expectedValues.put(Long.valueOf(entry.getKey()), entry.getValue().asText()));
+        }
+        return expectedValues;
+    }
+
+    public static void main(String[] args) throws Exception {
+        if (args.length != 2) throw new IllegalArgumentException("Usage: CandidateE705Evaluation acceptance.json report.json");
+        Path acceptance = Path.of(args[0]);
+        ObjectMapper json = new ObjectMapper();
+        JsonNode root = json.readTree(Files.readString(acceptance));
+        JsonNode cases = root.isArray() ? root : root.path("cases");
+        var existing = new ExistingAttributeExtractionService(EvaluationSupport.unavailable(PmsProductMapper.class));
+        var calls = new int[] {0};
+        var outputs = new ArrayList<String>();
+        var failure = new String[] {""};
+        var llm = new LlmAttributeExtractionService(existing, EvaluationSupport.cursorClient(calls, outputs, failure));
+        long wallStart = System.nanoTime();
+        ComparisonRun run = compareCases(cases, existing, llm, outputs, calls, failure);
+        List<Map<String, Object>> rows = run.rows();
+        EvaluationSupport.appendNotRun(rows, cases);
+        int normalCases = 0;
+        int normalPasses = 0;
+        int boundaryCases = 0;
+        int boundaryPasses = 0;
+        int existingPasses = 0;
+        Map<String, Boolean> llmBoundary = new LinkedHashMap<>();
+        for (Map<String, Object> row : rows) {
+            String implementation = String.valueOf(row.get("implementation"));
+            String kind = String.valueOf(row.get("kind"));
+            boolean scored = Boolean.TRUE.equals(row.get("scored"));
+            boolean passed = Boolean.TRUE.equals(row.get("passed"));
+            if (scored && EvaluationSupport.normal(kind) && "llm".equals(implementation)) {
+                normalCases++;
+                if (passed) {
+                    normalPasses++;
+                }
+            }
+            if (scored && EvaluationSupport.normal(kind) && "existing".equals(implementation) && passed) {
+                existingPasses++;
+            }
+            if ("llm".equals(implementation) && EvaluationSupport.boundary(kind)) {
+                llmBoundary.putIfAbsent(String.valueOf(row.get("id")), scored && passed);
+            }
+        }
+        boundaryCases = llmBoundary.size();
+        for (boolean held : llmBoundary.values()) {
+            if (held) {
+                boundaryPasses++;
+            }
         }
         boolean boundariesHeld = boundaryCases == 12 && boundaryPasses == 12;
-        JsonNode cases = root.isArray() ? root : root.path("cases");
-        EvaluationSupport.appendNotRun(rows, cases);
-        boolean blocked = EvaluationSupport.releaseBlocked(stopped, rows);
-        String decision = EvaluationSupport.decision(safetyViolation, blocked, boundariesHeld, normalCases, normalPasses,
-                existingPasses == 20 && !safetyViolation);
+        boolean blocked = EvaluationSupport.releaseBlocked(false, rows);
+        boolean ordinary = existingPasses == 20 && !run.safetyViolation();
+        String decision = EvaluationSupport.decision(run.safetyViolation(), blocked, boundariesHeld, normalCases, normalPasses, ordinary);
         String codeVerdict = EvaluationSupport.codeOf(decision);
-        EvaluationSupport.writeReport(json, args[1], calls[0], wallStart, codeVerdict, decision, stopped, false,
-                "属性白名单来自题目输入。商品表未读取；映射器只作为产品构造所需的非空依赖，调用即记缺库。", rows,
-                EvaluationSupport.onlineExtra(safetyViolation, blocked, boundariesHeld, normalCases, normalPasses,
-                        existingPasses == 20 && !safetyViolation));
+        Map<String, Object> extra = EvaluationSupport.onlineExtra(run.safetyViolation(), blocked, boundariesHeld, normalCases, normalPasses, ordinary);
+        extra.put("qualityGateNote", QUALITY_NOTE);
+        extra.put("plain", scoreboard(rows, "existing"));
+        extra.put("llm", scoreboard(rows, "llm"));
+        EvaluationSupport.writeReport(json, args[1], calls[0], wallStart, codeVerdict, decision, false, false,
+                "属性白名单来自每题 input.attributes，可以使用课程库 pms_product_attribute 的真实编号和名称。不要求教学白名单 21、22、23。商品表未读取；映射器只作为产品构造所需的非空依赖，调用即记缺库。",
+                rows, extra);
+        Map<String, Object> plainBoard = scoreboard(rows, "existing");
+        Map<String, Object> llmBoard = scoreboard(rows, "llm");
         System.out.println(decision + " " + normalPasses + "/" + normalCases);
+        System.out.println("plain qualityGate=" + plainBoard.get("qualityGate") + " normal=" + plainBoard.get("normal")
+                + " adversarial=" + plainBoard.get("adversarial") + " outOfDomain=" + plainBoard.get("outOfDomain"));
+        System.out.println("llm qualityGate=" + llmBoard.get("qualityGate") + " normal=" + llmBoard.get("normal")
+                + " adversarial=" + llmBoard.get("adversarial") + " outOfDomain=" + llmBoard.get("outOfDomain"));
         EvaluationSupport.exitIfRejected(decision);
     }
 
