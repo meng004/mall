@@ -16,12 +16,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
-/** 按属性编号、规范值和关系比较。期望不进入模型输入。 */
+/** 按 method.md 比较：行按 attributeId 升序，逐字段精确匹配。期望不进入模型输入。 */
 public final class CandidateE702Evaluation {
     public static final int NORMAL_EXPECTED = 20;
     public static final int ADVERSARIAL_EXPECTED = 8;
@@ -30,11 +33,18 @@ public final class CandidateE702Evaluation {
 
     private CandidateE702Evaluation() {}
 
-    public record ExpectedRow(long attributeId, String leftNormalized, String rightNormalized, String relation) {}
+    public record ExpectedSide(Long productId, Long skuId, String raw, String normalized, String sourceField) {}
+
+    public record ExpectedRow(long attributeId, String relation, ExpectedSide left, ExpectedSide right) {}
 
     /** One implementation of one case, after that case has been run. */
     public record ScoredCase(String id, String kind, String implementation, String actualState,
                              boolean passed, boolean scored) {}
+
+    /** Counters from one pass over the case set. A timeout does not set {@code stopped}. */
+    public record Round(List<Map<String, Object>> rows, List<ScoredCase> scored, int normalCases, int normalPasses,
+                        int boundaryCases, int boundaryPasses, int existingNormalPasses, boolean safetyViolation,
+                        boolean stopped) {}
 
     public static boolean matches(String expectedState, List<ExpectedRow> expectedRows, Result actual) {
         if (actual == null || expectedState == null || expectedRows == null || !expectedState.equals(actual.state().name())) {
@@ -43,17 +53,55 @@ public final class CandidateE702Evaluation {
         if (expectedRows.size() != actual.rows().size()) {
             return false;
         }
-        for (int i = 0; i < expectedRows.size(); i++) {
-            ExpectedRow expected = expectedRows.get(i);
-            Row row = actual.rows().get(i);
+        List<ExpectedRow> expectedSorted = new ArrayList<>(expectedRows);
+        expectedSorted.sort(Comparator.comparingLong(ExpectedRow::attributeId));
+        List<Row> actualSorted = new ArrayList<>(actual.rows());
+        actualSorted.sort(Comparator.comparingLong(Row::attributeId));
+        for (int i = 0; i < expectedSorted.size(); i++) {
+            ExpectedRow expected = expectedSorted.get(i);
+            Row row = actualSorted.get(i);
             if (expected.attributeId() != row.attributeId()
                     || !Objects.equals(expected.relation(), row.relation())
-                    || !Objects.equals(expected.leftNormalized(), row.left().normalized())
-                    || !Objects.equals(expected.rightNormalized(), row.right().normalized())) {
+                    || !sameSide(expected.left(), row.left())
+                    || !sameSide(expected.right(), row.right())) {
                 return false;
             }
         }
         return true;
+    }
+
+    private static boolean sameSide(ExpectedSide expected, com.macro.mall.portal.ai.comparison.ProductComparisonService.Value actual) {
+        return actual != null && expected != null
+                && Objects.equals(expected.productId(), actual.productId())
+                && Objects.equals(expected.skuId(), actual.skuId())
+                && Objects.equals(expected.raw(), actual.raw())
+                && Objects.equals(expected.normalized(), actual.normalized())
+                && Objects.equals(expected.sourceField(), actual.sourceField());
+    }
+
+    /** Empty when every case id is unique and both paths name the same products and SKUs. */
+    public static List<String> caseSetProblems(JsonNode cases) {
+        List<String> problems = new ArrayList<>();
+        if (cases == null || !cases.isArray()) {
+            problems.add("cases 不是数组");
+            return problems;
+        }
+        Set<String> ids = new LinkedHashSet<>();
+        for (JsonNode item : cases) {
+            String id = item.path("id").asText("");
+            if (id.isEmpty()) {
+                problems.add("题号为空");
+            } else if (!ids.add(id)) {
+                problems.add("题号重复: " + id);
+            }
+            JsonNode form = formOf(item);
+            JsonNode llm = llmOf(item);
+            if (!sameNumber(form, llm, "leftId") || !sameNumber(form, llm, "rightId")
+                    || !sameNumber(form, llm, "leftSkuId") || !sameNumber(form, llm, "rightSkuId")) {
+                problems.add((id.isEmpty() ? "未编号的题" : id) + " 的 form 与 llm 商品或 SKU 不一致");
+            }
+        }
+        return problems;
     }
 
     /** Normal ≥18/20 and every adversarial and out-of-domain case passed, with those exact denominators. */
@@ -126,6 +174,10 @@ public final class CandidateE702Evaluation {
         Path acceptance = Path.of(args[0]);
         ObjectMapper json = new ObjectMapper();
         JsonNode caseNode = rootCases(json.readTree(Files.readString(acceptance)));
+        List<String> problems = caseSetProblems(caseNode);
+        if (!problems.isEmpty()) {
+            throw new IllegalArgumentException(String.join("；", problems));
+        }
         long wallStart = System.nanoTime();
         EvaluationSupport.TeachingGate gate = EvaluationSupport.connectSdc();
         boolean isolated = false;
@@ -171,19 +223,39 @@ public final class CandidateE702Evaluation {
         var outputs = new ArrayList<String>();
         var failure = new String[] {""};
         var llm = new LlmProductComparisonService(existing, EvaluationSupport.cursorClient(calls, outputs, failure));
+        Round round = runCases(caseNode, existing, llm, isolated, calls, outputs, failure);
+        EvaluationSupport.appendNotRun(round.rows(), caseNode);
+        boolean boundariesHeld = round.boundaryCases() == 12 && round.boundaryPasses() == 12;
+        boolean ordinary = round.existingNormalPasses() == 20 && !round.safetyViolation();
+        boolean blocked = EvaluationSupport.releaseBlocked(!isolated || round.stopped(), round.rows());
+        String decision = EvaluationSupport.decision(round.safetyViolation(), blocked, boundariesHeld, round.normalCases(), round.normalPasses(), ordinary);
+        String codeVerdict = EvaluationSupport.codeOf(decision);
+        if (context != null) {
+            context.close();
+        }
+        Map<String, Object> extra = EvaluationSupport.onlineExtra(round.safetyViolation(), blocked, boundariesHeld, round.normalCases(), round.normalPasses(), ordinary);
+        extra.put("qualityGateNote", QUALITY_NOTE);
+        extra.put("existing", implementationBoard(round.scored(), "existing"));
+        extra.put("llm", implementationBoard(round.scored(), "llm"));
+        EvaluationSupport.writeReport(json, args[1], calls[0], wallStart, codeVerdict, decision, round.stopped(), !isolated, databaseNote, round.rows(), extra);
+        System.out.println(decision + " calls " + calls[0]);
+        EvaluationSupport.exitIfRejected(decision);
+    }
+
+    /** Runs every case on both implementations. One timeout or model failure stays on that case. */
+    static Round runCases(JsonNode caseNode, ExistingProductComparisonService existing, LlmProductComparisonService llm,
+                          boolean isolated, int[] calls, List<String> outputs, String[] failure) {
         List<Map<String, Object>> rows = new ArrayList<>();
         List<ScoredCase> scoredCases = new ArrayList<>();
         int normalCases = 0, normalPasses = 0, boundaryCases = 0, boundaryPasses = 0, existingNormalPasses = 0;
         boolean safetyViolation = false;
-        boolean stopped = false;
         for (JsonNode item : caseNode) {
             String kind = item.path("kind").asText();
             boolean normal = EvaluationSupport.normal(kind);
             boolean boundary = EvaluationSupport.boundary(kind);
             boolean llmBoundary = true;
-            JsonNode input = item.path("input");
-            JsonNode llmInput = input.has("llm") ? input.get("llm") : input;
-            JsonNode form = input.has("form") ? input.get("form") : input;
+            JsonNode llmInput = llmOf(item);
+            JsonNode form = formOf(item);
             JsonNode expected = item.path("expected");
             List<ExpectedRow> expectedRows = new ArrayList<>();
             expected.path("rows").forEach(node -> expectedRows.add(rowFrom(node)));
@@ -199,7 +271,7 @@ public final class CandidateE702Evaluation {
                             ? llm.compare(new Request(sideId(llmInput, "leftId"), sideId(llmInput, "rightId"),
                             nullableLong(llmInput, "leftSkuId"), nullableLong(llmInput, "rightSkuId"), text(llmInput, "text"), null))
                             : existing.compare(new Request(sideId(form, "leftId"), sideId(form, "rightId"),
-                            nullableLong(form, "leftSkuId"), nullableLong(form, "rightSkuId"), null, longList(form.path("attributeIds"))));
+                            nullableLong(form, "leftSkuId"), nullableLong(form, "rightSkuId"), text(form, "text"), longList(form.path("attributeIds"))));
                 } catch (RuntimeException ex) {
                     actual = new Result(com.macro.mall.portal.ai.comparison.ProductComparisonService.State.UNAVAILABLE, List.of(), List.of());
                     error = EvaluationSupport.redact(ex.getClass().getSimpleName() + ": " + ex.getMessage());
@@ -239,22 +311,8 @@ public final class CandidateE702Evaluation {
             }
             if (boundary) { boundaryCases++; if (llmBoundary) boundaryPasses++; }
         }
-        EvaluationSupport.appendNotRun(rows, caseNode);
-        boolean boundariesHeld = boundaryCases == 12 && boundaryPasses == 12;
-        boolean ordinary = existingNormalPasses == 20 && !safetyViolation;
-        boolean blocked = EvaluationSupport.releaseBlocked(!isolated || stopped, rows);
-        String decision = EvaluationSupport.decision(safetyViolation, blocked, boundariesHeld, normalCases, normalPasses, ordinary);
-        String codeVerdict = EvaluationSupport.codeOf(decision);
-        if (context != null) {
-            context.close();
-        }
-        Map<String, Object> extra = EvaluationSupport.onlineExtra(safetyViolation, blocked, boundariesHeld, normalCases, normalPasses, ordinary);
-        extra.put("qualityGateNote", QUALITY_NOTE);
-        extra.put("existing", implementationBoard(scoredCases, "existing"));
-        extra.put("llm", implementationBoard(scoredCases, "llm"));
-        EvaluationSupport.writeReport(json, args[1], calls[0], wallStart, codeVerdict, decision, stopped, !isolated, databaseNote, rows, extra);
-        System.out.println(decision + " calls " + calls[0]);
-        EvaluationSupport.exitIfRejected(decision);
+        return new Round(rows, scoredCases, normalCases, normalPasses, boundaryCases, boundaryPasses,
+                existingNormalPasses, safetyViolation, false);
     }
 
     static boolean teachingProductsReady(ExistingProductComparisonService service, JsonNode facts) {
@@ -328,18 +386,43 @@ public final class CandidateE702Evaluation {
         return root.isArray() ? root : root.path("cases");
     }
 
+    private static JsonNode formOf(JsonNode item) {
+        JsonNode input = item.path("input");
+        return input.has("form") ? input.get("form") : input;
+    }
+
+    private static JsonNode llmOf(JsonNode item) {
+        JsonNode input = item.path("input");
+        return input.has("llm") ? input.get("llm") : input;
+    }
+
+    private static boolean sameNumber(JsonNode left, JsonNode right, String field) {
+        return Objects.equals(nullableLong(left, field), nullableLong(right, field));
+    }
+
     private static long sideId(JsonNode node, String field) {
         JsonNode value = node.get(field);
         return value == null || value.isNull() ? 0L : value.asLong();
     }
 
     static ExpectedRow rowFrom(JsonNode node) {
-        if (node.has("leftNormalized")) {
-            return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.get("leftNormalized")),
-                    nullableText(node.get("rightNormalized")), nullableText(node.get("relation")));
+        if (node.has("left") || node.has("right")) {
+            return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.get("relation")),
+                    sideFrom(node.get("left")), sideFrom(node.get("right")));
         }
-        return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.path("left").get("normalized")),
-                nullableText(node.path("right").get("normalized")), nullableText(node.get("relation")));
+        return new ExpectedRow(node.path("attributeId").asLong(), nullableText(node.get("relation")),
+                new ExpectedSide(nullableLong(node, "leftProductId"), nullableLong(node, "leftSkuId"),
+                        nullableText(node.get("leftRaw")), nullableText(node.get("leftNormalized")), nullableText(node.get("leftSourceField"))),
+                new ExpectedSide(nullableLong(node, "rightProductId"), nullableLong(node, "rightSkuId"),
+                        nullableText(node.get("rightRaw")), nullableText(node.get("rightNormalized")), nullableText(node.get("rightSourceField"))));
+    }
+
+    private static ExpectedSide sideFrom(JsonNode node) {
+        if (node == null || node.isNull() || node.isMissingNode()) {
+            return new ExpectedSide(null, null, null, null, null);
+        }
+        return new ExpectedSide(nullableLong(node, "productId"), nullableLong(node, "skuId"),
+                nullableText(node.get("raw")), nullableText(node.get("normalized")), nullableText(node.get("sourceField")));
     }
 
     static String nullableText(JsonNode node) {
@@ -352,17 +435,29 @@ public final class CandidateE702Evaluation {
     private static Map<String, Object> structured(String recordedState, Result actual) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("state", recordedState);
+        List<Row> ordered = new ArrayList<>(actual.rows());
+        ordered.sort(Comparator.comparingLong(Row::attributeId));
         List<Map<String, Object>> compared = new ArrayList<>();
-        for (Row row : actual.rows()) {
+        for (Row row : ordered) {
             Map<String, Object> item = new LinkedHashMap<>();
             item.put("attributeId", row.attributeId());
             item.put("relation", row.relation());
-            item.put("leftNormalized", row.left().normalized());
-            item.put("rightNormalized", row.right().normalized());
+            item.put("left", sideMap(row.left()));
+            item.put("right", sideMap(row.right()));
             compared.add(item);
         }
         body.put("rows", compared);
         return body;
+    }
+
+    private static Map<String, Object> sideMap(com.macro.mall.portal.ai.comparison.ProductComparisonService.Value value) {
+        Map<String, Object> side = new LinkedHashMap<>();
+        side.put("productId", value.productId());
+        side.put("skuId", value.skuId());
+        side.put("raw", value.raw());
+        side.put("normalized", value.normalized());
+        side.put("sourceField", value.sourceField());
+        return side;
     }
 
     private static Long nullableLong(JsonNode node, String field) {

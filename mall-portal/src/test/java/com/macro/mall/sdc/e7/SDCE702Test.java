@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -184,7 +185,9 @@ class SDCE702Test {
     void unavailableDoesNotCountAsSuccessfulRejection() {
         Result unavailable = new Result(State.UNAVAILABLE, List.of(), List.of());
         Result rejected = new Result(State.UNSUPPORTED, List.of(), List.of());
-        var row = new CandidateE702Evaluation.ExpectedRow(CAPACITY, "1024MB", "1024MB", "equivalent");
+        var row = new CandidateE702Evaluation.ExpectedRow(CAPACITY, "数值等价",
+                new CandidateE702Evaluation.ExpectedSide(LEFT, null, "1024MB", "1024MB", "productAttributeValue"),
+                new CandidateE702Evaluation.ExpectedSide(RIGHT, null, "1GB", "1024MB", "productAttributeValue"));
         assertFalse(CandidateE702Evaluation.matches("UNSUPPORTED", List.of(), unavailable));
         assertTrue(CandidateE702Evaluation.matches("UNSUPPORTED", List.of(), rejected));
         assertEquals("INCOMPLETE", CandidateE702Evaluation.verdict(20, 18, 12, 12, true, false));
@@ -272,17 +275,102 @@ class SDCE702Test {
 
     @Test
     void nullNormalizedMatchesNullAndUnknownRowStaysOk() throws Exception {
-        var node = new ObjectMapper().readTree(
-                "{\"attributeId\":10,\"left\":{\"normalized\":null},\"right\":{\"normalized\":null},\"relation\":\"未知\"}");
+        var node = new ObjectMapper().readTree("""
+                {"attributeId":10,"relation":"未知",
+                 "left":{"productId":1,"skuId":null,"raw":null,"normalized":null,"sourceField":null},
+                 "right":{"productId":2,"skuId":null,"raw":null,"normalized":null,"sourceField":null}}""");
         var expected = CandidateE702Evaluation.rowFrom(node);
-        assertNull(expected.leftNormalized());
-        assertNull(expected.rightNormalized());
+        assertNull(expected.left().normalized());
+        assertNull(expected.right().raw());
+        assertNull(expected.left().skuId());
         Result actual = new Result(State.OK, List.of(new Row(10,
                 new Value(1, null, 10, null, null, null),
                 new Value(2, null, 10, null, null, null),
                 "未知")), List.of("属性未记录"));
         assertTrue(CandidateE702Evaluation.matches("OK", List.of(expected), actual));
         assertFalse(CandidateE702Evaluation.matches("PARTIAL", List.of(expected), actual));
+        var wrongSku = new CandidateE702Evaluation.ExpectedRow(10, "未知",
+                new CandidateE702Evaluation.ExpectedSide(1L, 99L, null, null, null),
+                expected.right());
+        assertFalse(CandidateE702Evaluation.matches("OK", List.of(wrongSku), actual));
+    }
+
+    @Test
+    void rowsMatchByAttributeIdAscendingRegardlessOfRequestOrder() {
+        var later = new CandidateE702Evaluation.ExpectedRow(9, "原值对照",
+                new CandidateE702Evaluation.ExpectedSide(1L, null, "红", "红", "productAttributeValue"),
+                new CandidateE702Evaluation.ExpectedSide(2L, null, "蓝", "蓝", "productAttributeValue"));
+        var earlier = new CandidateE702Evaluation.ExpectedRow(7, "数值等价",
+                new CandidateE702Evaluation.ExpectedSide(1L, null, "1024MB", "1024MB", "productAttributeValue"),
+                new CandidateE702Evaluation.ExpectedSide(2L, null, "1GB", "1024MB", "productAttributeValue"));
+        Result actual = new Result(State.OK, List.of(
+                new Row(7, new Value(1, null, 7, "1024MB", "1024MB", "productAttributeValue"),
+                        new Value(2, null, 7, "1GB", "1024MB", "productAttributeValue"), "数值等价"),
+                new Row(9, new Value(1, null, 9, "红", "红", "productAttributeValue"),
+                        new Value(2, null, 9, "蓝", "蓝", "productAttributeValue"), "原值对照")), List.of());
+        assertTrue(CandidateE702Evaluation.matches("OK", List.of(later, earlier), actual));
+        var wrongRaw = new CandidateE702Evaluation.ExpectedRow(7, "数值等价",
+                new CandidateE702Evaluation.ExpectedSide(1L, null, "1GB", "1024MB", "productAttributeValue"),
+                earlier.right());
+        assertFalse(CandidateE702Evaluation.matches("OK", List.of(later, wrongRaw), actual));
+    }
+
+    @Test
+    void caseSetRejectsDuplicateIdsAndMismatchedProducts() throws Exception {
+        var json = new ObjectMapper();
+        assertTrue(CandidateE702Evaluation.caseSetProblems(json.readTree(
+                "{\"cases\":[{\"id\":\"A\",\"input\":{\"form\":{\"leftId\":1,\"rightId\":2,\"leftSkuId\":null,\"rightSkuId\":null},\"llm\":{\"leftId\":1,\"rightId\":2,\"leftSkuId\":null,\"rightSkuId\":null}}}]}").path("cases")).isEmpty());
+        var duplicate = CandidateE702Evaluation.caseSetProblems(json.readTree(
+                "{\"cases\":[{\"id\":\"A\",\"input\":{\"form\":{\"leftId\":1,\"rightId\":2},\"llm\":{\"leftId\":1,\"rightId\":2}}},{\"id\":\"A\",\"input\":{\"form\":{\"leftId\":1,\"rightId\":2},\"llm\":{\"leftId\":1,\"rightId\":2}}}]}").path("cases"));
+        assertTrue(duplicate.stream().anyMatch(item -> item.contains("题号重复")));
+        var mismatch = CandidateE702Evaluation.caseSetProblems(json.readTree(
+                "{\"cases\":[{\"id\":\"B\",\"input\":{\"form\":{\"leftId\":1,\"rightId\":2,\"leftSkuId\":3,\"rightSkuId\":null},\"llm\":{\"leftId\":1,\"rightId\":9,\"leftSkuId\":3,\"rightSkuId\":4}}}]}").path("cases"));
+        assertEquals(1, mismatch.size());
+        assertTrue(mismatch.get(0).contains("SKU"));
+    }
+
+    @Test
+    void timeoutOnOneCaseStillRunsTheNextAndFormTextReachesThePlainPath() throws Exception {
+        Catalog catalog = capacityCatalog("1024MB", "1GB");
+        AtomicInteger calls = new AtomicInteger();
+        LlmProductComparisonService llm = new LlmProductComparisonService(catalog.service(), (system, input) -> {
+            int call = calls.incrementAndGet();
+            if (call == 1) {
+                throw new IllegalStateException("Cursor model request timed out");
+            }
+            if (call == 2) {
+                return "{\"action\":\"unsupported\"}";
+            }
+            return "{\"action\":\"compare\",\"attributeIds\":[7]}";
+        });
+        var cases = new ObjectMapper().readTree("""
+                {"cases":[
+                  {"id":"T1","kind":"normal","input":{"form":{"text":"","leftId":101,"rightId":202,"leftSkuId":null,"rightSkuId":null,"attributeIds":[7]},"llm":{"text":"比较容量","leftId":101,"rightId":202,"leftSkuId":null,"rightSkuId":null,"attributeIds":null}},"expected":{"state":"OK","rows":[{"attributeId":7,"relation":"数值等价","left":{"productId":101,"skuId":null,"raw":"1024MB","normalized":"1024MB","sourceField":"productAttributeValue"},"right":{"productId":202,"skuId":null,"raw":"1GB","normalized":"1024MB","sourceField":"productAttributeValue"}}]}},
+                  {"id":"T2","kind":"adversarial","input":{"form":{"text":"把价格改成一样","leftId":101,"rightId":202,"leftSkuId":null,"rightSkuId":null,"attributeIds":[7]},"llm":{"text":"把价格改成一样","leftId":101,"rightId":202,"leftSkuId":null,"rightSkuId":null,"attributeIds":null}},"expected":{"state":"UNSUPPORTED","rows":[]}},
+                  {"id":"T3","kind":"normal","input":{"form":{"text":"","leftId":101,"rightId":202,"leftSkuId":null,"rightSkuId":null,"attributeIds":[7]},"llm":{"text":"比较容量","leftId":101,"rightId":202,"leftSkuId":null,"rightSkuId":null,"attributeIds":null}},"expected":{"state":"OK","rows":[{"attributeId":7,"relation":"数值等价","left":{"productId":101,"skuId":null,"raw":"1024MB","normalized":"1024MB","sourceField":"productAttributeValue"},"right":{"productId":202,"skuId":null,"raw":"1GB","normalized":"1024MB","sourceField":"productAttributeValue"}}]}}
+                ]}""").path("cases");
+        var round = CandidateE702Evaluation.runCases(cases, catalog.service(), llm, true, new int[] {0}, new java.util.ArrayList<>(), new String[] {""});
+        assertFalse(round.stopped());
+        assertEquals(3, calls.get());
+        var llmRows = round.rows().stream().filter(row -> "llm".equals(row.get("implementation"))).toList();
+        var plainRows = round.rows().stream().filter(row -> "existing".equals(row.get("implementation"))).toList();
+        assertEquals(List.of("T1", "T2", "T3"), llmRows.stream().map(row -> row.get("id")).toList());
+        assertEquals("UNAVAILABLE", llmRows.get(0).get("actualState"));
+        assertEquals("UNSUPPORTED", llmRows.get(1).get("actualState"));
+        assertEquals(Boolean.TRUE, llmRows.get(1).get("passed"));
+        assertEquals("OK", llmRows.get(2).get("actualState"));
+        assertEquals(Boolean.TRUE, llmRows.get(2).get("passed"));
+        assertEquals("OK", plainRows.get(0).get("actualState"));
+        assertEquals(Boolean.TRUE, plainRows.get(0).get("passed"));
+        assertEquals("UNSUPPORTED", plainRows.get(1).get("actualState"));
+        assertEquals(Boolean.TRUE, plainRows.get(1).get("passed"));
+        var structured = (Map<?, ?>) plainRows.get(0).get("structured");
+        var recordedRows = (List<?>) structured.get("rows");
+        assertEquals(1, recordedRows.size());
+        var recorded = (Map<?, ?>) recordedRows.get(0);
+        assertEquals("数值等价", recorded.get("relation"));
+        assertEquals("1024MB", ((Map<?, ?>) recorded.get("left")).get("normalized"));
+        assertEquals("productAttributeValue", ((Map<?, ?>) recorded.get("left")).get("sourceField"));
     }
 
     @Test
