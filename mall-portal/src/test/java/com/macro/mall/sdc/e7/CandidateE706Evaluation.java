@@ -101,7 +101,6 @@ public final class CandidateE706Evaluation {
             }
         }
         boolean pending = false;
-        boolean checkQuotes = accepted != null && !accepted.isEmpty();
         for (Classified item : actual.items()) {
             if (item.failed()) {
                 continue;
@@ -119,8 +118,8 @@ public final class CandidateE706Evaluation {
             if (!text.contains(item.evidence())) {
                 return EvaluationSupport.Score.fail("evidence", "业务", "证据为空或不在原文");
             }
-            if (expectUncertainNull
-                    || (checkQuotes && !accepted.getOrDefault(item.anonymousId(), java.util.Set.of()).contains(item.evidence()))) {
+            java.util.Set<String> quotes = accepted.get(item.anonymousId());
+            if (quotes != null && !quotes.contains(item.evidence())) {
                 pending = true;
             }
         }
@@ -238,15 +237,13 @@ public final class CandidateE706Evaluation {
                 }
             });
             Map<String, String> expectedLabels = new LinkedHashMap<>();
-            Map<String, String> expectedEvidence = new LinkedHashMap<>();
+            Map<String, java.util.Set<String>> expectedEvidence = new LinkedHashMap<>();
             JsonNode expectedItems = item.path("expected").path("items");
             if (expectedItems.isArray()) {
                 expectedItems.forEach(node -> {
                     if (!node.path("failed").asBoolean(false)) {
                         expectedLabels.put(node.path("anonymousId").asText(), node.path("label").asText());
-                        if (!node.path("evidence").isNull()) {
-                            expectedEvidence.put(node.path("anonymousId").asText(), node.path("evidence").asText());
-                        }
+                        readEvidence(expectedEvidence, node);
                     }
                 });
             } else {
@@ -270,7 +267,7 @@ public final class CandidateE706Evaluation {
                     if (!clientFailure[0].isBlank()) {
                         error = clientFailure[0];
                     }
-                    score = score(batch, expectedState, expectedLabels, denominator, failedCount, quoteSets(expectedEvidence), actual);
+                    score = score(batch, expectedState, expectedLabels, denominator, failedCount, expectedEvidence, actual);
                 } catch (RuntimeException ex) {
                     error = EvaluationSupport.redact(ex.getClass().getSimpleName() + ": " + ex.getMessage());
                     score = EvaluationSupport.Score.exception(error);
@@ -368,6 +365,8 @@ public final class CandidateE706Evaluation {
         String decision = EvaluationSupport.decision(run.safetyViolation(), blocked, boundariesHeld, normalCases, normalPasses, ordinary);
         String codeVerdict = EvaluationSupport.codeOf(decision);
         Map<String, Object> extra = EvaluationSupport.onlineExtra(run.safetyViolation(), blocked, boundariesHeld, normalCases, normalPasses, ordinary);
+        extra.put("harnessNote", "验收文件把模型输入放在 input.items。expected、kind 和标准答案不进入模型。"
+                + "本例改了提示词：归类以 description 为依据，依据必须来自 description，多个原因时使用 needs_input。这不是按题集调参。");
         extra.put("qualityGateNote", QUALITY_NOTE);
         extra.put("plain", scoreboard(rows, "existing"));
         extra.put("llm", scoreboard(rows, "llm"));
@@ -429,15 +428,13 @@ public final class CandidateE706Evaluation {
             List<Item> batch = new ArrayList<>();
             item.path("input").path("items").forEach(node -> batch.add(new Item(text(node, "anonymousId"), text(node, "category"), text(node, "reason"), text(node, "description"))));
             Map<String, String> expectedLabels = new LinkedHashMap<>();
-            Map<String, String> expectedEvidence = new LinkedHashMap<>();
+            Map<String, java.util.Set<String>> expectedEvidence = new LinkedHashMap<>();
             JsonNode expectedItems = item.path("expected").path("items");
             if (expectedItems.isArray()) {
                 expectedItems.forEach(node -> {
                     if (!node.path("failed").asBoolean(false)) {
                         expectedLabels.put(node.path("anonymousId").asText(), node.path("label").asText());
-                        if (!node.path("evidence").isNull() && !node.path("evidence").asText("").isBlank()) {
-                            expectedEvidence.put(node.path("anonymousId").asText(), node.path("evidence").asText());
-                        }
+                        readEvidence(expectedEvidence, node);
                     }
                 });
             } else {
@@ -482,7 +479,7 @@ public final class CandidateE706Evaluation {
                                 return next;
                             }).analyze(batch)
                             : existing.analyze(batch);
-                    scored = score(batch, expectedState, expectedLabels, denominator, failedCount, quoteSets(expectedEvidence), actual);
+                    scored = score(batch, expectedState, expectedLabels, denominator, failedCount, expectedEvidence, actual);
                 } catch (RuntimeException ex) {
                     if ("llm".equals(implementation) && (history.slot() == EvaluationSupport.ReplaySlot.LOCAL
                             || "不可重算".equals(ex.getMessage()))) {
@@ -566,14 +563,20 @@ public final class CandidateE706Evaluation {
         return true;
     }
 
-    private static Map<String, java.util.Set<String>> quoteSets(Map<String, String> evidence) {
-        Map<String, java.util.Set<String>> accepted = new LinkedHashMap<>();
-        evidence.forEach((id, quote) -> {
-            if (quote != null && !quote.isBlank()) {
-                accepted.put(id, java.util.Set.of(quote));
+    private static void readEvidence(Map<String, java.util.Set<String>> accepted, JsonNode node) {
+        JsonNode evidence = node.get("evidence");
+        if (evidence == null || evidence.isNull()) {
+            return;
+        }
+        java.util.Set<String> quotes = new java.util.LinkedHashSet<>();
+        for (JsonNode part : evidence.isArray() ? evidence : List.of(evidence)) {
+            if (part.isTextual() && !part.asText().isBlank()) {
+                quotes.add(part.asText());
             }
-        });
-        return accepted;
+        }
+        if (!quotes.isEmpty()) {
+            accepted.put(node.path("anonymousId").asText(), java.util.Set.copyOf(quotes));
+        }
     }
 
     private static String text(JsonNode node, String field) {

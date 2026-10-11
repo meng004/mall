@@ -161,14 +161,29 @@ class CandidateE706EvaluationTest {
     }
 
     @Test
-    void uncertainQuoteDiffersFromNullAnnotationAndIsPending() {
+    void uncertainQuoteIsAcceptedWhenAnnotationIsNull() {
         Item item = new Item("b01", "鞋", "", "鞋底开胶");
         var quoted = ExistingReturnReasonBatchService.aggregate(null,
                 List.of(new Classified("b01", Label.UNCERTAIN, "鞋底开胶", false)), 1);
-        var pending = CandidateE706Evaluation.score(List.of(item), "OK", Map.of("b01", "UNCERTAIN"), 1, 0, quoted);
-        assertFalse(pending.passed());
-        assertFalse(pending.scored());
-        assertEquals("待人工核对", pending.category());
+        assertTrue(CandidateE706Evaluation.score(List.of(item), "OK", Map.of("b01", "UNCERTAIN"), 1, 0, quoted).passed());
+    }
+
+    @Test
+    void evidenceArrayAcceptsAnyListedFragment() throws Exception {
+        var cases = new ObjectMapper().readTree("""
+                [{"id":"n","kind":"normal","input":{"items":[
+                    {"anonymousId":"b01","category":"鞋","reason":"","description":"鞋底开胶"}]},
+                  "expected":{"state":"OK","denominator":1,"failedCount":0,"items":[
+                    {"anonymousId":"b01","label":"QUALITY","evidence":["鞋底开胶","开胶"],"failed":false}]}}]
+                """);
+        ReturnReasonBatchService phrase = input -> ExistingReturnReasonBatchService.aggregate(null,
+                List.of(new Classified("b01", Label.QUALITY, "开胶", false)), 1);
+        var run = CandidateE706Evaluation.compareCases(cases, phrase, phrase, new ArrayList<>(), new int[] {0}, new String[] {""});
+        assertEquals(true, row(run, "n", "llm").get("passed"));
+        ReturnReasonBatchService other = input -> ExistingReturnReasonBatchService.aggregate(null,
+                List.of(new Classified("b01", Label.QUALITY, "鞋底", false)), 1);
+        var missed = CandidateE706Evaluation.compareCases(cases, other, other, new ArrayList<>(), new int[] {0}, new String[] {""});
+        assertEquals("待人工核对", row(missed, "n", "llm").get("errorCategory"));
     }
 
     @Test
