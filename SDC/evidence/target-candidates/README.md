@@ -49,7 +49,7 @@ rtk proxy java -cp '/tmp/sdc-candidate-audit:mall-admin/target/classes:<E3测试
 
 同样需要替换占位内容；Windows 改用对应目录与分号。当前记录源码的预期摘要为 `checks=6 specificationFailures=6`，随后抛出 AssertionError，退出码 1；出现编译失败、初始化错误或摘要前中断不能算复现成功。控制器检查采用 MockMvc standalone，未加载完整认证链或事务代理。E3-05 只检查明确的关系清理规格，不证明真实抵扣错误。
 
-验证后台 JUnit 入口时，在个人分支确认没有同名测试后，将本目录的 `CandidateAttributeValidationTest.java` 临时复制到 `mall-admin/src/test/java`，在 mall 根目录运行：
+验证后台 JUnit 入口时，在本地工作区确认没有同名测试后，将本目录的 `CandidateAttributeValidationTest.java` 临时复制到 `mall-admin/src/test/java`，在 mall 根目录运行：
 
 ```sh
 rtk proxy mvn -pl mall-admin -am -DskipTests=false -Dtest=CandidateAttributeValidationTest -Dsurefire.failIfNoSpecifiedTests=false test
