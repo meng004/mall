@@ -1,6 +1,6 @@
 # SDC — software design and conventions
 
-SDC 指 software design and conventions。学生从[学生操作手册](学生操作手册.md)进入：在基线上做首次构建，每次实验从脚手架开个人分支，用 `SDC/compare.sh` 做改前／改后对照。
+SDC 指 software design and conventions。学生从[学生操作手册](学生操作手册.md)进入：在基线上做首次构建，每次实验在脚手架上只读检出、不开个人分支，用 `SDC/compare.sh` 做改前／改后对照。
 
 当前结构：
 
