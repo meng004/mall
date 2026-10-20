@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -102,7 +103,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         try {
             UserDetails userDetails = loadUserByUsername(username);
             if(!passwordEncoder.matches(password,userDetails.getPassword())){
-                Asserts.fail("密码不正确");
+                throw new BadCredentialsException("用户名或密码错误");
             }
             if(!userDetails.isEnabled()){
                 Asserts.fail("帐号已被禁用");
@@ -243,17 +244,17 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         if(StrUtil.isEmpty(param.getUsername())
                 ||StrUtil.isEmpty(param.getOldPassword())
                 ||StrUtil.isEmpty(param.getNewPassword())){
-            return -1;
+            Asserts.fail("提交参数不合法");
         }
         UmsAdminExample example = new UmsAdminExample();
         example.createCriteria().andUsernameEqualTo(param.getUsername());
         List<UmsAdmin> adminList = adminMapper.selectByExample(example);
         if(CollUtil.isEmpty(adminList)){
-            return -2;
+            Asserts.fail("找不到该用户");
         }
         UmsAdmin umsAdmin = adminList.get(0);
         if(!passwordEncoder.matches(param.getOldPassword(),umsAdmin.getPassword())){
-            return -3;
+            Asserts.fail("旧密码错误");
         }
         umsAdmin.setPassword(passwordEncoder.encode(param.getNewPassword()));
         adminMapper.updateByPrimaryKey(umsAdmin);

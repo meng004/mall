@@ -146,17 +146,7 @@ public class UmsAdminController {
     @ResponseBody
     public CommonResult updatePassword(@Validated @RequestBody UpdateAdminPasswordParam updatePasswordParam) {
         int status = adminService.updatePassword(updatePasswordParam);
-        if (status > 0) {
-            return CommonResult.success(status);
-        } else if (status == -1) {
-            return CommonResult.failed("提交参数不合法");
-        } else if (status == -2) {
-            return CommonResult.failed("找不到该用户");
-        } else if (status == -3) {
-            return CommonResult.failed("旧密码错误");
-        } else {
-            return CommonResult.failed();
-        }
+        return CommonResult.success(status);
     }
 
     @Operation(summary = "删除指定用户信息")

@@ -76,7 +76,7 @@ public interface UmsAdminService {
     List<UmsResource> getResourceList(Long adminId);
 
     /**
-     * 修改密码
+     * 修改密码；失败时抛 ApiException（文案即对外提示），成功返回 1
      */
     int updatePassword(UpdateAdminPasswordParam updatePasswordParam);
 
