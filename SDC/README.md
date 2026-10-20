@@ -19,7 +19,7 @@ SDC 指 software design and conventions。学生从[学生操作手册](学生�
 |---|---|---|
 | E1 | 系统理解、依赖图、源码与运行证据 | 基线 `baseline-dcaa93b3`（见[学生操作手册](学生操作手册.md)）。本页 [E1 说明](E1/说明.md) 是迁移前旧结构 |
 | E2 | 分层问题、两种解耦方案与架构视图 | [exp/E2 说明](https://github.com/meng004/mall/blob/exp/E2/SDC/E2/说明.md) · [Issue 标签 E2](https://github.com/meng004/mall/issues?q=label%3AE2) |
-| E3 | 规格、积分缺陷、插入边界测试 | [exp/E3 说明](https://github.com/meng004/mall/blob/exp/E3/SDC/E3/说明.md) · [Issue 标签 E3](https://github.com/meng004/mall/issues?q=label%3AE3) |
+| E3 | 规格、登录失败契约（服务层给出失败语义）、HTTP 边界测试 | [exp/E3 说明](https://github.com/meng004/mall/blob/exp/E3/SDC/E3/说明.md) · [Issue 标签 E3](https://github.com/meng004/mall/issues?q=label%3AE3) |
 | E4 | 策略重构、金额与行为特征测试 | [exp/E4 说明](https://github.com/meng004/mall/blob/exp/E4/SDC/E4/说明.md) · [Issue 标签 E4](https://github.com/meng004/mall/issues?q=label%3AE4) |
 | E5 | 库存需求变更的影响分析 | [exp/E5 说明](https://github.com/meng004/mall/blob/exp/E5/SDC/E5/说明.md) · [Issue 标签 E5](https://github.com/meng004/mall/issues?q=label%3AE5) |
 | E6 | 会员价（E6-00，#14）；库存预警为扩展（E6-07，#26） | [exp/E6 说明](https://github.com/meng004/mall/blob/exp/E6/SDC/E6/说明.md) · [Issue 标签 E6](https://github.com/meng004/mall/issues?q=label%3AE6) |
