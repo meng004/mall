@@ -1,0 +1,5 @@
+示例：E3-00  模块：mall-admin  测试：SDCE300Test
+改前 baseline-dcaa93b3：fail（预期 fail）  [ERROR] Tests run: 6, Failures: 1, Errors: 0, Skipped: 0
+[ERROR]   SDCE300Test.unknownUserAndWrongPasswordLookTheSame:101 JSON path "$.code" expected:<404> but was:<500>
+改后 e0ea94ef：pass（预期 pass）  [INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+结论：符合

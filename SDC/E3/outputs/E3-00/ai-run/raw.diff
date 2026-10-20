@@ -1,0 +1,65 @@
+diff --git a/mall-admin/src/main/java/com/macro/mall/controller/UmsAdminController.java b/mall-admin/src/main/java/com/macro/mall/controller/UmsAdminController.java
+index 2549aaad..9fc2ec39 100644
+--- a/mall-admin/src/main/java/com/macro/mall/controller/UmsAdminController.java
++++ b/mall-admin/src/main/java/com/macro/mall/controller/UmsAdminController.java
+@@ -146,17 +146,7 @@ public class UmsAdminController {
+     @ResponseBody
+     public CommonResult updatePassword(@Validated @RequestBody UpdateAdminPasswordParam updatePasswordParam) {
+         int status = adminService.updatePassword(updatePasswordParam);
+-        if (status > 0) {
+-            return CommonResult.success(status);
+-        } else if (status == -1) {
+-            return CommonResult.failed("提交参数不合法");
+-        } else if (status == -2) {
+-            return CommonResult.failed("找不到该用户");
+-        } else if (status == -3) {
+-            return CommonResult.failed("旧密码错误");
+-        } else {
+-            return CommonResult.failed();
+-        }
++        return CommonResult.success(status);
+     }
+ 
+     @Operation(summary = "删除指定用户信息")
+diff --git a/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminServiceImpl.java b/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminServiceImpl.java
+index 282cbb56..d1ebacf6 100644
+--- a/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminServiceImpl.java
++++ b/mall-admin/src/main/java/com/macro/mall/service/impl/UmsAdminServiceImpl.java
+@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.BeanUtils;
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
++import org.springframework.security.authentication.BadCredentialsException;
+ import org.springframework.security.core.AuthenticationException;
+ import org.springframework.security.core.context.SecurityContextHolder;
+ import org.springframework.security.core.userdetails.UserDetails;
+@@ -102,7 +103,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
+         try {
+             UserDetails userDetails = loadUserByUsername(username);
+             if(!passwordEncoder.matches(password,userDetails.getPassword())){
+-                Asserts.fail("密码不正确");
++                throw new BadCredentialsException("用户名或密码错误");
+             }
+             if(!userDetails.isEnabled()){
+                 Asserts.fail("帐号已被禁用");
+@@ -243,17 +244,17 @@ public class UmsAdminServiceImpl implements UmsAdminService {
+         if(StrUtil.isEmpty(param.getUsername())
+                 ||StrUtil.isEmpty(param.getOldPassword())
+                 ||StrUtil.isEmpty(param.getNewPassword())){
+-            return -1;
++            Asserts.fail("提交参数不合法");
+         }
+         UmsAdminExample example = new UmsAdminExample();
+         example.createCriteria().andUsernameEqualTo(param.getUsername());
+         List<UmsAdmin> adminList = adminMapper.selectByExample(example);
+         if(CollUtil.isEmpty(adminList)){
+-            return -2;
++            Asserts.fail("找不到该用户");
+         }
+         UmsAdmin umsAdmin = adminList.get(0);
+         if(!passwordEncoder.matches(param.getOldPassword(),umsAdmin.getPassword())){
+-            return -3;
++            Asserts.fail("旧密码错误");
+         }
+         umsAdmin.setPassword(passwordEncoder.encode(param.getNewPassword()));
+         adminMapper.updateByPrimaryKey(umsAdmin);

@@ -1,0 +1,15 @@
+工具：JaCoCo 0.8.13（org.jacoco:jacoco-maven-plugin:0.8.13）；JDK 17.0.19。
+命令：
+mvn -B -o -pl mall-admin -am -DskipTests=false -Dtest=SDCE300Test -Dsurefire.failIfNoSpecifiedTests=false org.jacoco:jacoco-maven-plugin:0.8.13:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.13:report
+数据文件：mall-admin/target/site/jacoco/jacoco.xml（target 不提交）。
+覆盖率跑在修复提交 e0ea94ef65c9831bf241f4bd6d5c48c189a89e17 之上。
+
+统计对象与结果（JaCoCo 方法计数）：
+UmsAdminServiceImpl.login            行 13/14 = 92.9%   分支 4/4 = 100%
+UmsAdminServiceImpl.updatePassword   行 13/16 = 81.3%   分支 8/10 = 80.0%
+UmsAdminServiceImpl.loadUserByUsername 行 5/5          分支 2/2
+UmsAdminController.login             行 7/7             分支 2/2
+UmsAdminController.updatePassword    行 2/2             （无分支）
+
+未覆盖部分：updatePassword 参数检查是 username、oldPassword、newPassword 三个 isEmpty 的短路或，测试只走“用户名为空”一条，
+旧密码为空、新密码为空两个分支未走到。控制器的 @NotEmpty 会先拦住这三种空值（经全局处理器回 404），服务层这道检查只对绕过控制器的调用方生效，故不再加用例。
