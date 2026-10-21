@@ -1,0 +1,17 @@
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-在此粘贴你的Key",
+    "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+    "ANTHROPIC_MODEL": "deepseek-flash",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-pro",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-flash[1M]",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro[1M]",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL_NAME": "deepseek-flash",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL_NAME": "deepseek-v4-pro",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "deepseek-v4-pro",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL_NAME": "deepseek-v4-pro",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME": "deepseek-v4-pro",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-pro",
+    "CLAUDE_CODE_AUTO_MODE_SERVER": "0"
+  }
+}
