@@ -1,6 +1,6 @@
 # SDC — software design and conventions
 
-SDC 指 software design and conventions。学生从[学生操作手册](学生操作手册.md)进入：在基线上做首次构建，每次实验在脚手架上只读检出、不开个人分支，用 `SDC/compare.sh` 做改前／改后对照。
+SDC 指 software design and conventions。学生以对应课件和个人选题 Issue 为入口，按题目说明准备环境、记录版本并完成实验。
 
 当前结构：
 
@@ -17,7 +17,7 @@ SDC 指 software design and conventions。学生从[学生操作手册](学生�
 
 | 实验 | 课堂内容 | 入口 |
 |---|---|---|
-| E1 | 系统理解、依赖图、源码与运行证据 | 基线 `baseline-dcaa93b3`（见[学生操作手册](学生操作手册.md)）。本页 [E1 说明](E1/说明.md) 是迁移前旧结构 |
+| E1 | 系统理解、依赖图、源码与运行证据 | 基线 `baseline-dcaa93b3`（见对应课件和 Issue）。本页 [E1 说明](E1/说明.md) 是迁移前旧结构 |
 | E2 | 分层问题、两种解耦方案与架构视图 | [exp/E2 说明](https://github.com/meng004/mall/blob/exp/E2/SDC/E2/说明.md) · [Issue 标签 E2](https://github.com/meng004/mall/issues?q=label%3AE2) |
 | E3 | 规格、登录失败契约（服务层给出失败语义）、HTTP 边界测试 | [exp/E3 说明](https://github.com/meng004/mall/blob/exp/E3/SDC/E3/说明.md) · [Issue 标签 E3](https://github.com/meng004/mall/issues?q=label%3AE3) |
 | E4 | 策略重构、金额与行为特征测试 | [exp/E4 说明](https://github.com/meng004/mall/blob/exp/E4/SDC/E4/说明.md) · [Issue 标签 E4](https://github.com/meng004/mall/issues?q=label%3AE4) |
